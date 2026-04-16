@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parlem Flores · Floristería artesanal en Valencia</title>
+  <meta name="description" content="Floristería artesanal en Valencia. Ramos frescos hechos a mano, bodas y eventos. Entrega el mismo día.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <span id="top-bar-text">✿ Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia</span>
+  <a href="#contacto">Más info</a>
+</div>
+
+<!-- ===== HEADER / NAV ===== -->
+<header class="header" id="header">
+  <nav class="nav" id="nav">
+    <a class="logo" href="#inicio">
+      <span class="logo-icon">✿</span>
+      <span class="logo-name">Parlem <span>Flores</span></span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#productos">Tienda</a></li>
+      <li><a href="#bodas">Bodas</a></li>
+      <li><a href="#nosotros">Historia</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a id="nav-ig" href="#" target="_blank" class="nav-action-btn" title="Instagram">📸</a>
+      <a id="nav-wa" href="#" target="_blank" class="nav-action-btn" title="WhatsApp">💬</a>
+    </div>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ===== MOBILE NAV ===== -->
+<div class="mobile-nav-overlay" id="mobile-nav-overlay">
+  <nav class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-header">
+      <span class="logo-icon">✿</span>
+      <span class="logo-name">Parlem <span>Flores</span></span>
+    </div>
+    <ul id="mobile-nav-links">
+      <li><a href="#productos">Tienda</a></li>
+      <li><a href="#bodas">Bodas</a></li>
+      <li><a href="#nosotros">Historia</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <div class="mobile-nav-social">
+      <a id="mobile-nav-ig" href="#" target="_blank">📸 Instagram</a>
+      <a id="mobile-nav-wa" href="#" target="_blank">💬 WhatsApp</a>
+    </div>
+  </nav>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="inicio">
+  <div class="hero-image-overlay" id="hero-bg-img"></div>
+  <div class="hero-content">
+    <div class="hero-badge" id="hero-badge">✿ Floristería Artesanal · Valencia</div>
+    <h1 id="hero-title">Cada flor cuenta <em>una historia</em></h1>
+    <p class="hero-subtitle" id="hero-subtitle">Creaciones florales hechas a mano cada día en Valencia. Sorprende con algo único, pensado desde el corazón.</p>
+    <div class="hero-buttons">
+      <a id="wa-link" href="#" target="_blank" class="btn btn-primary">
+        PEDIR POR WHATSAPP
+      </a>
+      <a href="#productos" class="btn btn-outline">DESCUBRIR FLORES →</a>
+    </div>
+    <div class="hero-tags" id="hero-tags">
+      <span>Valencia ciudad</span>
+      <span>Entrega el mismo día</span>
+      <span>Flores frescas diarias</span>
+      <span>Bizum · Efectivo · Transferencia</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OCCASIONS STRIP ===== -->
+<div class="occasions-strip" id="occasions-strip"></div>
+
+<!-- ===== PRODUCTS ===== -->
+<section class="section" id="productos">
+  <div class="section-header">
+    <h2>Nuestras Flores</h2>
+    <p>Composiciones únicas hechas con las flores más frescas del mercado</p>
+  </div>
+  <div class="category-tabs" id="category-tabs"></div>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<!-- ===== SEASONAL ===== -->
+<section class="section section-alt" id="seasonal">
+  <div class="section-header">
+    <h2>De Temporada</h2>
+    <p>Las flores que la naturaleza nos regala en este momento</p>
+  </div>
+  <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;max-width:900px;margin:0 auto"></div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="section" id="servicios">
+  <div class="section-header">
+    <h2>Nuestra Magia</h2>
+    <p>Lo que hace que cada ramo sea especial</p>
+  </div>
+  <div class="services-grid" id="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🌸</div>
+      <h3>Flores del mercado</h3>
+      <p>Seleccionamos personalmente las flores más frescas cada mañana en el Mercado Central de Valencia</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✂️</div>
+      <h3>Hecho a mano</h3>
+      <p>Cada composición es única, creada con dedicación, cariño y atención a cada detalle</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚚</div>
+      <h3>Entrega hoy</h3>
+      <p>Pedidos antes de las 17:00, entrega el mismo día en toda la ciudad de Valencia</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💍</div>
+      <h3>Bodas y eventos</h3>
+      <p>Diseñamos la decoración floral completa para tu celebración más especial</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="section section-alt" id="nosotros">
+  <div class="about-grid">
+    <div class="about-image-wrap">
+      <div class="about-img" id="about-img">✿</div>
+      <div class="about-decor"></div>
+    </div>
+    <div class="about-text">
+      <h2>Hola, soy <span id="about-name">Isabel</span></h2>
+      <p id="about-text"></p>
+      <div class="about-stats" id="about-stats">
+        <div class="stat-item">
+          <div class="stat-num">5★</div>
+          <div class="stat-label">Google reviews</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Artesanal</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Flores importadas</div>
+        </div>
+      </div>
+      <a href="#contacto" class="btn btn-primary" style="margin-top:.5rem">ESCRÍBEME →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WEDDINGS ===== -->
+<section class="section" id="bodas">
+  <div class="section-header">
+    <h2>❦ Bodas y Eventos</h2>
+    <p>Desde el ramo de novia hasta la decoración completa del espacio</p>
+  </div>
+  <div class="wedding-card">
+    <p id="wedding-text">Cada boda es única y merece flores que lo sean también. Cuéntame tu historia, tus colores favoritos y tu fecha, y diseñaremos juntos el sueño floral que imaginas.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a id="wedding-wa" href="#" target="_blank" class="btn btn-whatsapp" onclick="openWeddingWA(event)">
+        PEDIR PRESUPUESTO
+      </a>
+      <a href="#productos" class="btn btn-outline" onclick="filterToWedding(event)">
+        VER COMPOSICIONES →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Corazones Contentos</h2>
+    <p>Palabras que nos hacen sonreír</p>
+  </div>
+  <div class="testimonials-grid" id="testimonials-grid"></div>
+</section>
+
+<!-- ===== INSTAGRAM BANNER ===== -->
+<div class="ig-banner">
+  <h2>📸 Síguenos en Instagram</h2>
+  <p>Inspiración floral diaria, novedades y las flores del día</p>
+  <a id="ig-banner-link" href="#" target="_blank" class="btn-ig">
+    @parlemflores →
+  </a>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<section class="section" id="contacto">
+  <div class="section-header">
+    <h2>Escríbenos</h2>
+    <p>Estamos aquí para ayudarte con tu pedido</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>Encuéntranos</h3>
+      <div class="contact-item">
+        <div class="ci-icon">📍</div>
+        <div class="ci-text">
+          <strong>Dirección</strong>
+          <span id="contact-address"></span>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📱</div>
+        <div class="ci-text">
+          <strong>Teléfono / WhatsApp</strong>
+          <a id="contact-phone" href="tel:" style="color:var(--text);text-decoration:none"></a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">🕐</div>
+        <div class="ci-text">
+          <strong>Horario</strong>
+          <span id="contact-hours"></span>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">🚚</div>
+        <div class="ci-text">
+          <strong>Entrega a domicilio</strong>
+          <span id="contact-delivery"></span>
+        </div>
+      </div>
+      <div class="contact-actions">
+        <a id="contact-wa-btn" href="#" target="_blank" class="btn btn-whatsapp" style="justify-content:center">💬 WHATSAPP DIRECTO</a>
+        <a id="contact-ig-btn" href="#" target="_blank" class="btn btn-outline" style="justify-content:center">📸 INSTAGRAM</a>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>Envía tu pedido</h3>
+      <form onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="form-name">TU NOMBRE</label>
+          <input id="form-name" type="text" placeholder="María García" required>
+        </div>
+        <div class="form-group">
+          <label for="form-phone">TELÉFONO</label>
+          <input id="form-phone" type="tel" placeholder="+34 600 000 000" required>
+        </div>
+        <div class="form-group">
+          <label for="form-type">TIPO DE PEDIDO</label>
+          <select id="form-type">
+            <option>Ramo del día</option>
+            <option>Composición personalizada</option>
+            <option>Entrega a domicilio</option>
+            <option>Boda / Evento</option>
+            <option>Suscripción semanal</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="form-msg">MENSAJE (OPCIONAL)</label>
+          <textarea id="form-msg" placeholder="Cuéntame qué necesitas: fecha, colores, presupuesto..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">ENVIAR POR WHATSAPP 💬</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">✿ Parlem Flores</div>
+      <p id="footer-tagline"></p>
+      <div class="footer-social">
+        <a id="footer-ig" href="#" target="_blank" class="social-btn" title="Instagram">📸</a>
+        <a id="footer-wa" href="#" target="_blank" class="social-btn" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Catálogo</h4>
+      <ul>
+        <li><a href="#productos">Ramos del día</a></li>
+        <li><a href="#bodas">Bodas y eventos</a></li>
+        <li><a href="#seasonal">De temporada</a></li>
+        <li><a href="#productos">Cajas de flores</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Información</h4>
+      <ul>
+        <li><a href="#nosotros">Sobre nosotros</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#contacto">Entregas</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© <span id="footer-year"></span> Parlem Flores · Floristería artesanal en Valencia · Hecho con ✿</p>
+  </div>
+</footer>
+
+<!-- WhatsApp float -->
+<a id="wa-float" href="#" target="_blank" class="wa-float" title="WhatsApp">💬</a>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

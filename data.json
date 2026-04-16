@@ -1,0 +1,204 @@
+{
+  "site": {
+    "name": "Parlem Flores",
+    "tagline": "Floristería artesanal en Valencia. Flores frescas hechas a mano cada día, con entrega el mismo día.",
+    "hero_title": "Cada flor cuenta una historia",
+    "hero_subtitle": "Creaciones florales hechas a mano cada día en Valencia. Sorprende con algo único, pensado desde el corazón.",
+    "hero_image": "",
+    "about_name": "Isabel",
+    "about_text": "Parlem Flores nació de mi pasión por las flores y el deseo de crear algo auténtico en el corazón de Valencia. Cada mañana selecciono personalmente las flores más frescas del Mercado Central para elaborar composiciones únicas, hechas con cuidado y sin prisas. No somos una cadena, soy una artesana que cree en el poder de las flores para transmitir emociones reales.",
+    "about_image": "",
+    "address": "Eixample, Valencia",
+    "phone": "+34 600 000 000",
+    "whatsapp": "34600000000",
+    "email": "hola@parlemflores.com",
+    "instagram": "parlemflores",
+    "hours": "Lun–Sáb: 9:00–20:00 · Dom: 10:00–15:00",
+    "delivery_info": "Entrega el mismo día en Valencia ciudad (pedidos antes de las 17:00)",
+    "top_bar_text": "🌸 Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia",
+    "nav_links": [
+      { "label": "Tienda", "href": "#productos" },
+      { "label": "Bodas", "href": "#bodas" },
+      { "label": "Historia", "href": "#nosotros" },
+      { "label": "Contacto", "href": "#contacto" }
+    ],
+    "hero_badge": "✦ Floristería artesanal · Valencia",
+    "hero_tags": ["Valencia ciudad", "Entrega el mismo día", "Flores frescas diarias", "Bizum · Efectivo · Transferencia"],
+    "services": [
+      { "icon": "🌸", "title": "Flores del mercado", "desc": "Seleccionamos personalmente las flores más frescas cada mañana en el Mercado Central de Valencia" },
+      { "icon": "✂️", "title": "Hecho a mano", "desc": "Cada composición es única, creada con dedicación, cariño y atención a cada detalle" },
+      { "icon": "🚚", "title": "Entrega hoy", "desc": "Pedidos antes de las 17:00, entrega el mismo día en toda la ciudad de Valencia" },
+      { "icon": "💍", "title": "Bodas y eventos", "desc": "Diseñamos la decoración floral completa para tu celebración más especial" }
+    ],
+    "wedding_text": "Cada boda es única y merece flores que lo sean también. Cuéntame tu historia, tus colores favoritos y tu fecha, y diseñaremos juntos el sueño floral que imaginas. Cada detalle, hecho con flores y con el corazón.",
+    "wedding_cta": "Pedir presupuesto",
+    "about_stats": [
+      { "num": "5★", "label": "Google reviews" },
+      { "num": "100%", "label": "Artesanal" },
+      { "num": "0", "label": "Flores importadas" }
+    ]
+  },
+  "occasions": [
+    { "icon": "🎂", "label": "Cumpleaños", "desc": "Sorprende en su día" },
+    { "icon": "💕", "label": "Aniversario", "desc": "Celebra el amor" },
+    { "icon": "👶", "label": "Nacimiento", "desc": "Dale la bienvenida" },
+    { "icon": "💐", "label": "Agradecimiento", "desc": "Di gracias con flores" },
+    { "icon": "🏠", "label": "Hogar", "desc": "Flores para tu espacio" }
+  ],
+  "seasonal": [
+    { "name": "Tulipanes", "emoji": "🌷" },
+    { "name": "Peonías", "emoji": "🌸" },
+    { "name": "Rosas", "emoji": "🌹" },
+    { "name": "Anémonas", "emoji": "🌺" },
+    { "name": "Lisianthus", "emoji": "🤍" },
+    { "name": "Hortensias", "emoji": "💜" }
+  ],
+  "categories": [
+    { "id": "bouquets", "name": "Ramos del Día", "icon": "💐" },
+    { "id": "premium", "name": "Composiciones Premium", "icon": "✨" },
+    { "id": "wedding", "name": "Bodas y Eventos", "icon": "💍" },
+    { "id": "gifts", "name": "Regalos", "icon": "🎁" }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "category": "bouquets",
+      "name": "Ramo Primavera",
+      "description": "Rosas, peonías y eucalipto. Tonos pastel ideales para cualquier ocasión.",
+      "price": 28,
+      "price_max": 45,
+      "price_label": "",
+      "image": "",
+      "badge": "Más vendido",
+      "available": true
+    },
+    {
+      "id": 2,
+      "category": "bouquets",
+      "name": "Ramo Romance",
+      "description": "Rosas rojas y mimosa. El clásico atemporal para aniversarios y San Valentín.",
+      "price": 35,
+      "price_max": 55,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 3,
+      "category": "bouquets",
+      "name": "Ramo Silvestre",
+      "description": "Flores silvestres de temporada. Natural, fresco y lleno de personalidad.",
+      "price": 22,
+      "price_max": 38,
+      "price_label": "",
+      "image": "",
+      "badge": "Temporada",
+      "available": true
+    },
+    {
+      "id": 4,
+      "category": "bouquets",
+      "name": "Ramo Blanco Puro",
+      "description": "Lisianthus blanco, gypsophila y verdes. Elegancia y sofisticación en su estado más puro.",
+      "price": 30,
+      "price_max": 50,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 5,
+      "category": "premium",
+      "name": "Centro Premium",
+      "description": "Composición de gran formato con las flores más selectas del mercado. Ideal para regalos especiales.",
+      "price": 60,
+      "price_max": 120,
+      "price_label": "Según tamaño",
+      "image": "",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 6,
+      "category": "premium",
+      "name": "Jarrón Artístico",
+      "description": "Composición en jarrón cerámica incluido. Perfecto para decorar el hogar o regalar con estilo.",
+      "price": 75,
+      "price_max": 0,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 7,
+      "category": "wedding",
+      "name": "Ramo de Novia Clásico",
+      "description": "Rosas garden y hortensias. Personalizamos cada detalle para tu día más especial.",
+      "price": 120,
+      "price_max": 250,
+      "price_label": "Según diseño",
+      "image": "",
+      "badge": "Boda",
+      "available": true
+    },
+    {
+      "id": 8,
+      "category": "wedding",
+      "name": "Decoración Completa",
+      "description": "Centros de mesa, arco floral, pétalos y detalles. Presupuesto personalizado para tu celebración.",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "image": "",
+      "badge": "Consultar",
+      "available": true
+    },
+    {
+      "id": 9,
+      "category": "gifts",
+      "name": "Caja de Flores",
+      "description": "Flores premium presentadas en caja elegante. El regalo perfecto para cumpleaños y celebraciones.",
+      "price": 45,
+      "price_max": 80,
+      "price_label": "",
+      "image": "",
+      "badge": "Regalo ideal",
+      "available": true
+    },
+    {
+      "id": 10,
+      "category": "gifts",
+      "name": "Suscripción Semanal",
+      "description": "Recibe un ramo fresco cada semana en tu casa o negocio. Sorpresas florales garantizadas.",
+      "price": 55,
+      "price_max": 0,
+      "price_label": "/semana",
+      "image": "",
+      "badge": "Nuevo",
+      "available": true
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "María G.",
+      "text": "Pedí un ramo para mi madre y quedó preciosa. La atención fue muy cariñosa y las flores duraron más de dos semanas. ¡Volveré seguro!",
+      "stars": 5,
+      "source": "Google"
+    },
+    {
+      "name": "Carlos M.",
+      "text": "Isabel decoró nuestra boda y fue un sueño. Escuchó exactamente lo que queríamos y lo hizo realidad. Mil gracias.",
+      "stars": 5,
+      "source": "Instagram"
+    },
+    {
+      "name": "Ana L.",
+      "text": "La entrega fue puntual y el ramo llegó en perfecto estado. El packaging es muy bonito. Totalmente recomendable.",
+      "stars": 5,
+      "source": "Google"
+    }
+  ]
+}

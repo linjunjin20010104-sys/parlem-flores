@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin · Parlem Flores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #722f37;
+      --primary-dark: #5a2429;
+      --primary-light: #8f4a52;
+      --primary-pale: #f5ebe9;
+      --accent: #b8860b;
+      --accent-light: #d4a843;
+      --secondary: #f4efe8;
+      --bg: #faf7f2;
+      --text: #2c2420;
+      --text-light: #6b5e54;
+      --text-lighter: #9a8e84;
+      --white: #ffffff;
+      --border: #e2dbd3;
+      --border-soft: #ece7e0;
+      --radius: 2px;
+      --radius-sm: 0px;
+      --shadow: 0 2px 12px rgba(44,36,32,0.06);
+      --success: #5a8a6a;
+      --danger: #a05050;
+      --warning: #b08830;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+    .admin-header {
+      background: var(--white); box-shadow: var(--shadow);
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border);
+    }
+    .admin-logo { font-family: 'Cormorant Garamond', Georgia, serif; color: var(--primary); font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px; }
+    .admin-logo span { color: var(--primary-dark); }
+    .header-actions { display: flex; gap: .8rem; align-items: center; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); border: none; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all .2s; text-decoration: none; letter-spacing: 0.3px; }
+    .btn-primary { background: var(--primary); color: var(--white); }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--success); color: var(--white); }
+    .btn-success:hover { background: #4a7a5a; }
+    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+    .btn-ghost { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px 8px; border-radius: 6px; }
+    .btn-ghost:hover { background: var(--secondary); }
+
+    .admin-layout { display: flex; min-height: calc(100vh - 60px); }
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      background: var(--white); border-right: 1px solid var(--border); padding: 1.5rem 0;
+    }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 1.5rem; text-decoration: none; color: var(--text-light);
+      font-weight: 600; font-size: 0.82rem; transition: all .2s; border-left: 3px solid transparent;
+    }
+    .sidebar-nav li a:hover, .sidebar-nav li a.active {
+      color: var(--primary); background: var(--secondary); border-left-color: var(--primary);
+    }
+    .sidebar-divider { height: 1px; background: var(--border); margin: .8rem 1.5rem; }
+    .admin-main { flex: 1; padding: 2rem; max-width: 1100px; }
+    .page-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 600; letter-spacing: 0.5px; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { font-size: 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: .5rem; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; letter-spacing: 0.5px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-light); margin-bottom: .3rem; text-transform: uppercase; letter-spacing: .5px; }
+    input[type=text], input[type=number], input[type=tel], input[type=email],
+    select, textarea {
+      width: 100%; padding: 8px 12px;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color .2s; background: var(--white);
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .img-upload-area {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 1.5rem; text-align: center; cursor: pointer;
+      transition: border-color .2s; background: var(--bg);
+    }
+    .img-upload-area:hover { border-color: var(--primary); }
+    .img-upload-area input { display: none; }
+    .img-preview {
+      width: 100px; height: 100px; border-radius: var(--radius); object-fit: cover;
+      margin: 0 auto .8rem; display: block; border: 2px solid var(--border); background: var(--secondary);
+    }
+    .img-preview-lg { width: 200px; height: 120px; }
+    .img-placeholder { font-size: 2.5rem; margin-bottom: .5rem; }
+    .img-upload-label { font-size: 0.8rem; color: var(--text-light); }
+    .img-upload-label strong { color: var(--primary); }
+
+    .products-table { width: 100%; border-collapse: collapse; }
+    .products-table th {
+      text-align: left; padding: 8px 10px; font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-light); border-bottom: 2px solid var(--border);
+      font-family: 'Inter', sans-serif; font-weight: 700;
+    }
+    .products-table td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.85rem; }
+    .products-table tr:last-child td { border-bottom: none; }
+    .products-table tr:hover td { background: var(--bg); }
+    .prod-thumb {
+      width: 48px; height: 48px; border-radius: var(--radius); object-fit: cover;
+      background: var(--secondary); display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; overflow: hidden;
+    }
+    .prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-green { background: var(--primary-pale); color: var(--primary); }
+    .badge-gray { background: #f0f0f0; color: #666; }
+    .badge-orange { background: #fff3e0; color: #e65100; }
+    .badge-red { background: var(--primary-pale); color: var(--danger); }
+    .price-tag { font-weight: 700; color: var(--primary); font-size: 0.95rem; font-family: 'Cormorant Garamond', serif; }
+
+    .toggle { position: relative; width: 40px; height: 22px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: #ccc; border-radius: 50px; cursor: pointer; transition: .3s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background: white; border-radius: 50%; transition: .3s;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--primary); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    .alert { padding: 10px 14px; border-radius: var(--radius); margin-bottom: 1rem; font-size: 0.85rem; display: flex; align-items: center; gap: .5rem; }
+    .alert-success { background: #e8f5ee; color: var(--success); border: 1px solid var(--border); }
+    .alert-warning { background: #f7f0dc; color: #8b6508; border: 1px solid #e8d9a8; }
+    .alert-info { background: var(--bg-rose); color: var(--primary); border: 1px solid var(--border); }
+
+    .save-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: .8rem 2rem; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06); z-index: 100;
+      transform: translateY(100%); transition: transform .3s;
+    }
+    .save-bar.visible { transform: translateY(0); }
+    .save-bar p { font-size: 0.85rem; color: var(--text-light); }
+    .save-bar p strong { color: var(--text); }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white); border-radius: var(--radius);
+      width: 90%; max-width: 540px; max-height: 90vh; overflow-y: auto;
+      padding: 2rem; transform: scale(.95); transition: transform .25s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h3 { font-size: 1.15rem; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; letter-spacing: 0.5px; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); line-height: 1; }
+
+    /* Sortable list items */
+    .sortable-item {
+      display: flex; align-items: center; gap: .8rem; padding: .8rem 1rem;
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      margin-bottom: .5rem; transition: all .2s;
+    }
+    .sortable-item:hover { border-color: var(--primary); }
+    .sortable-item .drag-handle { cursor: grab; color: var(--border); font-size: 1.1rem; user-select: none; }
+    .sortable-item .item-content { flex: 1; }
+    .sortable-item .item-content strong { font-size: .85rem; }
+    .sortable-item .item-content small { color: var(--text-light); font-size: .78rem; display: block; margin-top: 2px; }
+    .sortable-item .item-actions { display: flex; gap: .3rem; }
+
+    /* Mini list for tags */
+    .tag-list { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .tag-item {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--primary-pale); color: var(--primary);
+      padding: 4px 10px; border-radius: 20px; font-size: .8rem; font-weight: 600;
+    }
+    .tag-item .tag-remove { cursor: pointer; opacity: .6; font-size: .9rem; }
+    .tag-item .tag-remove:hover { opacity: 1; }
+
+    /* Service cards grid */
+    .services-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .service-admin-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 1rem; text-align: center;
+    }
+    .service-admin-card .svc-icon { font-size: 1.8rem; margin-bottom: .3rem; }
+    .service-admin-card .svc-title { font-weight: 700; font-size: .85rem; }
+    .service-admin-card .svc-desc { color: var(--text-light); font-size: .78rem; margin-top: .3rem; }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .admin-main { padding: 1rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .admin-header { padding: 0 1rem; }
+      .services-admin-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-logo">✿ Admin · <span>Parlem</span> Flores</div>
+  <div class="header-actions">
+    <a href="../index.html" target="_blank" class="btn btn-outline btn-sm">👁 Ver sitio</a>
+    <button class="btn btn-success btn-sm" onclick="saveAll()">💾 Guardar cambios</button>
+  </div>
+</header>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="#" class="active" onclick="showTab('products', this)">🛒 Productos</a></li>
+      <li><a href="#" onclick="showTab('categories', this)">📂 Categorías</a></li>
+      <li><a href="#" onclick="showTab('occasions', this)">🎭 Ocasiones</a></li>
+      <li><a href="#" onclick="showTab('seasonal', this)">🌷 Temporada</a></li>
+      <li><a href="#" onclick="showTab('services', this)">✨ Servicios</a></li>
+      <li><a href="#" onclick="showTab('hero', this)">🖼️ Inicio (Hero)</a></li>
+      <li><a href="#" onclick="showTab('nav', this)">🧭 Navegación</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li><a href="#" onclick="showTab('site', this)">⚙️ Info del sitio</a></li>
+      <li><a href="#" onclick="showTab('testimonials', this)">⭐ Opiniones</a></li>
+      <li><a href="#" onclick="showTab('export', this)">📤 Exportar</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li><a href="../index.html" target="_blank">🌐 Ver web</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <div class="alert alert-info" id="main-alert">
+      ℹ️ <span>Bienvenida al panel de administración. Edita los datos y pulsa <strong>Guardar</strong>.</span>
+    </div>
+
+    <!-- ===== PRODUCTS ===== -->
+    <div class="panel active" id="panel-products">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">🛒 Gestión de Productos</h2>
+        <button class="btn btn-primary" onclick="openNewProductModal()">+ Añadir producto</button>
+      </div>
+      <div class="card">
+        <table class="products-table" id="products-table">
+          <thead>
+            <tr><th>Foto</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Activo</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="products-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== CATEGORIES ===== -->
+    <div class="panel" id="panel-categories">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">📂 Categorías de Productos</h2>
+        <button class="btn btn-primary" onclick="openCategoryModal()">+ Añadir categoría</button>
+      </div>
+      <div class="card">
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Gestiona las categorías que aparecen en la tienda. Puedes añadir, editar o eliminar.</p>
+        <div id="categories-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== OCCASIONS ===== -->
+    <div class="panel" id="panel-occasions">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">🎭 Franja de Ocasiones</h2>
+        <button class="btn btn-primary" onclick="openOccasionModal()">+ Añadir ocasión</button>
+      </div>
+      <div class="card">
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Los elementos de la franja horizontal que aparece debajo del Hero: Cumpleaños, Aniversario, etc.</p>
+        <div id="occasions-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== SEASONAL ===== -->
+    <div class="panel" id="panel-seasonal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">🌷 Flores de Temporada</h2>
+        <button class="btn btn-primary" onclick="openSeasonalModal()">+ Añadir</button>
+      </div>
+      <div class="card">
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Las flores que se muestran en la sección "De Temporada".</p>
+        <div id="seasonal-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== SERVICES ===== -->
+    <div class="panel" id="panel-services">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">✨ Nuestra Magia (Servicios)</h2>
+        <button class="btn btn-primary" onclick="openServiceModal()">+ Añadir servicio</button>
+      </div>
+      <div class="card">
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Los 4 servicios que aparecen en la sección "Nuestra Magia".</p>
+        <div class="services-admin-grid" id="services-grid"></div>
+      </div>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <div class="panel" id="panel-hero">
+      <h2 class="page-title">🖼️ Inicio (Hero)</h2>
+      <div class="card">
+        <h3>📸 Imagen de fondo del Hero</h3>
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Sube una imagen de alta resolución. Se mostrará como fondo de la sección principal.</p>
+        <div class="img-upload-area" onclick="document.getElementById('hero-img-input').click()" style="margin-bottom:1rem">
+          <input type="file" id="hero-img-input" accept="image/*" onchange="previewHeroImg(event)">
+          <img id="hero-img-preview" class="img-preview img-preview-lg" src="" alt="" style="display:none">
+          <div id="hero-img-placeholder">
+            <div class="img-placeholder">🖼️</div>
+            <div class="img-upload-label">Haz clic para subir imagen de fondo<br><strong>JPG, PNG, WebP · Recomendado 1920×1080</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>✨ Badge del Hero</h3>
+        <div class="form-group">
+          <label>Texto del badge (ej: "✦ Floristería artesanal · Valencia")</label>
+          <input type="text" id="site-hero-badge" placeholder="✦ Floristería artesanal · Valencia">
+        </div>
+      </div>
+      <div class="card">
+        <h3>🏷️ Tags del Hero</h3>
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.8rem">Las etiquetas pequeñas que aparecen debajo de los botones.</p>
+        <div class="tag-list" id="hero-tags-list"></div>
+        <div style="display:flex;gap:.5rem;margin-top:1rem">
+          <input type="text" id="hero-tag-input" placeholder="Nuevo tag (ej: Envío gratis)" style="flex:1">
+          <button class="btn btn-primary btn-sm" onclick="addHeroTag()">+ Añadir</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>💍 Sección Bodas</h3>
+        <div class="form-group">
+          <label>Texto principal de bodas</label>
+          <textarea id="site-wedding-text" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Texto del botón CTA</label>
+          <input type="text" id="site-wedding-cta" placeholder="Pedir presupuesto">
+        </div>
+      </div>
+      <div class="card">
+        <h3>📊 Estadísticas "Sobre mí"</h3>
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.8rem">Los 3 números que aparecen en tu perfil (ej: 5★ Google reviews, 100% Artesanal).</p>
+        <div id="stats-list"></div>
+        <div style="display:flex;gap:.5rem;margin-top:.8rem">
+          <input type="text" id="stat-num-input" placeholder="Número" style="width:100px">
+          <input type="text" id="stat-label-input" placeholder="Etiqueta (ej: Artesanal)" style="flex:1">
+          <button class="btn btn-primary btn-sm" onclick="addStat()">+ Añadir</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📢 Barra superior</h3>
+        <div class="form-group">
+          <label>Texto de la barra superior</label>
+          <input type="text" id="site-top-bar" placeholder="🌸 Envío gratuito en pedidos superiores a 40€">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NAVIGATION ===== -->
+    <div class="panel" id="panel-nav">
+      <h2 class="page-title">🧭 Navegación</h2>
+      <div class="card">
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Edita los enlaces del menú de navegación principal.</p>
+        <div id="nav-links-list"></div>
+        <div style="display:flex;gap:.5rem;margin-top:.8rem">
+          <input type="text" id="nav-label-input" placeholder="Texto (ej: Tienda)" style="flex:1">
+          <input type="text" id="nav-href-input" placeholder="#productos" style="width:180px">
+          <button class="btn btn-primary btn-sm" onclick="addNavLink()">+ Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SITE INFO ===== -->
+    <div class="panel" id="panel-site">
+      <h2 class="page-title">⚙️ Información del Sitio</h2>
+      <div class="card">
+        <h3>🌿 Datos Generales</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Nombre del negocio</label><input type="text" id="site-name"></div>
+          <div class="form-group"><label>Eslogan</label><input type="text" id="site-tagline"></div>
+          <div class="form-group full"><label>Título del hero</label><input type="text" id="site-hero-title"></div>
+          <div class="form-group full"><label>Subtítulo del hero</label><input type="text" id="site-hero-subtitle"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📞 Contacto</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Dirección</label><input type="text" id="site-address"></div>
+          <div class="form-group"><label>Teléfono</label><input type="tel" id="site-phone"></div>
+          <div class="form-group"><label>WhatsApp (solo números)</label><input type="text" id="site-whatsapp" placeholder="34600000000"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="site-email"></div>
+          <div class="form-group"><label>Instagram (sin @)</label><input type="text" id="site-instagram"></div>
+          <div class="form-group"><label>Horario</label><input type="text" id="site-hours"></div>
+          <div class="form-group full"><label>Info de entrega</label><input type="text" id="site-delivery"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>👤 Sobre mí</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Tu nombre</label><input type="text" id="site-about-name"></div>
+          <div class="form-group full"><label>Texto sobre mí</label><textarea id="site-about-text" rows="4"></textarea></div>
+        </div>
+        <label style="margin-top:.5rem">Foto "Sobre mí"</label>
+        <div class="img-upload-area" onclick="document.getElementById('about-img-input').click()" style="margin-top:.5rem">
+          <input type="file" id="about-img-input" accept="image/*" onchange="previewAboutImg(event)">
+          <img id="about-img-preview" class="img-preview" src="" alt="" style="display:none">
+          <div id="about-img-placeholder">
+            <div class="img-placeholder">🌿</div>
+            <div class="img-upload-label">Haz clic para subir tu foto<br><strong>o arrastra aquí</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <div class="panel" id="panel-testimonials">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="page-title" style="margin:0">⭐ Opiniones de Clientes</h2>
+        <button class="btn btn-primary" onclick="openNewTestimonialModal()">+ Añadir opinión</button>
+      </div>
+      <div id="testimonials-list"></div>
+    </div>
+
+    <!-- ===== EXPORT ===== -->
+    <div class="panel" id="panel-export">
+      <h2 class="page-title">📤 Exportar datos</h2>
+      <div class="card">
+        <h3>💾 Guardar data.json</h3>
+        <p style="color:var(--text-light);font-size:.85rem;margin-bottom:1.2rem">
+          Descarga el archivo <code>data.json</code> actualizado con todos tus cambios y reemplaza el archivo en la carpeta de tu web.
+        </p>
+        <button class="btn btn-success" onclick="downloadJSON()">⬇ Descargar data.json</button>
+      </div>
+      <div class="card">
+        <h3>📋 Instrucciones</h3>
+        <ol style="padding-left:1.2rem;line-height:2;color:var(--text-light);font-size:.85rem">
+          <li>Edita tus productos, precios e imágenes en este panel</li>
+          <li>Pulsa <strong>"Guardar cambios"</strong> arriba a la derecha</li>
+          <li>Ve a <strong>"Exportar"</strong> y descarga el <code>data.json</code></li>
+          <li>Reemplaza el archivo <code>data.json</code> en la carpeta de tu web</li>
+          <li>¡Listo! Los cambios se verán en tu web inmediatamente</li>
+        </ol>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+  <p>⚠️ Tienes <strong id="change-count">0</strong> cambio(s) sin guardar</p>
+  <div style="display:flex;gap:.8rem">
+    <button class="btn btn-outline" onclick="discardChanges()">Descartar</button>
+    <button class="btn btn-success" onclick="saveAll()">💾 Guardar todo</button>
+  </div>
+</div>
+
+<!-- ===== PRODUCT MODAL ===== -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Nuevo Producto</h3>
+      <button class="modal-close" onclick="closeModal('product-modal')">×</button>
+    </div>
+    <div class="form-group">
+      <label>Foto del producto</label>
+      <div class="img-upload-area" onclick="document.getElementById('prod-img-input').click()">
+        <input type="file" id="prod-img-input" accept="image/*" onchange="previewProdImg(event)">
+        <img id="prod-img-preview" class="img-preview" src="" alt="" style="display:none">
+        <div id="prod-img-placeholder">
+          <div class="img-placeholder">💐</div>
+          <div class="img-upload-label">Haz clic para subir foto<br><strong>JPG, PNG, WebP</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-grid" style="margin-top:1rem">
+      <div class="form-group full"><label>Nombre del producto *</label><input type="text" id="prod-name" placeholder="Ramo Primavera"></div>
+      <div class="form-group full"><label>Descripción</label><textarea id="prod-desc" rows="2" placeholder="Rosas, peonías y eucalipto..."></textarea></div>
+      <div class="form-group"><label>Precio desde (€) — 0 = Consultar</label><input type="number" id="prod-price" min="0" step="1" placeholder="28"></div>
+      <div class="form-group"><label>Precio hasta (€) — opcional</label><input type="number" id="prod-price-max" min="0" step="1" placeholder="45"></div>
+      <div class="form-group"><label>Categoría</label><select id="prod-category"></select></div>
+      <div class="form-group"><label>Etiqueta precio (opcional)</label><input type="text" id="prod-price-label" placeholder="Según tamaño / semana"></div>
+      <div class="form-group full"><label>Etiqueta badge (opcional)</label><input type="text" id="prod-badge" placeholder="Más vendido / Temporada / Nuevo"></div>
+    </div>
+    <input type="hidden" id="prod-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('product-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveProduct()">💾 Guardar producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div class="modal-overlay" id="category-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="cat-modal-title">Nueva Categoría</h3>
+      <button class="modal-close" onclick="closeModal('category-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Identificador (id)</label><input type="text" id="cat-id" placeholder="bouquets"></div>
+    <div class="form-group"><label>Nombre</label><input type="text" id="cat-name" placeholder="Ramos del Día"></div>
+    <div class="form-group"><label>Emoji / Icono</label><input type="text" id="cat-icon" placeholder="💐"></div>
+    <input type="hidden" id="cat-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('category-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveCategory()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- OCCASION MODAL -->
+<div class="modal-overlay" id="occasion-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="occ-modal-title">Nueva Ocasión</h3>
+      <button class="modal-close" onclick="closeModal('occasion-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Emoji</label><input type="text" id="occ-icon" placeholder="🎂"></div>
+    <div class="form-group"><label>Etiqueta</label><input type="text" id="occ-label" placeholder="Cumpleaños"></div>
+    <div class="form-group"><label>Descripción corta</label><input type="text" id="occ-desc" placeholder="Sorprende en su día"></div>
+    <input type="hidden" id="occ-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('occasion-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveOccasion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEASONAL MODAL -->
+<div class="modal-overlay" id="seasonal-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="sea-modal-title">Nueva Flor de Temporada</h3>
+      <button class="modal-close" onclick="closeModal('seasonal-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Nombre</label><input type="text" id="sea-name" placeholder="Tulipanes"></div>
+    <div class="form-group"><label>Emoji</label><input type="text" id="sea-emoji" placeholder="🌷"></div>
+    <input type="hidden" id="sea-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('seasonal-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveSeasonal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="service-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="svc-modal-title">Nuevo Servicio</h3>
+      <button class="modal-close" onclick="closeModal('service-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Icono (emoji)</label><input type="text" id="svc-icon" placeholder="🌸"></div>
+    <div class="form-group"><label>Título</label><input type="text" id="svc-title" placeholder="Flores del mercado"></div>
+    <div class="form-group full"><label>Descripción</label><textarea id="svc-desc" rows="3" placeholder="Seleccionamos personalmente..."></textarea></div>
+    <input type="hidden" id="svc-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('service-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveService()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIAL MODAL -->
+<div class="modal-overlay" id="testimonial-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Añadir opinión</h3>
+      <button class="modal-close" onclick="closeModal('testimonial-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Nombre del cliente</label><input type="text" id="t-name"></div>
+    <div class="form-group"><label>Texto de la opinión</label><textarea id="t-text" rows="3"></textarea></div>
+    <div class="form-group">
+      <label>Estrellas</label>
+      <select id="t-stars"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option></select>
+    </div>
+    <div class="form-group"><label>Fuente (Google / Instagram)</label><input type="text" id="t-source" placeholder="Google"></div>
+    <input type="hidden" id="t-editing-id">
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModal('testimonial-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveTestimonial()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let data = null;
+let hasChanges = false;
+let prodImageDataUrl = null;
+let aboutImageDataUrl = null;
+let heroImageDataUrl = null;
+
+// ==================== INIT ====================
+async function init() {
+  try {
+    const res = await fetch('../data.json?v=' + Date.now());
+    data = await res.json();
+  } catch(e) {
+    data = { site: {}, products: [], categories: [], testimonials: [], occasions: [], seasonal: [], services: [] };
+    showAlert('⚠️ No se pudo cargar data.json. Trabajando con datos vacíos.', 'warning');
+  }
+  // Ensure arrays exist
+  if (!data.categories) data.categories = [];
+  if (!data.occasions) data.occasions = [];
+  if (!data.seasonal) data.seasonal = [];
+  if (!data.services) data.services = [];
+  if (!data.testimonials) data.testimonials = [];
+  if (!data.nav_links) data.nav_links = [];
+  if (!data.hero_tags) data.hero_tags = [];
+  if (!data.about_stats) data.about_stats = [];
+
+  renderProductsTable();
+  renderSiteForm();
+  renderTestimonialsList();
+  renderCategoriesList();
+  renderOccasionsList();
+  renderSeasonalList();
+  renderServicesGrid();
+  renderHeroSection();
+  renderNavLinksSection();
+}
+
+// ==================== TABS ====================
+function showTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+  return false;
+}
+
+// ==================== PRODUCTS ====================
+function renderProductsTable() {
+  const tbody = document.getElementById('products-tbody');
+  tbody.innerHTML = data.products.map((p, i) => {
+    const catObj = data.categories.find(c => c.id === p.category);
+    const catLabel = catObj ? `${catObj.icon} ${catObj.name}` : p.category;
+    let priceStr;
+    if (p.price === 0) {
+      priceStr = '<span style="color:var(--accent);font-size:.82rem">Consultar</span>';
+    } else if (p.price_max && p.price_max > p.price) {
+      priceStr = `<span class="price-tag">${p.price}€</span><br><small style="color:var(--text-light);font-size:.75rem">– ${p.price_max}€</small>`;
+    } else {
+      priceStr = `<span class="price-tag">${p.price}€</span>`;
+    }
+    const badgeHtml = p.badge ? `<span class="badge badge-orange">${p.badge}</span>` : '';
+    const imgHtml = p.image
+      ? `<div class="prod-thumb"><img src="../${p.image}" onerror="this.parentElement.innerHTML=getEmoji('${p.category}')"></div>`
+      : `<div class="prod-thumb" style="background:var(--secondary)">${getEmoji(p.category)}</div>`;
+    return `
+    <tr>
+      <td>${imgHtml}</td>
+      <td><strong>${p.name}</strong><br><small style="color:var(--text-light)">${(p.description || '').substring(0,45)}…</small>${badgeHtml ? '<div style="margin-top:3px">' + badgeHtml + '</div>' : ''}</td>
+      <td>${catLabel}</td>
+      <td>${priceStr}</td>
+      <td><label class="toggle"><input type="checkbox" ${p.available ? 'checked' : ''} onchange="toggleProduct(${i}, this.checked)"><span class="toggle-slider"></span></label></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editProduct(${i})" style="margin-right:.3rem">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${i})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function getEmoji(cat) { return { bouquets: '💐', premium: '✨', wedding: '💍', gifts: '🎁', plants: '🪴' }[cat] || '🌿'; }
+function toggleProduct(i, val) { data.products[i].available = val; markChanged(); }
+function deleteProduct(i) { if (confirm(`¿Eliminar "${data.products[i].name}"?`)) { data.products.splice(i, 1); renderProductsTable(); markChanged(); } }
+
+function openNewProductModal() {
+  document.getElementById('modal-title').textContent = 'Nuevo Producto';
+  document.getElementById('prod-name').value = '';
+  document.getElementById('prod-desc').value = '';
+  document.getElementById('prod-price').value = '';
+  document.getElementById('prod-price-max').value = '';
+  document.getElementById('prod-price-label').value = '';
+  document.getElementById('prod-badge').value = '';
+  document.getElementById('prod-category').value = data.categories.length ? data.categories[0].id : '';
+  document.getElementById('prod-editing-id').value = '';
+  resetProdImgPreview();
+  openModal('product-modal');
+}
+
+function editProduct(i) {
+  const p = data.products[i];
+  document.getElementById('modal-title').textContent = 'Editar Producto';
+  document.getElementById('prod-name').value = p.name;
+  document.getElementById('prod-desc').value = p.description;
+  document.getElementById('prod-price').value = p.price;
+  document.getElementById('prod-price-max').value = p.price_max || '';
+  document.getElementById('prod-price-label').value = p.price_label || '';
+  document.getElementById('prod-badge').value = p.badge || '';
+  document.getElementById('prod-category').value = p.category;
+  document.getElementById('prod-editing-id').value = i;
+  resetProdImgPreview();
+  if (p.image) {
+    const preview = document.getElementById('prod-img-preview');
+    preview.src = '../' + p.image;
+    preview.style.display = 'block';
+    document.getElementById('prod-img-placeholder').style.display = 'none';
+  }
+  openModal('product-modal');
+}
+
+function saveProduct() {
+  const name = document.getElementById('prod-name').value.trim();
+  if (!name) { alert('El nombre es obligatorio'); return; }
+  const prod = {
+    id: Date.now(), name,
+    description: document.getElementById('prod-desc').value.trim(),
+    price: parseFloat(document.getElementById('prod-price').value) || 0,
+    price_max: parseFloat(document.getElementById('prod-price-max').value) || 0,
+    price_label: document.getElementById('prod-price-label').value.trim(),
+    badge: document.getElementById('prod-badge').value.trim(),
+    category: document.getElementById('prod-category').value,
+    image: prodImageDataUrl || '', available: true
+  };
+  const editId = document.getElementById('prod-editing-id').value;
+  if (editId !== '') {
+    const i = parseInt(editId);
+    prod.id = data.products[i].id;
+    if (!prodImageDataUrl && data.products[i].image) prod.image = data.products[i].image;
+    data.products[i] = prod;
+  } else { data.products.push(prod); }
+  prodImageDataUrl = null;
+  renderProductsTable(); markChanged(); closeModal('product-modal');
+  showAlert('✅ Producto guardado.', 'success');
+}
+
+// ==================== CATEGORIES ====================
+function renderCategoriesList() {
+  const list = document.getElementById('categories-list');
+  list.innerHTML = data.categories.map((c, i) => `
+    <div class="sortable-item">
+      <span class="drag-handle">⠿</span>
+      <span style="font-size:1.3rem">${c.icon || '🌿'}</span>
+      <div class="item-content">
+        <strong>${c.name}</strong>
+        <small>ID: ${c.id} · ${data.products.filter(p => p.category === c.id).length} producto(s)</small>
+      </div>
+      <div class="item-actions">
+        <button class="btn-ghost" onclick="editCategory(${i})" title="Editar">✏️</button>
+        <button class="btn-ghost" onclick="deleteCategory(${i})" title="Eliminar">🗑</button>
+        ${i > 0 ? `<button class="btn-ghost" onclick="moveCategory(${i},-1)" title="Subir">↑</button>` : ''}
+        ${i < data.categories.length - 1 ? `<button class="btn-ghost" onclick="moveCategory(${i},1)" title="Bajar">↓</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openCategoryModal(editIdx) {
+  document.getElementById('cat-modal-title').textContent = editIdx !== undefined ? 'Editar Categoría' : 'Nueva Categoría';
+  document.getElementById('cat-id').value = editIdx !== undefined ? data.categories[editIdx].id : '';
+  document.getElementById('cat-id').disabled = editIdx !== undefined;
+  document.getElementById('cat-name').value = editIdx !== undefined ? data.categories[editIdx].name : '';
+  document.getElementById('cat-icon').value = editIdx !== undefined ? data.categories[editIdx].icon || '' : '';
+  document.getElementById('cat-editing-id').value = editIdx !== undefined ? editIdx : '';
+  openModal('category-modal');
+}
+
+function editCategory(i) { openCategoryModal(i); }
+
+function saveCategory() {
+  const editId = document.getElementById('cat-editing-id').value;
+  const cat = {
+    id: document.getElementById('cat-id').value.trim().replace(/\s+/g, '-').toLowerCase(),
+    name: document.getElementById('cat-name').value.trim(),
+    icon: document.getElementById('cat-icon').value.trim() || '🌿'
+  };
+  if (!cat.id || !cat.name) { alert('ID y nombre son obligatorios'); return; }
+  if (editId !== '') { data.categories[parseInt(editId)] = cat; }
+  else {
+    if (data.categories.find(c => c.id === cat.id)) { alert('Ya existe una categoría con ese ID'); return; }
+    data.categories.push(cat);
+  }
+  renderCategoriesList(); markChanged(); closeModal('category-modal');
+  showAlert('✅ Categoría guardada.', 'success');
+}
+
+function deleteCategory(i) {
+  const cat = data.categories[i];
+  const count = data.products.filter(p => p.category === cat.id).length;
+  const msg = count > 0
+    ? `La categoría "${cat.name}" tiene ${count} producto(s). ¿Eliminar de todas formas?`
+    : `¿Eliminar la categoría "${cat.name}"?`;
+  if (confirm(msg)) { data.categories.splice(i, 1); renderCategoriesList(); markChanged(); }
+}
+
+function moveCategory(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= data.categories.length) return;
+  [data.categories[i], data.categories[j]] = [data.categories[j], data.categories[i]];
+  renderCategoriesList(); markChanged();
+}
+
+// ==================== OCCASIONS ====================
+function renderOccasionsList() {
+  const list = document.getElementById('occasions-list');
+  list.innerHTML = data.occasions.map((o, i) => `
+    <div class="sortable-item">
+      <span class="drag-handle">⠿</span>
+      <span style="font-size:1.3rem">${o.icon || '🌸'}</span>
+      <div class="item-content">
+        <strong>${o.label}</strong>
+        <small>${o.desc}</small>
+      </div>
+      <div class="item-actions">
+        <button class="btn-ghost" onclick="editOccasion(${i})">✏️</button>
+        <button class="btn-ghost" onclick="deleteOccasion(${i})">🗑</button>
+        ${i > 0 ? `<button class="btn-ghost" onclick="moveItem(data.occasions,${i},-1);renderOccasionsList();markChanged()">↑</button>` : ''}
+        ${i < data.occasions.length - 1 ? `<button class="btn-ghost" onclick="moveItem(data.occasions,${i},1);renderOccasionsList();markChanged()">↓</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openOccasionModal(editIdx) {
+  document.getElementById('occ-modal-title').textContent = editIdx !== undefined ? 'Editar Ocasión' : 'Nueva Ocasión';
+  document.getElementById('occ-icon').value = editIdx !== undefined ? data.occasions[editIdx].icon : '';
+  document.getElementById('occ-label').value = editIdx !== undefined ? data.occasions[editIdx].label : '';
+  document.getElementById('occ-desc').value = editIdx !== undefined ? data.occasions[editIdx].desc : '';
+  document.getElementById('occ-editing-id').value = editIdx !== undefined ? editIdx : '';
+  openModal('occasion-modal');
+}
+
+function editOccasion(i) { openOccasionModal(i); }
+
+function saveOccasion() {
+  const editId = document.getElementById('occ-editing-id').value;
+  const occ = {
+    icon: document.getElementById('occ-icon').value.trim(),
+    label: document.getElementById('occ-label').value.trim(),
+    desc: document.getElementById('occ-desc').value.trim()
+  };
+  if (!occ.label) { alert('La etiqueta es obligatoria'); return; }
+  if (editId !== '') { data.occasions[parseInt(editId)] = occ; }
+  else { data.occasions.push(occ); }
+  renderOccasionsList(); markChanged(); closeModal('occasion-modal');
+  showAlert('✅ Ocasión guardada.', 'success');
+}
+
+function deleteOccasion(i) { if (confirm('¿Eliminar esta ocasión?')) { data.occasions.splice(i, 1); renderOccasionsList(); markChanged(); } }
+
+// ==================== SEASONAL ====================
+function renderSeasonalList() {
+  const list = document.getElementById('seasonal-list');
+  list.innerHTML = data.seasonal.map((s, i) => `
+    <div class="sortable-item">
+      <span class="drag-handle">⠿</span>
+      <span style="font-size:1.3rem">${s.emoji || s.icon || '🌿'}</span>
+      <div class="item-content">
+        <strong>${s.name}</strong>
+      </div>
+      <div class="item-actions">
+        <button class="btn-ghost" onclick="editSeasonal(${i})">✏️</button>
+        <button class="btn-ghost" onclick="deleteSeasonal(${i})">🗑</button>
+        ${i > 0 ? `<button class="btn-ghost" onclick="moveItem(data.seasonal,${i},-1);renderSeasonalList();markChanged()">↑</button>` : ''}
+        ${i < data.seasonal.length - 1 ? `<button class="btn-ghost" onclick="moveItem(data.seasonal,${i},1);renderSeasonalList();markChanged()">↓</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openSeasonalModal(editIdx) {
+  document.getElementById('sea-modal-title').textContent = editIdx !== undefined ? 'Editar Flor' : 'Nueva Flor de Temporada';
+  document.getElementById('sea-name').value = editIdx !== undefined ? data.seasonal[editIdx].name : '';
+  document.getElementById('sea-emoji').value = editIdx !== undefined ? (data.seasonal[editIdx].emoji || data.seasonal[editIdx].icon || '') : '';
+  document.getElementById('sea-editing-id').value = editIdx !== undefined ? editIdx : '';
+  openModal('seasonal-modal');
+}
+
+function editSeasonal(i) { openSeasonalModal(i); }
+
+function saveSeasonal() {
+  const editId = document.getElementById('sea-editing-id').value;
+  const item = {
+    name: document.getElementById('sea-name').value.trim(),
+    emoji: document.getElementById('sea-emoji').value.trim()
+  };
+  if (!item.name) { alert('El nombre es obligatorio'); return; }
+  if (editId !== '') { data.seasonal[parseInt(editId)] = item; }
+  else { data.seasonal.push(item); }
+  renderSeasonalList(); markChanged(); closeModal('seasonal-modal');
+  showAlert('✅ Flor de temporada guardada.', 'success');
+}
+
+function deleteSeasonal(i) { if (confirm('¿Eliminar?')) { data.seasonal.splice(i, 1); renderSeasonalList(); markChanged(); } }
+
+// ==================== SERVICES ====================
+function renderServicesGrid() {
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = data.services.map((s, i) => `
+    <div class="service-admin-card">
+      <div class="svc-icon">${s.icon || '✨'}</div>
+      <div class="svc-title">${s.title}</div>
+      <div class="svc-desc">${s.desc}</div>
+      <div style="margin-top:.8rem;display:flex;gap:.3rem;justify-content:center">
+        <button class="btn btn-outline btn-sm" onclick="editService(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteService(${i})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openServiceModal(editIdx) {
+  document.getElementById('svc-modal-title').textContent = editIdx !== undefined ? 'Editar Servicio' : 'Nuevo Servicio';
+  document.getElementById('svc-icon').value = editIdx !== undefined ? data.services[editIdx].icon : '';
+  document.getElementById('svc-title').value = editIdx !== undefined ? data.services[editIdx].title : '';
+  document.getElementById('svc-desc').value = editIdx !== undefined ? data.services[editIdx].desc : '';
+  document.getElementById('svc-editing-id').value = editIdx !== undefined ? editIdx : '';
+  openModal('service-modal');
+}
+
+function editService(i) { openServiceModal(i); }
+
+function saveService() {
+  const editId = document.getElementById('svc-editing-id').value;
+  const svc = {
+    icon: document.getElementById('svc-icon').value.trim(),
+    title: document.getElementById('svc-title').value.trim(),
+    desc: document.getElementById('svc-desc').value.trim()
+  };
+  if (!svc.title) { alert('El título es obligatorio'); return; }
+  if (editId !== '') { data.services[parseInt(editId)] = svc; }
+  else { data.services.push(svc); }
+  renderServicesGrid(); markChanged(); closeModal('service-modal');
+  showAlert('✅ Servicio guardado.', 'success');
+}
+
+function deleteService(i) { if (confirm('¿Eliminar este servicio?')) { data.services.splice(i, 1); renderServicesGrid(); markChanged(); } }
+
+// ==================== HERO ====================
+function renderHeroSection() {
+  const s = data.site;
+  document.getElementById('site-hero-badge').value = s.hero_badge || '';
+  document.getElementById('site-wedding-text').value = s.wedding_text || '';
+  document.getElementById('site-wedding-cta').value = s.wedding_cta || '';
+  document.getElementById('site-top-bar').value = s.top_bar_text || '';
+
+  if (s.hero_image) {
+    const preview = document.getElementById('hero-img-preview');
+    preview.src = s.hero_image.startsWith('data:') ? s.hero_image : '../' + s.hero_image;
+    preview.style.display = 'block';
+    document.getElementById('hero-img-placeholder').style.display = 'none';
+  }
+
+  // Tags
+  renderHeroTags();
+
+  // Stats
+  renderStatsList();
+
+  // Listen for changes
+  ['site-hero-badge', 'site-wedding-text', 'site-wedding-cta', 'site-top-bar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', markChanged);
+  });
+}
+
+function renderHeroTags() {
+  const list = document.getElementById('hero-tags-list');
+  const tags = data.site.hero_tags || [];
+  list.innerHTML = tags.map((t, i) => `
+    <span class="tag-item">
+      ${t}
+      <span class="tag-remove" onclick="removeHeroTag(${i})">×</span>
+    </span>
+  `).join('');
+}
+
+function addHeroTag() {
+  const input = document.getElementById('hero-tag-input');
+  const val = input.value.trim();
+  if (!val) return;
+  if (!data.site.hero_tags) data.site.hero_tags = [];
+  data.site.hero_tags.push(val);
+  input.value = '';
+  renderHeroTags(); markChanged();
+}
+
+function removeHeroTag(i) {
+  data.site.hero_tags.splice(i, 1);
+  renderHeroTags(); markChanged();
+}
+
+function renderStatsList() {
+  const list = document.getElementById('stats-list');
+  const stats = data.site.about_stats || [];
+  list.innerHTML = stats.map((s, i) => `
+    <div class="sortable-item">
+      <div class="item-content">
+        <strong style="font-size:1.1rem;color:var(--primary)">${s.num}</strong>
+        <small>${s.label}</small>
+      </div>
+      <div class="item-actions">
+        <button class="btn-ghost" onclick="editStat(${i})">✏️</button>
+        <button class="btn-ghost" onclick="removeStat(${i})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addStat() {
+  const num = document.getElementById('stat-num-input').value.trim();
+  const label = document.getElementById('stat-label-input').value.trim();
+  if (!num || !label) return;
+  if (!data.site.about_stats) data.site.about_stats = [];
+  data.site.about_stats.push({ num, label });
+  document.getElementById('stat-num-input').value = '';
+  document.getElementById('stat-label-input').value = '';
+  renderStatsList(); markChanged();
+}
+
+function editStat(i) {
+  const s = data.site.about_stats[i];
+  const num = prompt('Número:', s.num);
+  if (num === null) return;
+  const label = prompt('Etiqueta:', s.label);
+  if (label === null) return;
+  data.site.about_stats[i] = { num: num.trim(), label: label.trim() };
+  renderStatsList(); markChanged();
+}
+
+function removeStat(i) {
+  data.site.about_stats.splice(i, 1);
+  renderStatsList(); markChanged();
+}
+
+// ==================== NAVIGATION ====================
+function renderNavLinksSection() {
+  const list = document.getElementById('nav-links-list');
+  const links = data.site.nav_links || [];
+  list.innerHTML = links.map((l, i) => `
+    <div class="sortable-item">
+      <span class="drag-handle">⠿</span>
+      <div class="item-content">
+        <strong>${l.label}</strong>
+        <small>${l.href}</small>
+      </div>
+      <div class="item-actions">
+        <button class="btn-ghost" onclick="editNavLink(${i})">✏️</button>
+        <button class="btn-ghost" onclick="deleteNavLink(${i})">🗑</button>
+        ${i > 0 ? `<button class="btn-ghost" onclick="moveItem(data.site.nav_links,${i},-1);renderNavLinksSection();markChanged()">↑</button>` : ''}
+        ${i < links.length - 1 ? `<button class="btn-ghost" onclick="moveItem(data.site.nav_links,${i},1);renderNavLinksSection();markChanged()">↓</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function addNavLink() {
+  const label = document.getElementById('nav-label-input').value.trim();
+  const href = document.getElementById('nav-href-input').value.trim();
+  if (!label || !href) return;
+  if (!data.site.nav_links) data.site.nav_links = [];
+  data.site.nav_links.push({ label, href });
+  document.getElementById('nav-label-input').value = '';
+  document.getElementById('nav-href-input').value = '';
+  renderNavLinksSection(); markChanged();
+}
+
+function editNavLink(i) {
+  const l = data.site.nav_links[i];
+  const label = prompt('Texto del enlace:', l.label);
+  if (label === null) return;
+  const href = prompt('URL / Ancla:', l.href);
+  if (href === null) return;
+  data.site.nav_links[i] = { label: label.trim(), href: href.trim() };
+  renderNavLinksSection(); markChanged();
+}
+
+function deleteNavLink(i) {
+  if (confirm('¿Eliminar este enlace?')) {
+    data.site.nav_links.splice(i, 1);
+    renderNavLinksSection(); markChanged();
+  }
+}
+
+// ==================== SITE FORM ====================
+function renderSiteForm() {
+  const s = data.site;
+  document.getElementById('site-name').value = s.name || '';
+  document.getElementById('site-tagline').value = s.tagline || '';
+  document.getElementById('site-hero-title').value = s.hero_title || '';
+  document.getElementById('site-hero-subtitle').value = s.hero_subtitle || '';
+  document.getElementById('site-address').value = s.address || '';
+  document.getElementById('site-phone').value = s.phone || '';
+  document.getElementById('site-whatsapp').value = s.whatsapp || '';
+  document.getElementById('site-email').value = s.email || '';
+  document.getElementById('site-instagram').value = s.instagram || '';
+  document.getElementById('site-hours').value = s.hours || '';
+  document.getElementById('site-delivery').value = s.delivery_info || '';
+  document.getElementById('site-about-name').value = s.about_name || '';
+  document.getElementById('site-about-text').value = s.about_text || '';
+  if (s.about_image) {
+    const preview = document.getElementById('about-img-preview');
+    preview.src = s.about_image.startsWith('data:') ? s.about_image : '../' + s.about_image;
+    preview.style.display = 'block';
+    document.getElementById('about-img-placeholder').style.display = 'none';
+  }
+  document.querySelectorAll('#panel-site input, #panel-site textarea, #panel-site select')
+    .forEach(el => el.addEventListener('input', markChanged));
+}
+
+function collectSiteForm() {
+  const s = data.site;
+  s.name = document.getElementById('site-name').value;
+  s.tagline = document.getElementById('site-tagline').value;
+  s.hero_title = document.getElementById('site-hero-title').value;
+  s.hero_subtitle = document.getElementById('site-hero-subtitle').value;
+  s.address = document.getElementById('site-address').value;
+  s.phone = document.getElementById('site-phone').value;
+  s.whatsapp = document.getElementById('site-whatsapp').value;
+  s.email = document.getElementById('site-email').value;
+  s.instagram = document.getElementById('site-instagram').value;
+  s.hours = document.getElementById('site-hours').value;
+  s.delivery_info = document.getElementById('site-delivery').value;
+  s.about_name = document.getElementById('site-about-name').value;
+  s.about_text = document.getElementById('site-about-text').value;
+  if (aboutImageDataUrl) s.about_image = aboutImageDataUrl;
+
+  // Hero data
+  s.hero_badge = document.getElementById('site-hero-badge').value;
+  s.wedding_text = document.getElementById('site-wedding-text').value;
+  s.wedding_cta = document.getElementById('site-wedding-cta').value;
+  s.top_bar_text = document.getElementById('site-top-bar').value;
+  if (heroImageDataUrl) s.hero_image = heroImageDataUrl;
+}
+
+// ==================== TESTIMONIALS ====================
+function renderTestimonialsList() {
+  const list = document.getElementById('testimonials-list');
+  list.innerHTML = data.testimonials.map((t, i) => `
+    <div class="card" style="display:flex;gap:1rem;align-items:flex-start">
+      <div style="font-size:1.8rem">⭐</div>
+      <div style="flex:1">
+        <strong>${t.name}</strong>
+        <span style="margin-left:.5rem;font-size:.75rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.3px">via ${t.source}</span>
+        <div style="color:var(--accent);margin:.3rem 0;font-size:.85rem">${'★'.repeat(t.stars)}</div>
+        <p style="font-size:.85rem;color:var(--text-light);font-style:italic">${t.text}</p>
+      </div>
+      <div style="display:flex;gap:.4rem">
+        <button class="btn btn-outline btn-sm" onclick="editTestimonial(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTestimonial(${i})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewTestimonialModal() {
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-text').value = '';
+  document.getElementById('t-stars').value = '5';
+  document.getElementById('t-source').value = 'Google';
+  document.getElementById('t-editing-id').value = '';
+  openModal('testimonial-modal');
+}
+
+function editTestimonial(i) {
+  const t = data.testimonials[i];
+  document.getElementById('t-name').value = t.name;
+  document.getElementById('t-text').value = t.text;
+  document.getElementById('t-stars').value = t.stars;
+  document.getElementById('t-source').value = t.source;
+  document.getElementById('t-editing-id').value = i;
+  openModal('testimonial-modal');
+}
+
+function saveTestimonial() {
+  const t = {
+    name: document.getElementById('t-name').value,
+    text: document.getElementById('t-text').value,
+    stars: parseInt(document.getElementById('t-stars').value),
+    source: document.getElementById('t-source').value || 'Google'
+  };
+  const editId = document.getElementById('t-editing-id').value;
+  if (editId !== '') data.testimonials[parseInt(editId)] = t;
+  else data.testimonials.push(t);
+  renderTestimonialsList(); markChanged(); closeModal('testimonial-modal');
+}
+
+function deleteTestimonial(i) { if (confirm('¿Eliminar esta opinión?')) { data.testimonials.splice(i, 1); renderTestimonialsList(); markChanged(); } }
+
+// ==================== SAVE / EXPORT ====================
+function saveAll() {
+  collectSiteForm();
+  hasChanges = false;
+  document.getElementById('save-bar').classList.remove('visible');
+  showAlert('✅ Cambios guardados en memoria. Descarga el JSON para aplicarlos.', 'success');
+}
+
+function downloadJSON() {
+  collectSiteForm();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'data.json'; a.click();
+  URL.revokeObjectURL(url);
+  showAlert('✅ data.json descargado. Reemplaza el archivo en tu web.', 'success');
+}
+
+function discardChanges() { if (confirm('¿Descartar todos los cambios?')) { location.reload(); } }
+
+function markChanged() {
+  hasChanges = true;
+  const count = document.getElementById('change-count');
+  count.textContent = parseInt(count.textContent) + 1;
+  document.getElementById('save-bar').classList.add('visible');
+}
+
+// ==================== IMAGE HANDLERS ====================
+function previewProdImg(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    prodImageDataUrl = e.target.result;
+    const preview = document.getElementById('prod-img-preview');
+    preview.src = prodImageDataUrl; preview.style.display = 'block';
+    document.getElementById('prod-img-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewAboutImg(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    aboutImageDataUrl = e.target.result;
+    const preview = document.getElementById('about-img-preview');
+    preview.src = aboutImageDataUrl; preview.style.display = 'block';
+    document.getElementById('about-img-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewHeroImg(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    heroImageDataUrl = e.target.result;
+    const preview = document.getElementById('hero-img-preview');
+    preview.src = heroImageDataUrl; preview.style.display = 'block';
+    document.getElementById('hero-img-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetProdImgPreview() {
+  prodImageDataUrl = null;
+  document.getElementById('prod-img-preview').style.display = 'none';
+  document.getElementById('prod-img-placeholder').style.display = 'block';
+  document.getElementById('prod-img-input').value = '';
+}
+
+// ==================== UTILS ====================
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+function moveItem(arr, i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+}
+
+function showAlert(msg, type = 'info') {
+  const a = document.getElementById('main-alert');
+  a.className = `alert alert-${type}`;
+  a.innerHTML = `${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'} <span>${msg}</span>`;
+  setTimeout(() => { a.className = 'alert alert-info'; a.innerHTML = 'ℹ️ <span>Panel listo.</span>'; }, 4000);
+}
+
+init();
+</script>
+</body>
+</html>
