@@ -1,360 +1,298 @@
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.app{display:flex;min-height:600px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
-.sidebar{width:180px;border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);padding:1rem 0;flex-shrink:0}
-.sidebar-logo{padding:0.5rem 1rem 1.5rem;font-size:15px;font-weight:500;color:var(--color-text-primary)}
-.sidebar-logo span{color:#8B1A1A}
-.nav-item{display:flex;align-items:center;gap:8px;padding:8px 1rem;font-size:14px;cursor:pointer;color:var(--color-text-secondary);border-left:2px solid transparent;transition:all .15s}
-.nav-item:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
-.nav-item.active{background:var(--color-background-primary);color:var(--color-text-primary);border-left-color:#8B1A1A}
-.nav-item i{font-size:16px}
-.main{flex:1;overflow:auto}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:0.5px solid var(--color-border-tertiary)}
-.topbar h2{font-size:16px;font-weight:500}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;font-size:13px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-primary);font-family:var(--font-sans)}
-.btn:hover{background:var(--color-background-secondary)}
-.btn-primary{background:#8B1A1A;color:#fff;border-color:#8B1A1A}
-.btn-primary:hover{background:#721515}
-.btn-danger{background:var(--color-background-danger);color:var(--color-text-danger);border-color:var(--color-border-danger)}
-.content{padding:1.25rem}
-.product-grid{display:grid;gap:10px}
-.product-row{display:grid;grid-template-columns:1fr 80px 90px 80px auto;gap:8px;align-items:center;padding:10px 12px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
-.product-name{font-size:14px;font-weight:500}
-.product-cat{font-size:12px;color:var(--color-text-secondary)}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
-.badge.bouquets{background:#FFF0E6;color:#8B3A1A}
-.badge.premium{background:#F0EEF9;color:#4A3A99}
-.badge.wedding{background:#FBE9EF;color:#8B1A3A}
-.badge.gifts{background:#E6F4EC;color:#1A6B3A}
-.form-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:10}
-.form-card{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:1.5rem;width:480px;max-height:80vh;overflow-y:auto;border:0.5px solid var(--color-border-tertiary)}
-.form-card h3{font-size:15px;font-weight:500;margin-bottom:1rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.form-group{margin-bottom:12px}
-.form-group label{display:block;font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
-.form-group input,.form-group select,.form-group textarea{width:100%;font-family:var(--font-sans);font-size:14px}
-.form-group textarea{height:60px;resize:vertical}
-.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)}
-.section-tabs{display:flex;gap:0;margin-bottom:1rem;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden}
-.tab{padding:7px 14px;font-size:13px;cursor:pointer;background:transparent;border:none;color:var(--color-text-secondary);font-family:var(--font-sans);flex:1;text-align:center}
-.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
-.site-form{display:grid;gap:12px}
-.avail-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px}
-.toggle{width:36px;height:20px;background:var(--color-border-secondary);border-radius:10px;position:relative;transition:background .2s}
-.toggle.on{background:#8B1A1A}
-.toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
-.toggle.on::after{transform:translateX(16px)}
-.export-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;font-size:13px;color:var(--color-text-secondary);margin-top:1rem}
-.seasonal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem}
-.seasonal-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px}
-.seasonal-item input{flex:1;font-size:13px;font-family:var(--font-sans)}
-.emoji-input{width:40px;text-align:center}
-</style>
-
-<div style="position:relative" id="app-root">
-<div class="app">
-  <div class="sidebar">
-    <div class="sidebar-logo">✿ <span>Parlem</span> Admin</div>
-    <div class="nav-item active" onclick="showPage('products')" id="nav-products">
-      <i class="ti ti-flower" aria-hidden="true"></i> Productos
-    </div>
-    <div class="nav-item" onclick="showPage('seasonal')" id="nav-seasonal">
-      <i class="ti ti-calendar" aria-hidden="true"></i> Temporada
-    </div>
-    <div class="nav-item" onclick="showPage('site')" id="nav-site">
-      <i class="ti ti-settings" aria-hidden="true"></i> Configuración
-    </div>
-    <div class="nav-item" onclick="showPage('export')" id="nav-export">
-      <i class="ti ti-download" aria-hidden="true"></i> Exportar
-    </div>
-  </div>
-
-  <div class="main">
-    <div id="page-products">
-      <div class="topbar">
-        <h2>Productos</h2>
-        <button class="btn btn-primary" onclick="openForm()"><i class="ti ti-plus"></i> Nuevo producto</button>
-      </div>
-      <div class="content">
-        <div class="section-tabs">
-          <div class="tab active" onclick="filterTab('all',this)">Todos</div>
-          <div class="tab" onclick="filterTab('bouquets',this)">Ramos</div>
-          <div class="tab" onclick="filterTab('premium',this)">Premium</div>
-          <div class="tab" onclick="filterTab('wedding',this)">Bodas</div>
-          <div class="tab" onclick="filterTab('gifts',this)">Regalos</div>
-        </div>
-        <div class="product-grid" id="product-list"></div>
-      </div>
-    </div>
-
-    <div id="page-seasonal" style="display:none">
-      <div class="topbar">
-        <h2>Flores de temporada</h2>
-        <button class="btn btn-primary" onclick="addSeasonal()"><i class="ti ti-plus"></i> Añadir</button>
-      </div>
-      <div class="content">
-        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:.5rem">Actualiza las flores disponibles según la estación del año.</p>
-        <div class="seasonal-grid" id="seasonal-list"></div>
-      </div>
-    </div>
-
-    <div id="page-site" style="display:none">
-      <div class="topbar"><h2>Configuración del sitio</h2></div>
-      <div class="content">
-        <div class="site-form" id="site-form"></div>
-      </div>
-    </div>
-
-    <div id="page-export" style="display:none">
-      <div class="topbar"><h2>Exportar</h2></div>
-      <div class="content">
-        <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem">Descarga el archivo <code>data.json</code> actualizado y súbelo a GitHub para actualizar la web.</p>
-        <button class="btn btn-primary" onclick="exportJSON()" style="font-size:14px;padding:10px 20px">
-          <i class="ti ti-download"></i> Descargar data.json
-        </button>
-        <div class="export-box" id="export-preview" style="margin-top:1rem;font-family:var(--font-mono);font-size:11px;max-height:300px;overflow:auto;white-space:pre"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="form-overlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:10">
-  <div class="form-card">
-    <h3 id="form-title">Nuevo producto</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input id="f-name" type="text" placeholder="Ramo Primavera">
-      </div>
-      <div class="form-group">
-        <label>Categoría</label>
-        <select id="f-cat">
-          <option value="bouquets">Ramos del día</option>
-          <option value="premium">Premium</option>
-          <option value="wedding">Bodas</option>
-          <option value="gifts">Regalos</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Descripción</label>
-      <textarea id="f-desc" placeholder="Describe el ramo..."></textarea>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Precio desde (€)</label>
-        <input id="f-price" type="number" placeholder="25">
-      </div>
-      <div class="form-group">
-        <label>Precio hasta (€, opcional)</label>
-        <input id="f-price-max" type="number" placeholder="45">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Badge (opcional)</label>
-        <input id="f-badge" type="text" placeholder="Más vendido">
-      </div>
-      <div class="form-group">
-        <label>Imagen URL (opcional)</label>
-        <input id="f-image" type="text" placeholder="https://...">
-      </div>
-    </div>
-    <div class="avail-toggle" onclick="toggleAvail()">
-      <div class="toggle on" id="avail-toggle"></div>
-      <span id="avail-label">Disponible</span>
-    </div>
-    <div class="form-actions">
-      <button class="btn" onclick="closeForm()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveProduct()">Guardar</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<script>
-const defaultData = {
-  site:{name:"Parlem Flores",tagline:"Floristería artesanal en Valencia.",hero_title:"Cada flor cuenta una historia",hero_subtitle:"Creaciones florales hechas a mano cada día en Valencia.",hero_image:"",about_name:"Isabel",about_text:"Parlem Flores nació de mi pasión por las flores...",address:"Eixample, Valencia",phone:"+34 600 000 000",whatsapp:"34600000000",email:"hola@parlemflores.com",instagram:"parlemflores",hours:"Lun–Sáb: 9:00–20:00 · Dom: 10:00–15:00",delivery_info:"Entrega el mismo día en Valencia ciudad",top_bar_text:"Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia",nav_links:[{label:"Tienda",href:"#productos"},{label:"Bodas",href:"#bodas"},{label:"Historia",href:"#nosotros"},{label:"Contacto",href:"#contacto"}],hero_badge:"✦ Floristería artesanal · Valencia",hero_tags:["Valencia ciudad","Entrega el mismo día","Flores frescas diarias","Bizum · Efectivo · Transferencia"],services:[{icon:"🌸",title:"Flores del mercado",desc:"Seleccionamos personalmente las flores más frescas cada mañana"},{icon:"✂️",title:"Hecho a mano",desc:"Cada composición es única, creada con dedicación"},{icon:"🚚",title:"Entrega hoy",desc:"Pedidos antes de las 17:00, entrega el mismo día"},{icon:"💍",title:"Bodas y eventos",desc:"Diseñamos la decoración floral completa para tu celebración"}],wedding_text:"Cada boda es única y merece flores que lo sean también.",about_stats:[{num:"5★",label:"Google reviews"},{num:"100%",label:"Artesanal"},{num:"0",label:"Flores importadas"}]},
-  occasions:[{icon:"🎂",label:"Cumpleaños",desc:"Sorprende en su día"},{icon:"💕",label:"Aniversario",desc:"Celebra el amor"},{icon:"👶",label:"Nacimiento",desc:"Dale la bienvenida"},{icon:"💐",label:"Agradecimiento",desc:"Di gracias con flores"},{icon:"🏠",label:"Hogar",desc:"Flores para tu espacio"}],
-  seasonal:[{name:"Tulipanes",emoji:"🌷"},{name:"Peonías",emoji:"🌸"},{name:"Rosas",emoji:"🌹"},{name:"Anémonas",emoji:"🌺"},{name:"Lisianthus",emoji:"🤍"},{name:"Hortensias",emoji:"💜"}],
-  categories:[{id:"bouquets",name:"Ramos del Día",icon:"💐"},{id:"premium",name:"Composiciones Premium",icon:"✨"},{id:"wedding",name:"Bodas y Eventos",icon:"💍"},{id:"gifts",name:"Regalos",icon:"🎁"}],
-  products:[{id:1,category:"bouquets",name:"Ramo Primavera",description:"Rosas, peonías y eucalipto. Tonos pastel ideales para cualquier ocasión.",price:28,price_max:45,price_label:"",image:"",badge:"Más vendido",available:true},{id:2,category:"bouquets",name:"Ramo Romance",description:"Rosas rojas y mimosa. El clásico atemporal para aniversarios.",price:35,price_max:55,price_label:"",image:"",badge:"",available:true},{id:3,category:"bouquets",name:"Ramo Silvestre",description:"Flores silvestres de temporada. Natural, fresco y lleno de personalidad.",price:22,price_max:38,price_label:"",image:"",badge:"Temporada",available:true},{id:4,category:"bouquets",name:"Ramo Blanco Puro",description:"Lisianthus blanco, gypsophila y verdes. Elegancia pura.",price:30,price_max:50,price_label:"",image:"",badge:"",available:true},{id:5,category:"premium",name:"Centro Premium",description:"Composición de gran formato con las flores más selectas.",price:60,price_max:120,price_label:"Según tamaño",image:"",badge:"Premium",available:true},{id:6,category:"premium",name:"Jarrón Artístico",description:"Composición en jarrón cerámica incluido.",price:75,price_max:0,price_label:"",image:"",badge:"",available:true},{id:7,category:"wedding",name:"Ramo de Novia Clásico",description:"Rosas garden y hortensias. Personalizamos cada detalle.",price:120,price_max:250,price_label:"Según diseño",image:"",badge:"Boda",available:true},{id:8,category:"wedding",name:"Decoración Completa",description:"Centros de mesa, arco floral, pétalos y detalles.",price:0,price_max:0,price_label:"",image:"",badge:"Consultar",available:true},{id:9,category:"gifts",name:"Caja de Flores",description:"Flores premium presentadas en caja elegante.",price:45,price_max:80,price_label:"",image:"",badge:"Regalo ideal",available:true},{id:10,category:"gifts",name:"Suscripción Semanal",description:"Recibe un ramo fresco cada semana en tu casa.",price:55,price_max:0,price_label:"/semana",image:"",badge:"Nuevo",available:true}],
-  testimonials:[{name:"María G.",text:"Pedí un ramo para mi madre y quedó preciosa.",stars:5,source:"Google"},{name:"Carlos M.",text:"Isabel decoró nuestra boda y fue un sueño.",stars:5,source:"Instagram"},{name:"Ana L.",text:"La entrega fue puntual y el ramo llegó en perfecto estado.",stars:5,source:"Google"}]
-};
-
-let data = JSON.parse(JSON.stringify(defaultData));
-let editingId = null;
-let availVal = true;
-let currentFilter = 'all';
-
-function showPage(p){
-  ['products','seasonal','site','export'].forEach(x=>{
-    document.getElementById('page-'+x).style.display = x===p?'':'none';
-    document.getElementById('nav-'+x).classList.toggle('active', x===p);
-  });
-  if(p==='seasonal') renderSeasonal();
-  if(p==='site') renderSiteForm();
-  if(p==='export') renderExport();
+{
+  "site": {
+    "name": "Parlem Flores",
+    "tagline": "Floristería artesanal en Valencia.",
+    "hero_title": "Cada flor cuenta una historia",
+    "hero_subtitle": "Creaciones florales hechas a mano cada día en Valencia.",
+    "hero_image": "",
+    "about_name": "Isabel",
+    "about_text": "Parlem Flores nació de mi pasión por las flores...",
+    "address": "Eixample, Valencia",
+    "phone": "+34 600 000 000",
+    "whatsapp": "34600000000",
+    "email": "hola@parlemflores.com",
+    "instagram": "parlemflores",
+    "hours": "Lun–Sáb: 9:00–20:00 · Dom: 10:00–15:00",
+    "delivery_info": "Entrega el mismo día en Valencia ciudad",
+    "top_bar_text": "Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia",
+    "nav_links": [
+      {
+        "label": "Tienda",
+        "href": "#productos"
+      },
+      {
+        "label": "Bodas",
+        "href": "#bodas"
+      },
+      {
+        "label": "Historia",
+        "href": "#nosotros"
+      },
+      {
+        "label": "Contacto",
+        "href": "#contacto"
+      }
+    ],
+    "hero_badge": "✦ Floristería artesanal · Valencia",
+    "hero_tags": [
+      "Valencia ciudad",
+      "Entrega el mismo día",
+      "Flores frescas diarias",
+      "Bizum · Efectivo · Transferencia"
+    ],
+    "services": [
+      {
+        "icon": "🌸",
+        "title": "Flores del mercado",
+        "desc": "Seleccionamos personalmente las flores más frescas cada mañana"
+      },
+      {
+        "icon": "✂️",
+        "title": "Hecho a mano",
+        "desc": "Cada composición es única, creada con dedicación"
+      },
+      {
+        "icon": "🚚",
+        "title": "Entrega hoy",
+        "desc": "Pedidos antes de las 17:00, entrega el mismo día"
+      },
+      {
+        "icon": "💍",
+        "title": "Bodas y eventos",
+        "desc": "Diseñamos la decoración floral completa para tu celebración"
+      }
+    ],
+    "wedding_text": "Cada boda es única y merece flores que lo sean también.",
+    "about_stats": [
+      {
+        "num": "5★",
+        "label": "Google reviews"
+      },
+      {
+        "num": "100%",
+        "label": "Artesanal"
+      },
+      {
+        "num": "0",
+        "label": "Flores importadas"
+      }
+    ]
+  },
+  "occasions": [
+    {
+      "icon": "🎂",
+      "label": "Cumpleaños",
+      "desc": "Sorprende en su día"
+    },
+    {
+      "icon": "💕",
+      "label": "Aniversario",
+      "desc": "Celebra el amor"
+    },
+    {
+      "icon": "👶",
+      "label": "Nacimiento",
+      "desc": "Dale la bienvenida"
+    },
+    {
+      "icon": "💐",
+      "label": "Agradecimiento",
+      "desc": "Di gracias con flores"
+    },
+    {
+      "icon": "🏠",
+      "label": "Hogar",
+      "desc": "Flores para tu espacio"
+    }
+  ],
+  "seasonal": [
+    {
+      "name": "Tulipanes",
+      "emoji": "🌷"
+    },
+    {
+      "name": "Peonías",
+      "emoji": "🌸"
+    },
+    {
+      "name": "Rosas",
+      "emoji": "🌹"
+    },
+    {
+      "name": "Anémonas",
+      "emoji": "🌺"
+    },
+    {
+      "name": "Lisianthus",
+      "emoji": "🤍"
+    },
+    {
+      "name": "Hortensias",
+      "emoji": "💜"
+    }
+  ],
+  "categories": [
+    {
+      "id": "bouquets",
+      "name": "Ramos del Día",
+      "icon": "💐"
+    },
+    {
+      "id": "premium",
+      "name": "Composiciones Premium",
+      "icon": "✨"
+    },
+    {
+      "id": "wedding",
+      "name": "Bodas y Eventos",
+      "icon": "💍"
+    },
+    {
+      "id": "gifts",
+      "name": "Regalos",
+      "icon": "🎁"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "category": "bouquets",
+      "name": "Ramo Primavera",
+      "description": "Rosas, peonías y eucalipto. Tonos pastel ideales para cualquier ocasión.",
+      "price": 28,
+      "price_max": 45,
+      "price_label": "",
+      "image": "",
+      "badge": "Más vendido",
+      "available": true
+    },
+    {
+      "id": 2,
+      "category": "bouquets",
+      "name": "Ramo Romance",
+      "description": "Rosas rojas y mimosa. El clásico atemporal para aniversarios.",
+      "price": 35,
+      "price_max": 55,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 3,
+      "category": "bouquets",
+      "name": "Ramo Silvestre",
+      "description": "Flores silvestres de temporada. Natural, fresco y lleno de personalidad.",
+      "price": 22,
+      "price_max": 38,
+      "price_label": "",
+      "image": "",
+      "badge": "Temporada",
+      "available": true
+    },
+    {
+      "id": 4,
+      "category": "bouquets",
+      "name": "Ramo Blanco Puro",
+      "description": "Lisianthus blanco, gypsophila y verdes. Elegancia pura.",
+      "price": 30,
+      "price_max": 50,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 5,
+      "category": "premium",
+      "name": "Centro Premium",
+      "description": "Composición de gran formato con las flores más selectas.",
+      "price": 60,
+      "price_max": 120,
+      "price_label": "Según tamaño",
+      "image": "",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 6,
+      "category": "premium",
+      "name": "Jarrón Artístico",
+      "description": "Composición en jarrón cerámica incluido.",
+      "price": 75,
+      "price_max": 0,
+      "price_label": "",
+      "image": "",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 7,
+      "category": "wedding",
+      "name": "Ramo de Novia Clásico",
+      "description": "Rosas garden y hortensias. Personalizamos cada detalle.",
+      "price": 120,
+      "price_max": 250,
+      "price_label": "Según diseño",
+      "image": "",
+      "badge": "Boda",
+      "available": true
+    },
+    {
+      "id": 8,
+      "category": "wedding",
+      "name": "Decoración Completa",
+      "description": "Centros de mesa, arco floral, pétalos y detalles.",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "image": "",
+      "badge": "Consultar",
+      "available": true
+    },
+    {
+      "id": 9,
+      "category": "gifts",
+      "name": "Caja de Flores",
+      "description": "Flores premium presentadas en caja elegante.",
+      "price": 45,
+      "price_max": 80,
+      "price_label": "",
+      "image": "",
+      "badge": "Regalo ideal",
+      "available": true
+    },
+    {
+      "id": 10,
+      "category": "gifts",
+      "name": "Suscripción Semanal",
+      "description": "Recibe un ramo fresco cada semana en tu casa.",
+      "price": 55,
+      "price_max": 0,
+      "price_label": "/semana",
+      "image": "",
+      "badge": "Nuevo",
+      "available": true
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "María G.",
+      "text": "Pedí un ramo para mi madre y quedó preciosa.",
+      "stars": 5,
+      "source": "Google"
+    },
+    {
+      "name": "Carlos M.",
+      "text": "Isabel decoró nuestra boda y fue un sueño.",
+      "stars": 5,
+      "source": "Instagram"
+    },
+    {
+      "name": "Ana L.",
+      "text": "La entrega fue puntual y el ramo llegó en perfecto estado.",
+      "stars": 5,
+      "source": "Google"
+    }
+  ]
 }
-
-function catLabel(c){return{bouquets:'Ramos',premium:'Premium',wedding:'Bodas',gifts:'Regalos'}[c]||c}
-
-function renderProducts(){
-  const list = document.getElementById('product-list');
-  const filtered = currentFilter==='all' ? data.products : data.products.filter(p=>p.category===currentFilter);
-  if(!filtered.length){list.innerHTML='<p style="font-size:13px;color:var(--color-text-secondary);padding:1rem">No hay productos en esta categoría.</p>';return;}
-  list.innerHTML = filtered.map(p=>`
-    <div class="product-row" style="${!p.available?'opacity:0.5':''}">
-      <div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-cat">${p.description.substring(0,60)}...</div>
-      </div>
-      <span class="badge ${p.category}">${catLabel(p.category)}</span>
-      <span style="font-size:13px">${p.price===0?'Consultar':'${p.price}€'+(p.price_max?'–${p.price_max}€':'')}</span>
-      <span style="font-size:12px;color:${p.available?'var(--color-text-success)':'var(--color-text-secondary)'}">${p.available?'Activo':'Oculto'}</span>
-      <div style="display:flex;gap:6px">
-        <button class="btn" onclick="openForm(${p.id})" style="padding:4px 10px"><i class="ti ti-edit" style="font-size:14px"></i></button>
-        <button class="btn btn-danger" onclick="deleteProduct(${p.id})" style="padding:4px 10px"><i class="ti ti-trash" style="font-size:14px"></i></button>
-      </div>
-    </div>
-  `).join('').replace(/\${p\.price}/g, p=>p).replace(/\$\{p\.(price|price_max)\}/g, '');
-  
-  list.innerHTML = filtered.map(p=>{
-    const priceStr = p.price===0 ? 'Consultar' : p.price+'€'+(p.price_max&&p.price_max>0?' – '+p.price_max+'€':'');
-    return `<div class="product-row" style="${!p.available?'opacity:0.5':''}">
-      <div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-cat">${p.description.substring(0,55)}...</div>
-      </div>
-      <span class="badge ${p.category}">${catLabel(p.category)}</span>
-      <span style="font-size:13px">${priceStr}</span>
-      <span style="font-size:12px;color:${p.available?'var(--color-text-success)':'var(--color-text-secondary)'}">${p.available?'Activo':'Oculto'}</span>
-      <div style="display:flex;gap:6px">
-        <button class="btn" onclick="openForm(${p.id})" style="padding:4px 10px"><i class="ti ti-edit" style="font-size:14px"></i></button>
-        <button class="btn btn-danger" onclick="deleteProduct(${p.id})" style="padding:4px 10px"><i class="ti ti-trash" style="font-size:14px"></i></button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function filterTab(cat, el){
-  currentFilter = cat;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderProducts();
-}
-
-function openForm(id){
-  editingId = id||null;
-  document.getElementById('form-title').textContent = id ? 'Editar producto' : 'Nuevo producto';
-  if(id){
-    const p = data.products.find(x=>x.id===id);
-    document.getElementById('f-name').value = p.name;
-    document.getElementById('f-cat').value = p.category;
-    document.getElementById('f-desc').value = p.description;
-    document.getElementById('f-price').value = p.price;
-    document.getElementById('f-price-max').value = p.price_max||'';
-    document.getElementById('f-badge').value = p.badge||'';
-    document.getElementById('f-image').value = p.image||'';
-    availVal = p.available;
-  } else {
-    ['f-name','f-desc','f-price','f-price-max','f-badge','f-image'].forEach(x=>document.getElementById(x).value='');
-    document.getElementById('f-cat').value='bouquets';
-    availVal=true;
-  }
-  updateToggle();
-  document.getElementById('form-overlay').style.display='flex';
-}
-
-function closeForm(){document.getElementById('form-overlay').style.display='none';}
-
-function toggleAvail(){availVal=!availVal;updateToggle();}
-function updateToggle(){
-  document.getElementById('avail-toggle').className='toggle'+(availVal?' on':'');
-  document.getElementById('avail-label').textContent=availVal?'Disponible':'Oculto en la web';
-}
-
-function saveProduct(){
-  const p = {
-    id: editingId || (Math.max(0,...data.products.map(x=>x.id))+1),
-    category: document.getElementById('f-cat').value,
-    name: document.getElementById('f-name').value,
-    description: document.getElementById('f-desc').value,
-    price: parseFloat(document.getElementById('f-price').value)||0,
-    price_max: parseFloat(document.getElementById('f-price-max').value)||0,
-    price_label: '',
-    image: document.getElementById('f-image').value,
-    badge: document.getElementById('f-badge').value,
-    available: availVal
-  };
-  if(editingId){
-    const i = data.products.findIndex(x=>x.id===editingId);
-    data.products[i]=p;
-  } else {
-    data.products.push(p);
-  }
-  closeForm();
-  renderProducts();
-}
-
-function deleteProduct(id){
-  if(confirm('¿Eliminar este producto?')){
-    data.products = data.products.filter(x=>x.id!==id);
-    renderProducts();
-  }
-}
-
-function renderSeasonal(){
-  const list = document.getElementById('seasonal-list');
-  list.innerHTML = data.seasonal.map((s,i)=>`
-    <div class="seasonal-item">
-      <input class="emoji-input" value="${s.emoji}" oninput="data.seasonal[${i}].emoji=this.value" style="width:36px;text-align:center">
-      <input value="${s.name}" oninput="data.seasonal[${i}].name=this.value" style="flex:1">
-      <button class="btn" onclick="data.seasonal.splice(${i},1);renderSeasonal()" style="padding:3px 8px"><i class="ti ti-x" style="font-size:13px"></i></button>
-    </div>
-  `).join('');
-}
-
-function addSeasonal(){
-  data.seasonal.push({name:'Nueva flor',emoji:'🌿'});
-  renderSeasonal();
-}
-
-function renderSiteForm(){
-  const f = document.getElementById('site-form');
-  const fields = [
-    {key:'name',label:'Nombre del negocio'},
-    {key:'tagline',label:'Tagline'},
-    {key:'phone',label:'Teléfono'},
-    {key:'whatsapp',label:'WhatsApp (sin +, ej: 34600000000)'},
-    {key:'instagram',label:'Instagram (sin @)'},
-    {key:'address',label:'Dirección'},
-    {key:'hours',label:'Horario'},
-    {key:'delivery_info',label:'Info de entrega'},
-    {key:'top_bar_text',label:'Texto barra superior'},
-  ];
-  f.innerHTML = fields.map(x=>`
-    <div class="form-group">
-      <label>${x.label}</label>
-      <input value="${data.site[x.key]||''}" oninput="data.site['${x.key}']=this.value">
-    </div>
-  `).join('');
-}
-
-function renderExport(){
-  const preview = document.getElementById('export-preview');
-  preview.textContent = JSON.stringify(data, null, 2).substring(0, 1500)+'...';
-}
-
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'data.json';
-  a.click();
-}
-
-renderProducts();
-</script>
