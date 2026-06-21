@@ -136,7 +136,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <h3 id="modal-title">Nuevo producto</h3>
     <div class="form-grid">
       <div><label>Nombre</label><input id="f-name"></div>
-      <div><label>Categoría</label><select id="f-cat"></select></div>
+      <div><label>Categoría</label><select id="f-cat" onchange="renderSubcategoryOptions()"></select></div>
+      <div class="wide" id="subcategory-field" style="display:none"><label>Subcategoría</label><select id="f-subcat"></select></div>
       <div class="wide"><label>Descripción</label><textarea id="f-desc"></textarea></div>
       <div><label>Precio desde</label><input id="f-price" type="number" min="0"></div>
       <div><label>Precio hasta</label><input id="f-pmax" type="number" min="0"></div>
@@ -234,15 +235,16 @@ function renderSummary(){
     <div class="stat"><strong>${missingPhotos}</strong><span>Sin foto</span></div>`;
 }
 function price(p){return p.price===0?"Consultar":`${p.price}€${p.price_max&&p.price_max>p.price?" - "+p.price_max+"€":""}${p.price_label?" "+p.price_label:""}`}
-function emoji(cat){return({"ramos-bouquets":"💐","centros-flores":"🌸","centros-cementerio":"🕊️","cestas-ramos-secos":"🧺","flores-preservadas":"🌹",jarrones:"🏺",plantas:"🪴",bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
+function emoji(cat){return({"ramos-bouquets":"💐","centros-flores":"🌸","centros-cementerio":"🕊️","cestas-ramos-secos":"🧺","flores-preservadas":"🌹",jarrones:"🏺",plantas:"🪴",evento:"💍",bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
 function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c.name:id}
+function subcatName(catId,subcatId){const c=(data.categories||[]).find(x=>x.id===catId);const s=(c?.subcategories||[]).find(x=>x.id===subcatId);return s?s.name:""}
 function renderProducts(){
   const byCat=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
   const items=searchTerm?byCat.filter(p=>`${p.name} ${p.description||""} ${p.badge||""}`.toLowerCase().includes(searchTerm)):byCat;
   document.getElementById("products").innerHTML=items.map(p=>`
     <div class="product" style="${p.available?"":"opacity:.55"}">
       <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:emoji(p.category)}</div>
-      <div><div class="pname">${p.name}</div><div class="pdesc">${p.description||""}</div><div class="meta"><span class="badge">${catName(p.category)}</span>${p.badge?`<span class="badge">${p.badge}</span>`:""}<span class="price">${price(p)}</span><span class="dot ${p.available?"":"off"}"></span></div></div>
+      <div><div class="pname">${p.name}</div><div class="pdesc">${p.description||""}</div><div class="meta"><span class="badge">${catName(p.category)}</span>${p.subcategory?`<span class="badge">${subcatName(p.category,p.subcategory)}</span>`:""}${p.badge?`<span class="badge">${p.badge}</span>`:""}<span class="price">${price(p)}</span><span class="dot ${p.available?"":"off"}"></span></div></div>
       <div class="actions"><button class="btn" onclick="openProduct(${p.id})">Editar</button><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Borrar</button></div>
     </div>`).join("")||'<p class="muted">No hay productos en esta categoría.</p>';
 }
@@ -252,10 +254,18 @@ function openProduct(id){
   const p=id?data.products.find(x=>x.id===id):{category:(data.categories||[])[0]?.id||"ramos-bouquets",name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
   ["name","desc","price","pmax","badge","plabel"].forEach(x=>document.getElementById("f-"+x).value="");
   document.getElementById("f-name").value=p.name||"";document.getElementById("f-cat").value=p.category||"ramos-bouquets";document.getElementById("f-desc").value=p.description||"";document.getElementById("f-price").value=p.price||"";document.getElementById("f-pmax").value=p.price_max||"";document.getElementById("f-badge").value=p.badge||"";document.getElementById("f-plabel").value=p.price_label||"";
+  renderSubcategoryOptions(p.subcategory||"");
   available=p.available!==false;updateToggle();
   const prev=document.getElementById("f-preview");prev.style.display=p.image?"block":"none";prev.src=p.image||"";
   document.getElementById("f-image").value="";
   document.getElementById("modal").classList.add("open");
+}
+function renderSubcategoryOptions(selected=""){
+  const catId=document.getElementById("f-cat").value;
+  const cat=(data.categories||[]).find(c=>c.id===catId);
+  const subs=cat?.subcategories||[];
+  document.getElementById("subcategory-field").style.display=subs.length?"block":"none";
+  document.getElementById("f-subcat").innerHTML=['<option value="">Sin subcategoría</option>',...subs.map(s=>`<option value="${s.id}" ${s.id===selected?"selected":""}>${s.name}</option>`)].join("");
 }
 function closeProduct(){document.getElementById("modal").classList.remove("open")}
 function toggleAvailable(){available=!available;updateToggle()}
@@ -276,7 +286,7 @@ async function saveProduct(){
     await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} photo`,content:await fileB64(pendingImage),branch})});
     image="/"+imgPath;
   }
-  const product={id:editingId||Math.max(0,...data.products.map(p=>p.id||0))+1,category:document.getElementById("f-cat").value,name,description:document.getElementById("f-desc").value.trim(),price:parseFloat(document.getElementById("f-price").value)||0,price_max:parseFloat(document.getElementById("f-pmax").value)||0,price_label:document.getElementById("f-plabel").value.trim(),image,badge:document.getElementById("f-badge").value.trim(),available};
+  const product={id:editingId||Math.max(0,...data.products.map(p=>p.id||0))+1,category:document.getElementById("f-cat").value,subcategory:document.getElementById("f-subcat").value||"",name,description:document.getElementById("f-desc").value.trim(),price:parseFloat(document.getElementById("f-price").value)||0,price_max:parseFloat(document.getElementById("f-pmax").value)||0,price_label:document.getElementById("f-plabel").value.trim(),image,badge:document.getElementById("f-badge").value.trim(),available};
   if(editingId){data.products[data.products.findIndex(p=>p.id===editingId)]=product}else data.products.push(product);
   closeProduct();renderSummary();renderProducts();setDirty(true);show("Producto guardado. Pulsa Publicar para subirlo.");
 }

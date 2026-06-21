@@ -48,6 +48,13 @@ collections:
               - { label: "ID", name: "id", widget: "string" }
               - { label: "Nombre", name: "name", widget: "string" }
               - { label: "Icono", name: "icon", widget: "string", required: false }
+              - label: "Subcategorías"
+                name: "subcategories"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Nombre", name: "name", widget: "string" }
           - label: "Productos"
             name: "products"
             widget: "list"
@@ -65,6 +72,19 @@ collections:
                   - { label: "Flores Preservadas", value: "flores-preservadas" }
                   - { label: "Jarrones", value: "jarrones" }
                   - { label: "Plantas", value: "plantas" }
+                  - { label: "Evento", value: "evento" }
+              - label: "Subcategoría"
+                name: "subcategory"
+                widget: "select"
+                required: false
+                options:
+                  - { label: "Sin subcategoría", value: "" }
+                  - { label: "Centros de mesa florales", value: "centros-mesa-florales" }
+                  - { label: "Ramo de Novia", value: "ramo-novia" }
+                  - { label: "Prendido para novio", value: "prendido-novio" }
+                  - { label: "Corsages de muñeca para damas de honor", value: "corsages-muneca-damas-honor" }
+                  - { label: "Decoración floral para coche nupcial", value: "decoracion-coche-nupcial" }
+                  - { label: "Decoración floral de suelo para ceremonia", value: "decoracion-suelo-ceremonia" }
               - { label: "Nombre", name: "name", widget: "string" }
               - { label: "Descripción", name: "description", widget: "text" }
               - { label: "Precio desde", name: "price", widget: "number", value_type: "float" }

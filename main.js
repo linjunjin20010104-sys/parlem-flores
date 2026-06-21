@@ -183,6 +183,7 @@ function renderProducts(catId) {
         </div>`;
     }
     const emoji = getProductEmoji(p.category);
+    const subcategoryName = p.subcategory ? getSubcategoryName(p.category, p.subcategory) : '';
     return `
     <div class="product-card" data-id="${p.id}">
       <div class="product-img">
@@ -191,6 +192,7 @@ function renderProducts(catId) {
       ${p.badge ? `<span class="product-badge ${badgeClass}">${p.badge}</span>` : ''}
       <div class="product-info">
         <div class="product-name">${p.name}</div>
+        ${subcategoryName ? `<div class="product-subcategory">${subcategoryName}</div>` : ''}
         <div class="product-desc">${p.description}</div>
         <div class="product-footer">
           ${priceHtml}
@@ -212,6 +214,7 @@ function getProductEmoji(cat) {
     'flores-preservadas': '🌹',
     jarrones: '🏺',
     plantas: '🪴',
+    evento: '💍',
     bouquets: '💐',
     wedding: '💍',
     gifts: '🎁',
@@ -220,6 +223,12 @@ function getProductEmoji(cat) {
     premium: '✨'
   };
   return map[cat] || '🌿';
+}
+
+function getSubcategoryName(catId, subcategoryId) {
+  const category = (siteData.categories || []).find(c => c.id === catId);
+  const subcategory = (category?.subcategories || []).find(s => s.id === subcategoryId);
+  return subcategory ? subcategory.name : '';
 }
 
 // ---- SERVICES ----

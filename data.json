@@ -21,10 +21,6 @@
         "href": "#productos"
       },
       {
-        "label": "Bodas",
-        "href": "#bodas"
-      },
-      {
         "label": "Historia",
         "href": "#nosotros"
       },
@@ -140,6 +136,37 @@
       "id": "plantas",
       "name": "Plantas",
       "icon": "🪴"
+    },
+    {
+      "id": "evento",
+      "name": "Evento",
+      "icon": "💍",
+      "subcategories": [
+        {
+          "id": "centros-mesa-florales",
+          "name": "Centros de mesa florales"
+        },
+        {
+          "id": "ramo-novia",
+          "name": "Ramo de Novia"
+        },
+        {
+          "id": "prendido-novio",
+          "name": "Prendido para novio"
+        },
+        {
+          "id": "corsages-muneca-damas-honor",
+          "name": "Corsages de muñeca para damas de honor"
+        },
+        {
+          "id": "decoracion-coche-nupcial",
+          "name": "Decoración floral para coche nupcial"
+        },
+        {
+          "id": "decoracion-suelo-ceremonia",
+          "name": "Decoración floral de suelo para ceremonia"
+        }
+      ]
     }
   ],
   "products": [
@@ -153,7 +180,8 @@
       "price_label": "",
       "image": "",
       "badge": "Más vendido",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 2,
@@ -165,7 +193,8 @@
       "price_label": "",
       "image": "",
       "badge": "",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 3,
@@ -177,7 +206,8 @@
       "price_label": "",
       "image": "",
       "badge": "Temporada",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 4,
@@ -189,7 +219,8 @@
       "price_label": "",
       "image": "",
       "badge": "",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 5,
@@ -201,7 +232,8 @@
       "price_label": "Según tamaño",
       "image": "",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 6,
@@ -213,7 +245,8 @@
       "price_label": "",
       "image": "",
       "badge": "",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 7,
@@ -225,7 +258,8 @@
       "price_label": "Según diseño",
       "image": "",
       "badge": "Boda",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 8,
@@ -237,7 +271,8 @@
       "price_label": "",
       "image": "",
       "badge": "Consultar",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 9,
@@ -249,7 +284,8 @@
       "price_label": "",
       "image": "",
       "badge": "Regalo ideal",
-      "available": true
+      "available": true,
+      "subcategory": ""
     },
     {
       "id": 10,
@@ -261,7 +297,8 @@
       "price_label": "/semana",
       "image": "",
       "badge": "Nuevo",
-      "available": true
+      "available": true,
+      "subcategory": ""
     }
   ],
   "testimonials": [
