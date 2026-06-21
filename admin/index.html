@@ -36,6 +36,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
 .head h2{font-size:22px}
 .muted{color:#7c7068;font-size:13px;line-height:1.5}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px}
+.stat strong{display:block;font-size:21px;color:#7f1f28;margin-bottom:2px}
+.stat span{font-size:12px;color:#75685f;font-weight:650}
+.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.search{width:min(340px,100%);background:white}
+.dirty{display:none;background:#fff3cd;color:#745500;border:1px solid #ead48a;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:750}
+.dirty.show{display:inline-flex}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .tab{border:1px solid #ddd1c7;background:white;border-radius:999px;padding:7px 13px;cursor:pointer;color:#655951}
 .tab.active{background:#7f1f28;color:white;border-color:#7f1f28}
@@ -88,13 +96,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <button class="nav" onclick="showPage('seasonal',this)">Temporada</button>
     <button class="nav" onclick="showPage('settings',this)">Configuración</button>
     <button class="nav" onclick="showPage('publish',this)">Publicar</button>
+    <span class="dirty" id="dirty">Cambios sin publicar</span>
     <button class="btn" onclick="location.href='/'">Ver web</button>
     <button class="btn" onclick="logout()">Salir</button>
   </nav>
   <main class="wrap">
     <section class="page active" id="page-products">
       <div class="head"><h2>Productos</h2><button class="btn btn-primary" onclick="openProduct()">+ Nuevo producto</button></div>
-      <div class="tabs" id="tabs"></div>
+      <div class="summary" id="summary"></div>
+      <div class="toolbar">
+        <div class="tabs" id="tabs"></div>
+        <input class="search" id="search" type="search" placeholder="Buscar producto..." oninput="searchTerm=this.value.toLowerCase();renderProducts()">
+      </div>
       <div class="grid" id="products"></div>
     </section>
     <section class="page" id="page-seasonal">
@@ -110,7 +123,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="card">
         <p class="muted">Los cambios se publican en Netlify. Después de guardar, la web puede tardar 1 a 3 minutos en actualizarse.</p>
         <div class="btn-row" style="margin-top:14px">
-          <button class="btn btn-primary" onclick="saveAll()">Guardar en la nube</button>
+          <button class="btn btn-primary" id="publish-btn" onclick="saveAll()">Guardar en la nube</button>
           <button class="btn" onclick="loadData()">Recargar datos</button>
         </div>
       </div>
@@ -133,7 +146,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
         <label>Foto</label>
         <div class="upload">
           <input id="f-image" type="file" accept="image/*" onchange="handleImage(event)">
-          <p class="muted">Sube una foto JPG, PNG o WebP. Se guardará en GitHub dentro de /img.</p>
+          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 5 MB. Se guardará en la nube dentro de /img.</p>
           <img id="f-preview" alt="">
         </div>
       </div>
@@ -153,7 +166,7 @@ const repo="parlem-flores";
 const branch="main";
 const api="/.netlify/git/github/contents";
 const raw="/data.json";
-let data=null,dataSha="",filter="all",editingId=null,available=true,pendingImage=null;
+let data=null,dataSha="",filter="all",searchTerm="",editingId=null,available=true,pendingImage=null,dirty=false;
 
 async function identityToken(){
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -167,6 +180,12 @@ async function gh(path,opts={}){
   return res.json();
 }
 function show(msg){const el=document.getElementById("status");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),4200)}
+function setDirty(v=true){
+  dirty=v;
+  document.getElementById("dirty").classList.toggle("show",dirty);
+  document.getElementById("publish-btn").disabled=!dirty;
+}
+window.addEventListener("beforeunload", e => { if(dirty){ e.preventDefault(); e.returnValue=""; } });
 function b64utf8(str){return btoa(unescape(encodeURIComponent(str)))}
 function fileB64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file)})}
 function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48)||"flor"}
@@ -191,21 +210,35 @@ async function loadData(){
   dataSha=file.sha;
   const res=await fetch(raw+"?v="+Date.now());
   data=await res.json();
+  dirty=false;
   renderAll();
+  setDirty(false);
   show("Datos cargados");
 }
-function renderAll(){if(!data)return;renderTabs();renderProducts();renderSeasonal();renderSettings()}
+function renderAll(){if(!data)return;renderSummary();renderTabs();renderProducts();renderSeasonal();renderSettings()}
 function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
 function renderTabs(){
   const cats=[{id:"all",name:"Todos",icon:"🌿"},...(data.categories||[])];
   document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';renderTabs();renderProducts()">${c.icon||""} ${c.name}</button>`).join("");
   document.getElementById("f-cat").innerHTML=(data.categories||[]).map(c=>`<option value="${c.id}">${c.icon||""} ${c.name}</option>`).join("");
 }
+function renderSummary(){
+  const total=data.products.length;
+  const visible=data.products.filter(p=>p.available).length;
+  const withPhotos=data.products.filter(p=>p.image).length;
+  const missingPhotos=total-withPhotos;
+  document.getElementById("summary").innerHTML=`
+    <div class="stat"><strong>${total}</strong><span>Productos</span></div>
+    <div class="stat"><strong>${visible}</strong><span>Visibles en la web</span></div>
+    <div class="stat"><strong>${withPhotos}</strong><span>Con foto</span></div>
+    <div class="stat"><strong>${missingPhotos}</strong><span>Sin foto</span></div>`;
+}
 function price(p){return p.price===0?"Consultar":`${p.price}€${p.price_max&&p.price_max>p.price?" - "+p.price_max+"€":""}${p.price_label?" "+p.price_label:""}`}
 function emoji(cat){return({bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
 function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c.name:id}
 function renderProducts(){
-  const items=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
+  const byCat=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
+  const items=searchTerm?byCat.filter(p=>`${p.name} ${p.description||""} ${p.badge||""}`.toLowerCase().includes(searchTerm)):byCat;
   document.getElementById("products").innerHTML=items.map(p=>`
     <div class="product" style="${p.available?"":"opacity:.55"}">
       <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:emoji(p.category)}</div>
@@ -227,7 +260,12 @@ function openProduct(id){
 function closeProduct(){document.getElementById("modal").classList.remove("open")}
 function toggleAvailable(){available=!available;updateToggle()}
 function updateToggle(){document.getElementById("f-toggle").className="toggle"+(available?" on":"");document.getElementById("f-toggle-label").textContent=available?"Disponible":"Oculto"}
-function handleImage(e){pendingImage=e.target.files[0]||null;if(pendingImage){const prev=document.getElementById("f-preview");prev.src=URL.createObjectURL(pendingImage);prev.style.display="block"}}
+function handleImage(e){
+  pendingImage=e.target.files[0]||null;
+  if(!pendingImage)return;
+  if(pendingImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingImage=null;return}
+  const prev=document.getElementById("f-preview");prev.src=URL.createObjectURL(pendingImage);prev.style.display="block";
+}
 async function saveProduct(){
   const name=document.getElementById("f-name").value.trim();
   if(!name){alert("El nombre es obligatorio");return}
@@ -240,12 +278,12 @@ async function saveProduct(){
   }
   const product={id:editingId||Math.max(0,...data.products.map(p=>p.id||0))+1,category:document.getElementById("f-cat").value,name,description:document.getElementById("f-desc").value.trim(),price:parseFloat(document.getElementById("f-price").value)||0,price_max:parseFloat(document.getElementById("f-pmax").value)||0,price_label:document.getElementById("f-plabel").value.trim(),image,badge:document.getElementById("f-badge").value.trim(),available};
   if(editingId){data.products[data.products.findIndex(p=>p.id===editingId)]=product}else data.products.push(product);
-  closeProduct();renderProducts();show("Producto guardado. Pulsa Publicar para subirlo.");
+  closeProduct();renderSummary();renderProducts();setDirty(true);show("Producto guardado. Pulsa Publicar para subirlo.");
 }
-function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`¿Borrar "${p.name}"?`)){data.products=data.products.filter(x=>x.id!==id);renderProducts()}}
-function renderSeasonal(){document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`<div class="seasonal-item"><input value="${s.emoji||""}" oninput="data.seasonal[${i}].emoji=this.value"><input value="${s.name||""}" oninput="data.seasonal[${i}].name=this.value"><button class="btn btn-danger" onclick="data.seasonal.splice(${i},1);renderSeasonal()">Borrar</button></div>`).join("")}
-function addSeasonal(){data.seasonal=data.seasonal||[];data.seasonal.push({name:"Nueva flor",emoji:"🌿"});renderSeasonal()}
-function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value">`}</div>`}
+function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`¿Borrar "${p.name}"?`)){data.products=data.products.filter(x=>x.id!==id);renderSummary();renderProducts();setDirty(true)}}
+function renderSeasonal(){document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`<div class="seasonal-item"><input value="${s.emoji||""}" oninput="data.seasonal[${i}].emoji=this.value;setDirty(true)"><input value="${s.name||""}" oninput="data.seasonal[${i}].name=this.value;setDirty(true)"><button class="btn btn-danger" onclick="data.seasonal.splice(${i},1);renderSeasonal();setDirty(true)">Borrar</button></div>`).join("")}
+function addSeasonal(){data.seasonal=data.seasonal||[];data.seasonal.push({name:"Nueva flor",emoji:"🌿"});renderSeasonal();setDirty(true)}
+function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
 function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}${setting("Historia","about_text","textarea")}</div></div>`}
 async function saveAll(){
   show("Guardando en GitHub...");
@@ -253,6 +291,7 @@ async function saveAll(){
   dataSha=latest.sha;
   const saved=await gh("data.json",{method:"PUT",body:JSON.stringify({message:"Update Parlem Flores data",content:b64utf8(JSON.stringify(data,null,2)+"\n"),sha:dataSha,branch})});
   dataSha=saved.content.sha;
+  setDirty(false);
   show("Publicado. La web puede tardar unos minutos en actualizarse.");
 }
 </script>
