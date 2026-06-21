@@ -78,33 +78,7 @@
       }
     ]
   },
-  "occasions": [
-    {
-      "icon": "🎂",
-      "label": "Cumpleaños",
-      "desc": "Sorprende en su día"
-    },
-    {
-      "icon": "💕",
-      "label": "Aniversario",
-      "desc": "Celebra el amor"
-    },
-    {
-      "icon": "👶",
-      "label": "Nacimiento",
-      "desc": "Dale la bienvenida"
-    },
-    {
-      "icon": "💐",
-      "label": "Agradecimiento",
-      "desc": "Di gracias con flores"
-    },
-    {
-      "icon": "🏠",
-      "label": "Hogar",
-      "desc": "Flores para tu espacio"
-    }
-  ],
+  "occasions": [],
   "seasonal": [
     {
       "name": "Tulipanes",
