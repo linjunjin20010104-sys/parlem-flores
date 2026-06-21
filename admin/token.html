@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parlem Flores · Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f6f1ec;color:#241d19;min-height:100vh}
+button,input,select,textarea{font:inherit}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{width:390px;background:white;border:1px solid #e7ddd4;border-radius:10px;padding:28px;box-shadow:0 12px 40px rgba(56,40,30,.08)}
+.logo{text-align:center;color:#7f1f28;font-family:Georgia,serif;font-size:28px;margin-bottom:6px}
+.login-card h1{text-align:center;font-size:19px;margin-bottom:6px}
+.hint{text-align:center;color:#7c7068;font-size:13px;line-height:1.5;margin-bottom:22px}
+label{display:block;font-size:12px;font-weight:700;color:#655951;margin:14px 0 5px;text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{width:100%;border:1px solid #ddd1c7;background:white;border-radius:6px;padding:10px 11px;color:#241d19}
+textarea{min-height:82px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-shadow:0 0 0 3px rgba(127,31,40,.1)}
+.btn{border:1px solid #ddd1c7;background:white;border-radius:6px;padding:9px 14px;cursor:pointer;color:#241d19;font-weight:650}
+.btn:hover{background:#faf6f2}
+.btn-primary{background:#7f1f28;color:white;border-color:#7f1f28}
+.btn-primary:hover{background:#661820}
+.btn-danger{color:#ad3f3f;border-color:#e7bcbc;background:#fff8f8}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.full{width:100%;justify-content:center;margin-top:18px}
+.error{display:none;color:#b43b3b;font-size:13px;text-align:center;margin-top:12px}
+.app{display:none;min-height:100vh}
+.top{height:58px;background:white;border-bottom:1px solid #e7ddd4;display:flex;align-items:center;gap:12px;padding:0 18px;position:sticky;top:0;z-index:2}
+.brand{font-weight:750;color:#7f1f28;margin-right:auto}.brand span{color:#241d19}
+.nav{border:0;background:transparent;border-radius:6px;padding:8px 11px;cursor:pointer;color:#73665e;font-weight:650}
+.nav.active,.nav:hover{background:#f0e7df;color:#7f1f28}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px}
+.page{display:none}.page.active{display:block}
+.head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+.head h2{font-size:22px}
+.muted{color:#7c7068;font-size:13px;line-height:1.5}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:1px solid #ddd1c7;background:white;border-radius:999px;padding:7px 13px;cursor:pointer;color:#655951}
+.tab.active{background:#7f1f28;color:white;border-color:#7f1f28}
+.grid{display:grid;gap:10px}
+.product{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px;display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center}
+.thumb{width:84px;height:84px;border-radius:6px;background:#f0e7df;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:30px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.pname{font-weight:750;margin-bottom:4px}
+.pdesc{font-size:13px;color:#7c7068;line-height:1.35;margin-bottom:8px}
+.meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 8px;border-radius:999px;background:#f0e7df;color:#655951}
+.price{font-weight:800;color:#7f1f28;font-size:13px}
+.dot{width:8px;height:8px;border-radius:50%;background:#41945c}.dot.off{background:#bbb}
+.actions{display:flex;flex-direction:column;gap:7px}
+.card{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:16px;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .wide{grid-column:1/-1}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal-bg.open{display:flex}
+.modal{width:min(620px,100%);max-height:92vh;overflow:auto;background:white;border-radius:10px;padding:22px}
+.modal h3{margin-bottom:14px}
+.upload{border:2px dashed #ddd1c7;border-radius:8px;padding:16px;text-align:center;background:#fbf8f5}
+.upload img{display:none;width:100%;height:160px;object-fit:cover;border-radius:6px;margin-top:12px}
+.switch{display:flex;gap:9px;align-items:center;margin-top:12px;cursor:pointer}
+.toggle{width:42px;height:23px;border-radius:999px;background:#cfc5bd;position:relative}.toggle:after{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:white;left:3px;top:3px;transition:.15s}.toggle.on{background:#7f1f28}.toggle.on:after{transform:translateX(19px)}
+.seasonal{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.seasonal-item{display:grid;grid-template-columns:48px 1fr auto;gap:8px;align-items:center;background:white;border:1px solid #e7ddd4;border-radius:8px;padding:10px}
+.status{position:fixed;right:16px;bottom:16px;background:#241d19;color:white;border-radius:8px;padding:11px 14px;box-shadow:0 10px 28px rgba(0,0,0,.18);display:none;max-width:360px;font-size:13px}
+.status.show{display:block}
+@media(max-width:720px){.top{overflow-x:auto}.product{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="login" id="login">
+  <div class="login-card">
+    <div class="logo">✿</div>
+    <h1>Parlem Flores Admin</h1>
+    <p class="hint">Introduce un GitHub token con permiso de escritura para actualizar productos, fotos y textos en la web.</p>
+    <label>GitHub token</label>
+    <input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+    <button class="btn btn-primary full" onclick="start()">Entrar</button>
+    <div class="error" id="login-error">No se pudo conectar con GitHub. Revisa el token.</div>
+  </div>
+</section>
+
+<section class="app" id="app">
+  <nav class="top">
+    <div class="brand">✿ <span>Parlem Admin</span></div>
+    <button class="nav active" onclick="showPage('products',this)">Productos</button>
+    <button class="nav" onclick="showPage('seasonal',this)">Temporada</button>
+    <button class="nav" onclick="showPage('settings',this)">Configuración</button>
+    <button class="nav" onclick="showPage('publish',this)">Publicar</button>
+    <button class="btn" onclick="location.href='/'">Ver web</button>
+  </nav>
+  <main class="wrap">
+    <section class="page active" id="page-products">
+      <div class="head"><h2>Productos</h2><button class="btn btn-primary" onclick="openProduct()">+ Nuevo producto</button></div>
+      <div class="tabs" id="tabs"></div>
+      <div class="grid" id="products"></div>
+    </section>
+    <section class="page" id="page-seasonal">
+      <div class="head"><h2>Flores de temporada</h2><button class="btn btn-primary" onclick="addSeasonal()">+ Añadir flor</button></div>
+      <div class="seasonal" id="seasonal"></div>
+    </section>
+    <section class="page" id="page-settings">
+      <div class="head"><h2>Configuración</h2></div>
+      <div id="settings"></div>
+    </section>
+    <section class="page" id="page-publish">
+      <div class="head"><h2>Publicar cambios</h2></div>
+      <div class="card">
+        <p class="muted">Los cambios se publican en GitHub Pages. Después de guardar, la web puede tardar 1 a 3 minutos en actualizarse.</p>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" onclick="saveAll()">Guardar en la nube</button>
+          <button class="btn" onclick="loadData()">Recargar datos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</section>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Nuevo producto</h3>
+    <div class="form-grid">
+      <div><label>Nombre</label><input id="f-name"></div>
+      <div><label>Categoría</label><select id="f-cat"></select></div>
+      <div class="wide"><label>Descripción</label><textarea id="f-desc"></textarea></div>
+      <div><label>Precio desde</label><input id="f-price" type="number" min="0"></div>
+      <div><label>Precio hasta</label><input id="f-pmax" type="number" min="0"></div>
+      <div><label>Badge</label><input id="f-badge" placeholder="Más vendido"></div>
+      <div><label>Etiqueta precio</label><input id="f-plabel" placeholder="/semana"></div>
+      <div class="wide">
+        <label>Foto</label>
+        <div class="upload">
+          <input id="f-image" type="file" accept="image/*" onchange="handleImage(event)">
+          <p class="muted">Sube una foto JPG, PNG o WebP. Se guardará en GitHub dentro de /img.</p>
+          <img id="f-preview" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="switch" onclick="toggleAvailable()"><div class="toggle on" id="f-toggle"></div><span id="f-toggle-label">Disponible</span></div>
+    <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
+      <button class="btn" onclick="closeProduct()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProduct()">Guardar producto</button>
+    </div>
+  </div>
+</div>
+<div class="status" id="status"></div>
+
+<script>
+const owner="linjunjin20010104-sys";
+const repo="parlem-flores";
+const branch="main";
+const api=`https://api.github.com/repos/${owner}/${repo}/contents`;
+const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/data.json`;
+let token="",data=null,dataSha="",filter="all",editingId=null,available=true,pendingImage=null;
+
+async function gh(path,opts={}){
+  const res=await fetch(`${api}/${path}`,{...opts,headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json",...(opts.headers||{})}});
+  if(!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+function show(msg){const el=document.getElementById("status");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),4200)}
+function b64utf8(str){return btoa(unescape(encodeURIComponent(str)))}
+function fileB64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file)})}
+function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48)||"flor"}
+
+async function start(){
+  token=document.getElementById("token").value.trim();
+  if(!token)return;
+  try{await loadData();document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";renderAll()}
+  catch(e){document.getElementById("login-error").style.display="block"}
+}
+async function loadData(){
+  const file=await gh("data.json?ref="+branch);
+  dataSha=file.sha;
+  const res=await fetch(raw+"?v="+Date.now());
+  data=await res.json();
+  renderAll();
+  show("Datos cargados");
+}
+function renderAll(){if(!data)return;renderTabs();renderProducts();renderSeasonal();renderSettings()}
+function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
+function renderTabs(){
+  const cats=[{id:"all",name:"Todos",icon:"🌿"},...(data.categories||[])];
+  document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';renderTabs();renderProducts()">${c.icon||""} ${c.name}</button>`).join("");
+  document.getElementById("f-cat").innerHTML=(data.categories||[]).map(c=>`<option value="${c.id}">${c.icon||""} ${c.name}</option>`).join("");
+}
+function price(p){return p.price===0?"Consultar":`${p.price}€${p.price_max&&p.price_max>p.price?" - "+p.price_max+"€":""}${p.price_label?" "+p.price_label:""}`}
+function emoji(cat){return({bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
+function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c.name:id}
+function renderProducts(){
+  const items=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
+  document.getElementById("products").innerHTML=items.map(p=>`
+    <div class="product" style="${p.available?"":"opacity:.55"}">
+      <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:emoji(p.category)}</div>
+      <div><div class="pname">${p.name}</div><div class="pdesc">${p.description||""}</div><div class="meta"><span class="badge">${catName(p.category)}</span>${p.badge?`<span class="badge">${p.badge}</span>`:""}<span class="price">${price(p)}</span><span class="dot ${p.available?"":"off"}"></span></div></div>
+      <div class="actions"><button class="btn" onclick="openProduct(${p.id})">Editar</button><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Borrar</button></div>
+    </div>`).join("")||'<p class="muted">No hay productos en esta categoría.</p>';
+}
+function openProduct(id){
+  editingId=id||null;pendingImage=null;available=true;
+  document.getElementById("modal-title").textContent=id?"Editar producto":"Nuevo producto";
+  const p=id?data.products.find(x=>x.id===id):{category:(data.categories||[])[0]?.id||"bouquets",name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
+  ["name","desc","price","pmax","badge","plabel"].forEach(x=>document.getElementById("f-"+x).value="");
+  document.getElementById("f-name").value=p.name||"";document.getElementById("f-cat").value=p.category||"bouquets";document.getElementById("f-desc").value=p.description||"";document.getElementById("f-price").value=p.price||"";document.getElementById("f-pmax").value=p.price_max||"";document.getElementById("f-badge").value=p.badge||"";document.getElementById("f-plabel").value=p.price_label||"";
+  available=p.available!==false;updateToggle();
+  const prev=document.getElementById("f-preview");prev.style.display=p.image?"block":"none";prev.src=p.image||"";
+  document.getElementById("f-image").value="";
+  document.getElementById("modal").classList.add("open");
+}
+function closeProduct(){document.getElementById("modal").classList.remove("open")}
+function toggleAvailable(){available=!available;updateToggle()}
+function updateToggle(){document.getElementById("f-toggle").className="toggle"+(available?" on":"");document.getElementById("f-toggle-label").textContent=available?"Disponible":"Oculto"}
+function handleImage(e){pendingImage=e.target.files[0]||null;if(pendingImage){const prev=document.getElementById("f-preview");prev.src=URL.createObjectURL(pendingImage);prev.style.display="block"}}
+async function saveProduct(){
+  const name=document.getElementById("f-name").value.trim();
+  if(!name){alert("El nombre es obligatorio");return}
+  let image=editingId?(data.products.find(x=>x.id===editingId)?.image||""):"";
+  if(pendingImage){
+    const ext=(pendingImage.name.split(".").pop()||"jpg").toLowerCase();
+    const imgPath=`img/${Date.now()}-${safeName(name)}.${ext}`;
+    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} photo`,content:await fileB64(pendingImage),branch})});
+    image="/"+imgPath;
+  }
+  const product={id:editingId||Math.max(0,...data.products.map(p=>p.id||0))+1,category:document.getElementById("f-cat").value,name,description:document.getElementById("f-desc").value.trim(),price:parseFloat(document.getElementById("f-price").value)||0,price_max:parseFloat(document.getElementById("f-pmax").value)||0,price_label:document.getElementById("f-plabel").value.trim(),image,badge:document.getElementById("f-badge").value.trim(),available};
+  if(editingId){data.products[data.products.findIndex(p=>p.id===editingId)]=product}else data.products.push(product);
+  closeProduct();renderProducts();show("Producto guardado. Pulsa Publicar para subirlo.");
+}
+function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`¿Borrar "${p.name}"?`)){data.products=data.products.filter(x=>x.id!==id);renderProducts()}}
+function renderSeasonal(){document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`<div class="seasonal-item"><input value="${s.emoji||""}" oninput="data.seasonal[${i}].emoji=this.value"><input value="${s.name||""}" oninput="data.seasonal[${i}].name=this.value"><button class="btn btn-danger" onclick="data.seasonal.splice(${i},1);renderSeasonal()">Borrar</button></div>`).join("")}
+function addSeasonal(){data.seasonal=data.seasonal||[];data.seasonal.push({name:"Nueva flor",emoji:"🌿"});renderSeasonal()}
+function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value">`}</div>`}
+function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}${setting("Historia","about_text","textarea")}</div></div>`}
+async function saveAll(){
+  show("Guardando en GitHub...");
+  const latest=await gh("data.json?ref="+branch);
+  dataSha=latest.sha;
+  const saved=await gh("data.json",{method:"PUT",body:JSON.stringify({message:"Update Parlem Flores data",content:b64utf8(JSON.stringify(data,null,2)+"\n"),sha:dataSha,branch})});
+  dataSha=saved.content.sha;
+  show("Publicado. La web puede tardar unos minutos en actualizarse.");
+}
+</script>
+</body>
+</html>
