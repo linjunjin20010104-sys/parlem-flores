@@ -148,15 +148,42 @@ function renderCategoryTabs() {
 function filterProducts(catId, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  renderSubcategoryTabs(catId);
   renderProducts(catId);
 }
 
+function renderSubcategoryTabs(catId, activeSubcategory = 'all') {
+  const tabs = document.getElementById('subcategory-tabs');
+  if (!tabs) return;
+  const category = (siteData.categories || []).find(c => c.id === catId);
+  const subcategories = category?.subcategories || [];
+  if (!subcategories.length) {
+    tabs.innerHTML = '';
+    tabs.style.display = 'none';
+    return;
+  }
+  tabs.style.display = 'flex';
+  const items = [{ id: 'all', name: 'Todos' }, ...subcategories];
+  tabs.innerHTML = items.map(s => `
+    <button class="subtab-btn ${s.id === activeSubcategory ? 'active' : ''}" onclick="filterProductsBySubcategory('${catId}', '${s.id}', this)">
+      ${s.name}
+    </button>
+  `).join('');
+}
+
+function filterProductsBySubcategory(catId, subcategoryId, btn) {
+  document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(catId, subcategoryId);
+}
+
 // ---- PRODUCTS ----
-function renderProducts(catId) {
+function renderProducts(catId, subcategoryId = 'all') {
   const grid = document.getElementById('products-grid');
+  if (catId === 'all') renderSubcategoryTabs('all');
   const products = catId === 'all'
     ? siteData.products.filter(p => p.available)
-    : siteData.products.filter(p => p.category === catId && p.available);
+    : siteData.products.filter(p => p.category === catId && p.available && (subcategoryId === 'all' || p.subcategory === subcategoryId));
 
   if (products.length === 0) {
     grid.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:3rem;grid-column:1/-1">No hay productos disponibles en esta categoría.</p>';
