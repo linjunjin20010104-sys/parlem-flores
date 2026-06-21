@@ -204,7 +204,21 @@ function renderProducts(catId) {
 }
 
 function getProductEmoji(cat) {
-  const map = { bouquets: '💐', wedding: '💍', gifts: '🎁', plants: '🪴', funeral: '🕊️', premium: '✨' };
+  const map = {
+    'ramos-bouquets': '💐',
+    'centros-flores': '🌸',
+    'centros-cementerio': '🕊️',
+    'cestas-ramos-secos': '🧺',
+    'flores-preservadas': '🌹',
+    jarrones: '🏺',
+    plantas: '🪴',
+    bouquets: '💐',
+    wedding: '💍',
+    gifts: '🎁',
+    plants: '🪴',
+    funeral: '🕊️',
+    premium: '✨'
+  };
   return map[cat] || '🌿';
 }
 

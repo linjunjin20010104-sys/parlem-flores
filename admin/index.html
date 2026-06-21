@@ -234,7 +234,7 @@ function renderSummary(){
     <div class="stat"><strong>${missingPhotos}</strong><span>Sin foto</span></div>`;
 }
 function price(p){return p.price===0?"Consultar":`${p.price}€${p.price_max&&p.price_max>p.price?" - "+p.price_max+"€":""}${p.price_label?" "+p.price_label:""}`}
-function emoji(cat){return({bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
+function emoji(cat){return({"ramos-bouquets":"💐","centros-flores":"🌸","centros-cementerio":"🕊️","cestas-ramos-secos":"🧺","flores-preservadas":"🌹",jarrones:"🏺",plantas:"🪴",bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
 function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c.name:id}
 function renderProducts(){
   const byCat=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
@@ -249,9 +249,9 @@ function renderProducts(){
 function openProduct(id){
   editingId=id||null;pendingImage=null;available=true;
   document.getElementById("modal-title").textContent=id?"Editar producto":"Nuevo producto";
-  const p=id?data.products.find(x=>x.id===id):{category:(data.categories||[])[0]?.id||"bouquets",name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
+  const p=id?data.products.find(x=>x.id===id):{category:(data.categories||[])[0]?.id||"ramos-bouquets",name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
   ["name","desc","price","pmax","badge","plabel"].forEach(x=>document.getElementById("f-"+x).value="");
-  document.getElementById("f-name").value=p.name||"";document.getElementById("f-cat").value=p.category||"bouquets";document.getElementById("f-desc").value=p.description||"";document.getElementById("f-price").value=p.price||"";document.getElementById("f-pmax").value=p.price_max||"";document.getElementById("f-badge").value=p.badge||"";document.getElementById("f-plabel").value=p.price_label||"";
+  document.getElementById("f-name").value=p.name||"";document.getElementById("f-cat").value=p.category||"ramos-bouquets";document.getElementById("f-desc").value=p.description||"";document.getElementById("f-price").value=p.price||"";document.getElementById("f-pmax").value=p.price_max||"";document.getElementById("f-badge").value=p.badge||"";document.getElementById("f-plabel").value=p.price_label||"";
   available=p.available!==false;updateToggle();
   const prev=document.getElementById("f-preview");prev.style.display=p.image?"block":"none";prev.src=p.image||"";
   document.getElementById("f-image").value="";

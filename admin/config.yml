@@ -58,10 +58,13 @@ collections:
                 name: "category"
                 widget: "select"
                 options:
-                  - { label: "Ramos del día", value: "bouquets" }
-                  - { label: "Premium", value: "premium" }
-                  - { label: "Bodas y eventos", value: "wedding" }
-                  - { label: "Regalos", value: "gifts" }
+                  - { label: "Ramos y Bouquets", value: "ramos-bouquets" }
+                  - { label: "Centros de Flores", value: "centros-flores" }
+                  - { label: "Centros de Cementerio", value: "centros-cementerio" }
+                  - { label: "Cestas y Ramos Secos", value: "cestas-ramos-secos" }
+                  - { label: "Flores Preservadas", value: "flores-preservadas" }
+                  - { label: "Jarrones", value: "jarrones" }
+                  - { label: "Plantas", value: "plantas" }
               - { label: "Nombre", name: "name", widget: "string" }
               - { label: "Descripción", name: "description", widget: "text" }
               - { label: "Precio desde", name: "price", widget: "number", value_type: "float" }

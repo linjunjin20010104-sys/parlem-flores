@@ -133,30 +133,45 @@
   ],
   "categories": [
     {
-      "id": "bouquets",
-      "name": "Ramos del Día",
+      "id": "ramos-bouquets",
+      "name": "Ramos y Bouquets",
       "icon": "💐"
     },
     {
-      "id": "premium",
-      "name": "Composiciones Premium",
-      "icon": "✨"
+      "id": "centros-flores",
+      "name": "Centros de Flores",
+      "icon": "🌸"
     },
     {
-      "id": "wedding",
-      "name": "Bodas y Eventos",
-      "icon": "💍"
+      "id": "centros-cementerio",
+      "name": "Centros de Cementerio",
+      "icon": "🕊️"
     },
     {
-      "id": "gifts",
-      "name": "Regalos",
-      "icon": "🎁"
+      "id": "cestas-ramos-secos",
+      "name": "Cestas y Ramos Secos",
+      "icon": "🧺"
+    },
+    {
+      "id": "flores-preservadas",
+      "name": "Flores Preservadas",
+      "icon": "🌹"
+    },
+    {
+      "id": "jarrones",
+      "name": "Jarrones",
+      "icon": "🏺"
+    },
+    {
+      "id": "plantas",
+      "name": "Plantas",
+      "icon": "🪴"
     }
   ],
   "products": [
     {
       "id": 1,
-      "category": "bouquets",
+      "category": "ramos-bouquets",
       "name": "Ramo Primavera",
       "description": "Rosas, peonías y eucalipto. Tonos pastel ideales para cualquier ocasión.",
       "price": 28,
@@ -168,7 +183,7 @@
     },
     {
       "id": 2,
-      "category": "bouquets",
+      "category": "ramos-bouquets",
       "name": "Ramo Romance",
       "description": "Rosas rojas y mimosa. El clásico atemporal para aniversarios.",
       "price": 35,
@@ -180,7 +195,7 @@
     },
     {
       "id": 3,
-      "category": "bouquets",
+      "category": "ramos-bouquets",
       "name": "Ramo Silvestre",
       "description": "Flores silvestres de temporada. Natural, fresco y lleno de personalidad.",
       "price": 22,
@@ -192,7 +207,7 @@
     },
     {
       "id": 4,
-      "category": "bouquets",
+      "category": "ramos-bouquets",
       "name": "Ramo Blanco Puro",
       "description": "Lisianthus blanco, gypsophila y verdes. Elegancia pura.",
       "price": 30,
@@ -204,7 +219,7 @@
     },
     {
       "id": 5,
-      "category": "premium",
+      "category": "centros-flores",
       "name": "Centro Premium",
       "description": "Composición de gran formato con las flores más selectas.",
       "price": 60,
@@ -216,7 +231,7 @@
     },
     {
       "id": 6,
-      "category": "premium",
+      "category": "centros-flores",
       "name": "Jarrón Artístico",
       "description": "Composición en jarrón cerámica incluido.",
       "price": 75,
@@ -228,7 +243,7 @@
     },
     {
       "id": 7,
-      "category": "wedding",
+      "category": "centros-flores",
       "name": "Ramo de Novia Clásico",
       "description": "Rosas garden y hortensias. Personalizamos cada detalle.",
       "price": 120,
@@ -240,7 +255,7 @@
     },
     {
       "id": 8,
-      "category": "wedding",
+      "category": "centros-flores",
       "name": "Decoración Completa",
       "description": "Centros de mesa, arco floral, pétalos y detalles.",
       "price": 0,
@@ -252,7 +267,7 @@
     },
     {
       "id": 9,
-      "category": "gifts",
+      "category": "cestas-ramos-secos",
       "name": "Caja de Flores",
       "description": "Flores premium presentadas en caja elegante.",
       "price": 45,
@@ -264,7 +279,7 @@
     },
     {
       "id": 10,
-      "category": "gifts",
+      "category": "cestas-ramos-secos",
       "name": "Suscripción Semanal",
       "description": "Recibe un ramo fresco cada semana en tu casa.",
       "price": 55,
