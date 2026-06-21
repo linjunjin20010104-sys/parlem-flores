@@ -315,6 +315,19 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user && window.location.hash) {
+        window.netlifyIdentity.open();
+      }
+    });
+    window.netlifyIdentity.on("login", () => {
+      document.location.href = "/admin/cms.html";
+    });
+  }
+</script>
 <script src="main.js"></script>
 </body>
 </html>
