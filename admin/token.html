@@ -68,8 +68,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .upload img{display:none;width:100%;height:160px;object-fit:cover;border-radius:6px;margin-top:12px}
 .switch{display:flex;gap:9px;align-items:center;margin-top:12px;cursor:pointer}
 .toggle{width:42px;height:23px;border-radius:999px;background:#cfc5bd;position:relative}.toggle:after{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:white;left:3px;top:3px;transition:.15s}.toggle.on{background:#7f1f28}.toggle.on:after{transform:translateX(19px)}
-.seasonal{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.seasonal-item{display:grid;grid-template-columns:48px 1fr auto;gap:8px;align-items:center;background:white;border:1px solid #e7ddd4;border-radius:8px;padding:10px}
+.seasonal{display:grid;gap:10px}
+.seasonal-item{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center}
+.seasonal-emoji{width:64px;height:64px;border-radius:6px;background:#f0e7df;display:flex;align-items:center;justify-content:center;font-size:28px}
+.seasonal-name{font-weight:750;font-size:16px}
 .status{position:fixed;right:16px;bottom:16px;background:#241d19;color:white;border-radius:8px;padding:11px 14px;box-shadow:0 10px 28px rgba(0,0,0,.18);display:none;max-width:360px;font-size:13px}
 .status.show{display:block}
 @media(max-width:720px){.top{overflow-x:auto}.product{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid{grid-template-columns:1fr}}
@@ -110,7 +112,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="grid" id="products"></div>
     </section>
     <section class="page" id="page-seasonal">
-      <div class="head"><h2>Temporada de Ramos</h2><button class="btn btn-primary" onclick="addSeasonal()">+ Añadir flor</button></div>
+      <div class="head"><h2>Temporada de Ramos</h2><button class="btn btn-primary" onclick="openSeasonal()">+ Nuevo ramo</button></div>
       <div class="seasonal" id="seasonal"></div>
     </section>
     <section class="page" id="page-settings">
@@ -158,17 +160,28 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     </div>
   </div>
 </div>
+<div class="modal-bg" id="seasonal-modal">
+  <div class="modal">
+    <h3 id="seasonal-modal-title">Nuevo ramo de temporada</h3>
+    <div class="form-grid">
+      <div><label>Emoji</label><input id="s-emoji" placeholder="🌷"></div>
+      <div><label>Nombre</label><input id="s-name" placeholder="Tulipanes"></div>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
+      <button class="btn" onclick="closeSeasonal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveSeasonal()">Guardar ramo</button>
+    </div>
+  </div>
+</div>
 <div class="status" id="status"></div>
 
 <script>
 const owner="linjunjin20010104-sys";
 const repo="parlem-flores";
 const branch="main";
-const owner="linjunjin20010104-sys";
-const repo="parlem-flores";
 const api=`https://api.github.com/repos/${owner}/${repo}/contents`;
 const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/data.json`;
-let token="",data=null,dataSha="",filter="all",searchTerm="",editingId=null,available=true,pendingImage=null,dirty=false;
+let token="",data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,dirty=false;
 
 async function gh(path,opts={}){
   const res=await fetch(`${api}/${path}`,{...opts,headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json",...(opts.headers||{})}});
@@ -277,8 +290,30 @@ async function saveProduct(){
   closeProduct();renderSummary();renderProducts();setDirty(true);show("Producto guardado. Pulsa Publicar para subirlo.");
 }
 function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`¿Borrar "${p.name}"?`)){data.products=data.products.filter(x=>x.id!==id);renderSummary();renderProducts();setDirty(true)}}
-function renderSeasonal(){document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`<div class="seasonal-item"><input value="${s.emoji||""}" oninput="data.seasonal[${i}].emoji=this.value;setDirty(true)"><input value="${s.name||""}" oninput="data.seasonal[${i}].name=this.value;setDirty(true)"><button class="btn btn-danger" onclick="data.seasonal.splice(${i},1);renderSeasonal();setDirty(true)">Borrar</button></div>`).join("")}
-function addSeasonal(){data.seasonal=data.seasonal||[];data.seasonal.push({name:"Nueva flor",emoji:"🌿"});renderSeasonal();setDirty(true)}
+function renderSeasonal(){
+  document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`
+    <div class="seasonal-item">
+      <div class="seasonal-emoji">${s.emoji||"🌿"}</div>
+      <div><div class="seasonal-name">${s.name||"Ramo de temporada"}</div><div class="muted">Temporada de Ramos</div></div>
+      <div class="actions"><button class="btn" onclick="openSeasonal(${i})">Editar</button><button class="btn btn-danger" onclick="deleteSeasonal(${i})">Borrar</button></div>
+    </div>`).join("")||'<p class="muted">No hay ramos de temporada.</p>';
+}
+function openSeasonal(i){
+  editingSeasonalIndex=Number.isInteger(i)?i:null;
+  const item=editingSeasonalIndex!==null?data.seasonal[editingSeasonalIndex]:{name:"",emoji:"🌿"};
+  document.getElementById("seasonal-modal-title").textContent=editingSeasonalIndex!==null?"Editar ramo de temporada":"Nuevo ramo de temporada";
+  document.getElementById("s-emoji").value=item.emoji||"";
+  document.getElementById("s-name").value=item.name||"";
+  document.getElementById("seasonal-modal").classList.add("open");
+}
+function closeSeasonal(){document.getElementById("seasonal-modal").classList.remove("open")}
+function saveSeasonal(){
+  const item={emoji:document.getElementById("s-emoji").value.trim()||"🌿",name:document.getElementById("s-name").value.trim()||"Nuevo ramo"};
+  data.seasonal=data.seasonal||[];
+  if(editingSeasonalIndex!==null){data.seasonal[editingSeasonalIndex]=item}else{data.seasonal.push(item)}
+  closeSeasonal();renderSeasonal();setDirty(true);show("Ramo de temporada guardado. Pulsa Publicar para subirlo.");
+}
+function deleteSeasonal(i){if(confirm("¿Borrar este ramo de temporada?")){data.seasonal.splice(i,1);renderSeasonal();setDirty(true)}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
 function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}${setting("Historia","about_text","textarea")}</div></div>`}
 async function saveAll(){
