@@ -78,27 +78,57 @@
   "seasonal": [
     {
       "name": "Tulipanes",
-      "emoji": "🌷"
+      "emoji": "🌷",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     },
     {
       "name": "Peonías",
-      "emoji": "🌸"
+      "emoji": "🌸",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     },
     {
       "name": "Rosas",
-      "emoji": "🌹"
+      "emoji": "🌹",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     },
     {
       "name": "Anémonas",
-      "emoji": "🌺"
+      "emoji": "🌺",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     },
     {
       "name": "Lisianthus",
-      "emoji": "🤍"
+      "emoji": "🤍",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     },
     {
       "name": "Hortensias",
-      "emoji": "💜"
+      "emoji": "💜",
+      "image": "",
+      "price": 0,
+      "price_max": 0,
+      "price_label": "",
+      "available": true
     }
   ],
   "categories": [

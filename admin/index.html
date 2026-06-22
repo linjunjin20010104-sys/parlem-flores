@@ -72,6 +72,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .seasonal{display:grid;gap:10px}
 .seasonal-item{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center}
 .seasonal-emoji{width:64px;height:64px;border-radius:6px;background:#f0e7df;display:flex;align-items:center;justify-content:center;font-size:28px}
+.seasonal-emoji img{width:100%;height:100%;object-fit:cover}
 .seasonal-name{font-weight:750;font-size:16px}
 .status{position:fixed;right:16px;bottom:16px;background:#241d19;color:white;border-radius:8px;padding:11px 14px;box-shadow:0 10px 28px rgba(0,0,0,.18);display:none;max-width:360px;font-size:13px}
 .status.show{display:block}
@@ -165,8 +166,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
   <div class="modal">
     <h3 id="seasonal-modal-title">Nuevo ramo de temporada</h3>
     <div class="form-grid">
-      <div><label>Emoji</label><input id="s-emoji" placeholder="🌷"></div>
       <div><label>Nombre</label><input id="s-name" placeholder="Tulipanes"></div>
+      <div><label>Emoji</label><input id="s-emoji" placeholder="🌷"></div>
+      <div><label>Precio desde</label><input id="s-price" type="number" min="0"></div>
+      <div><label>Precio hasta</label><input id="s-pmax" type="number" min="0"></div>
+      <div class="wide"><label>Etiqueta precio</label><input id="s-plabel" placeholder="/ramo"></div>
+      <div class="wide">
+        <label>Foto</label>
+        <div class="upload">
+          <input id="s-image" type="file" accept="image/*" onchange="handleSeasonalImage(event)">
+          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 5 MB. Se guardará en la nube dentro de /img.</p>
+          <img id="s-preview" alt="">
+        </div>
+      </div>
     </div>
     <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
       <button class="btn" onclick="closeSeasonal()">Cancelar</button>
@@ -182,7 +194,7 @@ const repo="parlem-flores";
 const branch="main";
 const api="/.netlify/git/github/contents";
 const raw="/data.json";
-let data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,dirty=false;
+let data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,dirty=false;
 
 async function identityToken(){
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -309,22 +321,43 @@ function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`
 function renderSeasonal(){
   document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`
     <div class="seasonal-item">
-      <div class="seasonal-emoji">${s.emoji||"🌿"}</div>
-      <div><div class="seasonal-name">${s.name||"Ramo de temporada"}</div><div class="muted">Temporada de Ramos</div></div>
+      <div class="seasonal-emoji">${s.image?`<img src="${s.image}" alt="${s.name}">`:s.emoji||"🌿"}</div>
+      <div><div class="seasonal-name">${s.name||"Ramo de temporada"}</div><div class="muted">${seasonalPrice(s)}</div></div>
       <div class="actions"><button class="btn" onclick="openSeasonal(${i})">Editar</button><button class="btn btn-danger" onclick="deleteSeasonal(${i})">Borrar</button></div>
     </div>`).join("")||'<p class="muted">No hay ramos de temporada.</p>';
 }
+function seasonalPrice(s){return s.price?`${s.price}€${s.price_max&&s.price_max>s.price?" - "+s.price_max+"€":""}${s.price_label?" "+s.price_label:""}`:"Sin precio"}
 function openSeasonal(i){
+  pendingSeasonalImage=null;
   editingSeasonalIndex=Number.isInteger(i)?i:null;
-  const item=editingSeasonalIndex!==null?data.seasonal[editingSeasonalIndex]:{name:"",emoji:"🌿"};
+  const item=editingSeasonalIndex!==null?data.seasonal[editingSeasonalIndex]:{name:"",emoji:"🌿",image:"",price:"",price_max:"",price_label:""};
   document.getElementById("seasonal-modal-title").textContent=editingSeasonalIndex!==null?"Editar ramo de temporada":"Nuevo ramo de temporada";
   document.getElementById("s-emoji").value=item.emoji||"";
   document.getElementById("s-name").value=item.name||"";
+  document.getElementById("s-price").value=item.price||"";
+  document.getElementById("s-pmax").value=item.price_max||"";
+  document.getElementById("s-plabel").value=item.price_label||"";
+  document.getElementById("s-image").value="";
+  const prev=document.getElementById("s-preview");prev.style.display=item.image?"block":"none";prev.src=item.image||"";
   document.getElementById("seasonal-modal").classList.add("open");
 }
 function closeSeasonal(){document.getElementById("seasonal-modal").classList.remove("open")}
-function saveSeasonal(){
-  const item={emoji:document.getElementById("s-emoji").value.trim()||"🌿",name:document.getElementById("s-name").value.trim()||"Nuevo ramo"};
+function handleSeasonalImage(e){
+  pendingSeasonalImage=e.target.files[0]||null;
+  if(!pendingSeasonalImage)return;
+  if(pendingSeasonalImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingSeasonalImage=null;return}
+  const prev=document.getElementById("s-preview");prev.src=URL.createObjectURL(pendingSeasonalImage);prev.style.display="block";
+}
+async function saveSeasonal(){
+  const name=document.getElementById("s-name").value.trim()||"Nuevo ramo";
+  let image=editingSeasonalIndex!==null?(data.seasonal[editingSeasonalIndex]?.image||""):"";
+  if(pendingSeasonalImage){
+    const ext=(pendingSeasonalImage.name.split(".").pop()||"jpg").toLowerCase();
+    const imgPath=`img/${Date.now()}-${safeName(name)}.${ext}`;
+    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} seasonal photo`,content:await fileB64(pendingSeasonalImage),branch})});
+    image="/"+imgPath;
+  }
+  const item={emoji:document.getElementById("s-emoji").value.trim()||"🌿",name,image,price:parseFloat(document.getElementById("s-price").value)||0,price_max:parseFloat(document.getElementById("s-pmax").value)||0,price_label:document.getElementById("s-plabel").value.trim(),available:true};
   data.seasonal=data.seasonal||[];
   if(editingSeasonalIndex!==null){data.seasonal[editingSeasonalIndex]=item}else{data.seasonal.push(item)}
   closeSeasonal();renderSeasonal();setDirty(true);show("Ramo de temporada guardado. Pulsa Publicar para subirlo.");

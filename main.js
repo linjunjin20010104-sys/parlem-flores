@@ -126,8 +126,9 @@ function renderSeasonal() {
   section.style.display = '';
   grid.innerHTML = seasonal.map(s => `
     <div style="text-align:center;padding:1.5rem 1rem;background:var(--white);border:1px solid var(--border-light);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border-light)'">
-      <div style="font-size:2.2rem;margin-bottom:.5rem">${s.emoji || s.icon || '🌿'}</div>
+      <div style="width:100%;aspect-ratio:1/1;border-radius:4px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:.75rem;overflow:hidden">${s.image ? `<img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover">` : (s.emoji || s.icon || '🌿')}</div>
       <div style="font-family:var(--font-heading);font-size:.95rem;font-weight:500;letter-spacing:.5px">${s.name}</div>
+      ${s.price ? `<div style="font-size:.78rem;color:var(--primary);font-weight:600;margin-top:.35rem">${s.price}€${s.price_max && s.price_max > s.price ? ' - ' + s.price_max + '€' : ''}${s.price_label ? ' ' + s.price_label : ''}</div>` : ''}
     </div>
   `).join('');
 }

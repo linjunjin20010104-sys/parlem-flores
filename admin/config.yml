@@ -41,6 +41,11 @@ collections:
             fields:
               - { label: "Nombre", name: "name", widget: "string" }
               - { label: "Emoji", name: "emoji", widget: "string", required: false }
+              - { label: "Imagen", name: "image", widget: "image", required: false }
+              - { label: "Precio desde", name: "price", widget: "number", value_type: "float", required: false }
+              - { label: "Precio hasta", name: "price_max", widget: "number", value_type: "float", required: false }
+              - { label: "Etiqueta de precio", name: "price_label", widget: "string", required: false }
+              - { label: "Disponible en la web", name: "available", widget: "boolean", default: true }
           - label: "Categorías"
             name: "categories"
             widget: "list"
