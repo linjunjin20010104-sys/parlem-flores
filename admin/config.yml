@@ -40,7 +40,6 @@ collections:
             widget: "list"
             fields:
               - { label: "Nombre", name: "name", widget: "string" }
-              - { label: "Emoji", name: "emoji", widget: "string", required: false }
               - { label: "Imagen", name: "image", widget: "image", required: false }
               - { label: "Precio desde", name: "price", widget: "number", value_type: "float", required: false }
               - { label: "Precio hasta", name: "price_max", widget: "number", value_type: "float", required: false }
@@ -52,7 +51,6 @@ collections:
             fields:
               - { label: "ID", name: "id", widget: "string" }
               - { label: "Nombre", name: "name", widget: "string" }
-              - { label: "Icono", name: "icon", widget: "string", required: false }
               - label: "Subcategorías"
                 name: "subcategories"
                 widget: "list"

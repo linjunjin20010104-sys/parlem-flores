@@ -126,7 +126,7 @@ function renderSeasonal() {
   section.style.display = '';
   grid.innerHTML = seasonal.map(s => `
     <div style="text-align:center;padding:1.5rem 1rem;background:var(--white);border:1px solid var(--border-light);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border-light)'">
-      <div style="width:100%;aspect-ratio:1/1;border-radius:4px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:.75rem;overflow:hidden">${s.image ? `<img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover">` : (s.emoji || s.icon || '🌿')}</div>
+      <div style="width:100%;aspect-ratio:1/1;border-radius:4px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;overflow:hidden">${s.image ? `<img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover">` : '<span style="font-size:.75rem;color:var(--text-light);letter-spacing:.08em;text-transform:uppercase">Sin foto</span>'}</div>
       <div style="font-family:var(--font-heading);font-size:.95rem;font-weight:500;letter-spacing:.5px">${s.name}</div>
       ${s.price ? `<div style="font-size:.78rem;color:var(--primary);font-weight:600;margin-top:.35rem">${s.price}€${s.price_max && s.price_max > s.price ? ' - ' + s.price_max + '€' : ''}${s.price_label ? ' ' + s.price_label : ''}</div>` : ''}
     </div>
@@ -138,10 +138,10 @@ function renderCategoryTabs() {
   const tabs = document.getElementById('category-tabs');
   if (!tabs) return;
   const cats = siteData.categories || [];
-  const allCats = [{ id: 'all', name: 'Todas', icon: '🌿' }, ...cats];
+  const allCats = [{ id: 'all', name: 'Todas' }, ...cats];
   tabs.innerHTML = allCats.map(c => `
     <button class="tab-btn ${c.id === 'all' ? 'active' : ''}" onclick="filterProducts('${c.id}', this)">
-      ${c.icon || ''} ${c.name}
+      ${c.name}
     </button>
   `).join('');
 }
@@ -210,12 +210,11 @@ function renderProducts(catId, subcategoryId = 'all') {
           ${p.price_label ? `<span class="product-price-range">${p.price_label}</span>` : ''}
         </div>`;
     }
-    const emoji = getProductEmoji(p.category);
     const subcategoryName = p.subcategory ? getSubcategoryName(p.category, p.subcategory) : '';
     return `
     <div class="product-card" data-id="${p.id}">
       <div class="product-img">
-        ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='${emoji}'">` : emoji}
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'image-placeholder\\'>Sin foto</span>'">` : '<span class="image-placeholder">Sin foto</span>'}
       </div>
       ${p.badge ? `<span class="product-badge ${badgeClass}">${p.badge}</span>` : ''}
       <div class="product-info">
@@ -231,26 +230,6 @@ function renderProducts(catId, subcategoryId = 'all') {
       </div>
     </div>`;
   }).join('');
-}
-
-function getProductEmoji(cat) {
-  const map = {
-    'ramos-bouquets': '💐',
-    'centros-flores': '🌸',
-    'centros-cementerio': '🕊️',
-    'cestas-ramos-secos': '🧺',
-    'flores-preservadas': '🌹',
-    jarrones: '🏺',
-    plantas: '🪴',
-    evento: '💍',
-    bouquets: '💐',
-    wedding: '💍',
-    gifts: '🎁',
-    plants: '🪴',
-    funeral: '🕊️',
-    premium: '✨'
-  };
-  return map[cat] || '🌿';
 }
 
 function getSubcategoryName(catId, subcategoryId) {

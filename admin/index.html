@@ -167,7 +167,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <h3 id="seasonal-modal-title">Nuevo ramo de temporada</h3>
     <div class="form-grid">
       <div><label>Nombre</label><input id="s-name" placeholder="Tulipanes"></div>
-      <div><label>Emoji</label><input id="s-emoji" placeholder="🌷"></div>
       <div><label>Precio desde</label><input id="s-price" type="number" min="0"></div>
       <div><label>Precio hasta</label><input id="s-pmax" type="number" min="0"></div>
       <div class="wide"><label>Etiqueta precio</label><input id="s-plabel" placeholder="/ramo"></div>
@@ -246,9 +245,9 @@ async function loadData(){
 function renderAll(){if(!data)return;renderSummary();renderTabs();renderProducts();renderSeasonal();renderSettings()}
 function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
 function renderTabs(){
-  const cats=[{id:"all",name:"Todos",icon:"🌿"},...(data.categories||[])];
-  document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';renderTabs();renderProducts()">${c.icon||""} ${c.name}</button>`).join("");
-  document.getElementById("f-cat").innerHTML=(data.categories||[]).map(c=>`<option value="${c.id}">${c.icon||""} ${c.name}</option>`).join("");
+  const cats=[{id:"all",name:"Todos"},...(data.categories||[])];
+  document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';renderTabs();renderProducts()">${c.name}</button>`).join("");
+  document.getElementById("f-cat").innerHTML=(data.categories||[]).map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
 }
 function renderSummary(){
   const total=data.products.length;
@@ -262,7 +261,6 @@ function renderSummary(){
     <div class="stat"><strong>${missingPhotos}</strong><span>Sin foto</span></div>`;
 }
 function price(p){return p.price===0?"Consultar":`${p.price}€${p.price_max&&p.price_max>p.price?" - "+p.price_max+"€":""}${p.price_label?" "+p.price_label:""}`}
-function emoji(cat){return({"ramos-bouquets":"💐","centros-flores":"🌸","centros-cementerio":"🕊️","cestas-ramos-secos":"🧺","flores-preservadas":"🌹",jarrones:"🏺",plantas:"🪴",evento:"💍",bouquets:"💐",premium:"✨",wedding:"💍",gifts:"🎁"}[cat]||"🌿")}
 function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c.name:id}
 function subcatName(catId,subcatId){const c=(data.categories||[]).find(x=>x.id===catId);const s=(c?.subcategories||[]).find(x=>x.id===subcatId);return s?s.name:""}
 function renderProducts(){
@@ -270,7 +268,7 @@ function renderProducts(){
   const items=searchTerm?byCat.filter(p=>`${p.name} ${p.description||""} ${p.badge||""}`.toLowerCase().includes(searchTerm)):byCat;
   document.getElementById("products").innerHTML=items.map(p=>`
     <div class="product" style="${p.available?"":"opacity:.55"}">
-      <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:emoji(p.category)}</div>
+      <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:`<span class="muted">Sin foto</span>`}</div>
       <div><div class="pname">${p.name}</div><div class="pdesc">${p.description||""}</div><div class="meta"><span class="badge">${catName(p.category)}</span>${p.subcategory?`<span class="badge">${subcatName(p.category,p.subcategory)}</span>`:""}${p.badge?`<span class="badge">${p.badge}</span>`:""}<span class="price">${price(p)}</span><span class="dot ${p.available?"":"off"}"></span></div></div>
       <div class="actions"><button class="btn" onclick="openProduct(${p.id})">Editar</button><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Borrar</button></div>
     </div>`).join("")||'<p class="muted">No hay productos en esta categoría.</p>';
@@ -321,7 +319,7 @@ function deleteProduct(id){const p=data.products.find(x=>x.id===id);if(confirm(`
 function renderSeasonal(){
   document.getElementById("seasonal").innerHTML=(data.seasonal||[]).map((s,i)=>`
     <div class="seasonal-item">
-      <div class="seasonal-emoji">${s.image?`<img src="${s.image}" alt="${s.name}">`:s.emoji||"🌿"}</div>
+      <div class="seasonal-emoji">${s.image?`<img src="${s.image}" alt="${s.name}">`:`<span class="muted">Sin foto</span>`}</div>
       <div><div class="seasonal-name">${s.name||"Ramo de temporada"}</div><div class="muted">${seasonalPrice(s)}</div></div>
       <div class="actions"><button class="btn" onclick="openSeasonal(${i})">Editar</button><button class="btn btn-danger" onclick="deleteSeasonal(${i})">Borrar</button></div>
     </div>`).join("")||'<p class="muted">No hay ramos de temporada.</p>';
@@ -330,9 +328,8 @@ function seasonalPrice(s){return s.price?`${s.price}€${s.price_max&&s.price_ma
 function openSeasonal(i){
   pendingSeasonalImage=null;
   editingSeasonalIndex=Number.isInteger(i)?i:null;
-  const item=editingSeasonalIndex!==null?data.seasonal[editingSeasonalIndex]:{name:"",emoji:"🌿",image:"",price:"",price_max:"",price_label:""};
+  const item=editingSeasonalIndex!==null?data.seasonal[editingSeasonalIndex]:{name:"",image:"",price:"",price_max:"",price_label:""};
   document.getElementById("seasonal-modal-title").textContent=editingSeasonalIndex!==null?"Editar ramo de temporada":"Nuevo ramo de temporada";
-  document.getElementById("s-emoji").value=item.emoji||"";
   document.getElementById("s-name").value=item.name||"";
   document.getElementById("s-price").value=item.price||"";
   document.getElementById("s-pmax").value=item.price_max||"";
@@ -357,7 +354,7 @@ async function saveSeasonal(){
     await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} seasonal photo`,content:await fileB64(pendingSeasonalImage),branch})});
     image="/"+imgPath;
   }
-  const item={emoji:document.getElementById("s-emoji").value.trim()||"🌿",name,image,price:parseFloat(document.getElementById("s-price").value)||0,price_max:parseFloat(document.getElementById("s-pmax").value)||0,price_label:document.getElementById("s-plabel").value.trim(),available:true};
+  const item={name,image,price:parseFloat(document.getElementById("s-price").value)||0,price_max:parseFloat(document.getElementById("s-pmax").value)||0,price_label:document.getElementById("s-plabel").value.trim(),available:true};
   data.seasonal=data.seasonal||[];
   if(editingSeasonalIndex!==null){data.seasonal[editingSeasonalIndex]=item}else{data.seasonal.push(item)}
   closeSeasonal();renderSeasonal();setDirty(true);show("Ramo de temporada guardado. Pulsa Publicar para subirlo.");
