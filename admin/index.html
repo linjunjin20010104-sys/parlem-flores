@@ -221,7 +221,7 @@ function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0
 function isNetlifyHost(){return location.hostname.includes("netlify.app")}
 function login(){
   if(!isNetlifyHost()){
-    location.href="/admin/token.html";
+    location.href="https://precious-concha-6f7bce.netlify.app/admin/";
     return;
   }
   window.netlifyIdentity.open();
@@ -236,7 +236,7 @@ async function start(){
   catch(e){document.getElementById("login-error").style.display="block"}
 }
 if(!isNetlifyHost()){
-  document.getElementById("login-main").textContent="Entrar con token";
+  document.getElementById("login-main").textContent="Entrar con cuenta";
   document.querySelector('a[href="/admin/token.html"]').style.display="none";
   document.querySelector('a[href="/admin/cms.html"]').style.display="none";
 }
