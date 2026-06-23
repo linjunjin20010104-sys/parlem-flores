@@ -80,11 +80,14 @@ function renderHero() {
   if (badge && s.hero_badge) badge.textContent = s.hero_badge;
 
   // Background image
+  const bg = document.getElementById('hero-bg-img');
   if (s.hero_image) {
-    const bg = document.getElementById('hero-bg-img');
     const imgSrc = s.hero_image.startsWith('data:') ? s.hero_image : s.hero_image;
     bg.style.backgroundImage = `url('${imgSrc}')`;
     bg.classList.add('active');
+  } else if (bg) {
+    bg.style.backgroundImage = '';
+    bg.classList.remove('active');
   }
 
   // Tags

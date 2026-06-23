@@ -193,7 +193,7 @@ const repo="parlem-flores";
 const branch="main";
 const api="/.netlify/git/github/contents";
 const raw="/data.json";
-let data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,dirty=false;
+let data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
 
 async function identityToken(){
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -361,9 +361,23 @@ async function saveSeasonal(){
 }
 function deleteSeasonal(i){if(confirm("¿Borrar este ramo de temporada?")){data.seasonal.splice(i,1);renderSeasonal();setDirty(true)}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
-function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}${setting("Historia","about_text","textarea")}</div></div>`}
+function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/*" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 5 MB.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div>${setting("Historia","about_text","textarea")}</div></div>`}
+function handleHeroImage(e){
+  pendingHeroImage=e.target.files[0]||null;
+  if(!pendingHeroImage)return;
+  if(pendingHeroImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingHeroImage=null;return}
+  const prev=document.getElementById("hero-preview");prev.src=URL.createObjectURL(pendingHeroImage);prev.style.display="block";
+  setDirty(true);
+}
 async function saveAll(){
   show("Guardando en GitHub...");
+  if(pendingHeroImage){
+    const ext=(pendingHeroImage.name.split(".").pop()||"jpg").toLowerCase();
+    const imgPath=`img/${Date.now()}-portada-inicio.${ext}`;
+    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:"Upload homepage cover photo",content:await fileB64(pendingHeroImage),branch})});
+    data.site.hero_image="/"+imgPath;
+    pendingHeroImage=null;
+  }
   const latest=await gh("data.json?ref="+branch);
   dataSha=latest.sha;
   const saved=await gh("data.json",{method:"PUT",body:JSON.stringify({message:"Update Parlem Flores data",content:b64utf8(JSON.stringify(data,null,2)+"\n"),sha:dataSha,branch})});
