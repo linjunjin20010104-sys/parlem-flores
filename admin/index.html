@@ -86,7 +86,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <div class="logo">✿</div>
     <h1>Parlem Flores Admin</h1>
     <p class="hint">Entra con tu cuenta de Netlify para actualizar productos, fotos y textos de la web.</p>
-    <button class="btn btn-primary full" onclick="login()">Entrar con cuenta</button>
+    <button class="btn btn-primary full" id="login-main" onclick="login()">Entrar con cuenta</button>
     <a class="btn full" href="/admin/cms.html">Abrir editor avanzado</a>
     <a class="btn full" href="/admin/token.html">Acceso de emergencia con token</a>
     <div class="error" id="login-error">No se pudo conectar con Netlify. Revisa que hayas iniciado sesión.</div>
@@ -218,7 +218,14 @@ function b64utf8(str){return btoa(unescape(encodeURIComponent(str)))}
 function fileB64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file)})}
 function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48)||"flor"}
 
-function login(){ window.netlifyIdentity.open(); }
+function isNetlifyHost(){return location.hostname.includes("netlify.app")}
+function login(){
+  if(!isNetlifyHost()){
+    location.href="/admin/token.html";
+    return;
+  }
+  window.netlifyIdentity.open();
+}
 function logout(){
   window.netlifyIdentity.logout();
   document.getElementById("app").style.display="none";
@@ -228,7 +235,12 @@ async function start(){
   try{await loadData();document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";renderAll()}
   catch(e){document.getElementById("login-error").style.display="block"}
 }
-if(window.netlifyIdentity){
+if(!isNetlifyHost()){
+  document.getElementById("login-main").textContent="Entrar con token";
+  document.querySelector('a[href="/admin/token.html"]').style.display="none";
+  document.querySelector('a[href="/admin/cms.html"]').style.display="none";
+}
+if(isNetlifyHost() && window.netlifyIdentity){
   window.netlifyIdentity.on("init", user => { if(user) start(); });
   window.netlifyIdentity.on("login", () => { window.netlifyIdentity.close(); start(); });
   window.netlifyIdentity.init();
