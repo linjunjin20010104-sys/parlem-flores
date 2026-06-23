@@ -259,6 +259,12 @@ function renderServices() {
 // ---- ABOUT ----
 function renderAbout() {
   const s = siteData.site;
+  const section = document.getElementById('nosotros');
+  if (!s.about_text && section) {
+    section.style.display = 'none';
+    return;
+  }
+  if (section) section.style.display = '';
   document.getElementById('about-name').textContent = s.about_name;
   document.getElementById('about-text').textContent = s.about_text;
   const img = document.getElementById('about-img');
@@ -419,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function openWeddingWA(e) {
   e.preventDefault();
   if (siteData) {
-    window.open(`https://wa.me/${siteData.site.whatsapp}?text=Hola%21%20Me%20gustar%C3%ADa%20consultar%20sobre%20decoraci%C3%B3n%20floral%20para%20mi%20boda%20%F0%9F%92%8D`, '_blank');
+    window.open(`https://wa.me/${siteData.site.whatsapp}?text=Hola%21%20Me%20gustar%C3%ADa%20consultar%20sobre%20decoraci%C3%B3n%20floral%20para%20un%20evento`, '_blank');
   }
 }
 
@@ -427,7 +433,7 @@ function filterToWedding(e) {
   e.preventDefault();
   document.querySelector('#productos').scrollIntoView({ behavior: 'smooth' });
   setTimeout(() => {
-    const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.textContent.toLowerCase().includes('bodas'));
+    const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.textContent.toLowerCase().includes('evento'));
     if (btn) btn.click();
   }, 600);
 }

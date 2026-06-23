@@ -5,24 +5,20 @@
     "hero_title": "Cada flor cuenta una historia",
     "hero_subtitle": "Creaciones florales hechas a mano cada día en Valencia.",
     "hero_image": "",
-    "about_name": "Isabel",
-    "about_text": "Parlem Flores nació de mi pasión por las flores...",
-    "address": "Eixample, Valencia",
-    "phone": "+34 600 000 000",
-    "whatsapp": "34600000000",
+    "about_name": "",
+    "about_text": "",
+    "address": "Calle Ciscar, 65, 46005 L'Eixample, Valencia",
+    "phone": "+34 614 506 761",
+    "whatsapp": "34614506761",
     "email": "hola@parlemflores.com",
     "instagram": "parlemflores",
-    "hours": "Lun–Sáb: 9:00–20:00 · Dom: 10:00–15:00",
-    "delivery_info": "Entrega el mismo día en Valencia ciudad",
-    "top_bar_text": "Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia",
+    "hours": "Lun-Vie: 9:00-14:00 y 16:00-20:00 · Sáb: 10:00-14:00 y 16:00-20:00 · Dom: cerrado. Festivos: consultar por teléfono.",
+    "delivery_info": "Entrega a domicilio gratis en Valencia ciudad y alrededores.",
+    "top_bar_text": "Entrega a domicilio gratis en Valencia ciudad y alrededores · Flores frescas cada semana",
     "nav_links": [
       {
         "label": "Tienda",
         "href": "#productos"
-      },
-      {
-        "label": "Historia",
-        "href": "#nosotros"
       },
       {
         "label": "Contacto",
@@ -32,15 +28,15 @@
     "hero_badge": "✦ Floristería artesanal · Valencia",
     "hero_tags": [
       "Valencia ciudad",
-      "Entrega el mismo día",
-      "Flores frescas diarias",
+      "Entrega a domicilio gratis",
+      "Flores frescas cada semana",
       "Bizum · Efectivo · Transferencia"
     ],
     "services": [
       {
         "icon": "🌸",
-        "title": "Flores del mercado",
-        "desc": "Seleccionamos personalmente las flores más frescas cada mañana"
+        "title": "Flores frescas cada semana",
+        "desc": "Cada semana llegan flores frescas para crear ramos y composiciones especiales"
       },
       {
         "icon": "✂️",
@@ -49,16 +45,16 @@
       },
       {
         "icon": "🚚",
-        "title": "Entrega hoy",
-        "desc": "Pedidos antes de las 17:00, entrega el mismo día"
+        "title": "Entrega a domicilio",
+        "desc": "Entrega gratis en Valencia ciudad y alrededores"
       },
       {
         "icon": "💍",
-        "title": "Bodas y eventos",
-        "desc": "Diseñamos la decoración floral completa para tu celebración"
+        "title": "Evento",
+        "desc": "Diseñamos decoración floral para celebraciones y momentos especiales"
       }
     ],
-    "wedding_text": "Cada boda es única y merece flores que lo sean también.",
+    "wedding_text": "Decoración floral para eventos, celebraciones y momentos especiales. Cuéntanos tu idea y prepararemos una propuesta a medida.",
     "about_stats": [
       {
         "num": "5★",
@@ -273,7 +269,7 @@
       "price_max": 250,
       "price_label": "Según diseño",
       "image": "",
-      "badge": "Boda",
+      "badge": "Evento",
       "available": true,
       "subcategory": ""
     },
@@ -326,7 +322,7 @@
     },
     {
       "name": "Carlos M.",
-      "text": "Isabel decoró nuestra boda y fue un sueño.",
+      "text": "Parlem Flores decoró nuestro evento y fue un sueño.",
       "stars": 5,
       "source": "Instagram"
     },

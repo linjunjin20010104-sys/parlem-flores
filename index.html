@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Parlem Flores tesanal en Valencia</title>
-  <meta name="description" content="Floristería artesanal en Valencia. Ramos frescos hechos a mano, bodas y eventos. Entrega el mismo día.">
+  <meta name="description" content="Floristería artesanal en Valencia. Ramos frescos hechos a mano, eventos y entrega a domicilio gratis en Valencia ciudad y alrededores.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -14,7 +14,7 @@
 
 <!-- ===== TOP BAR ===== -->
 <div class="top-bar">
-  <span id="top-bar-text">✿ Envío gratuito en pedidos superiores a 40€ · Entrega el mismo día en Valencia</span>
+  <span id="top-bar-text">✿ Entrega a domicilio gratis en Valencia ciudad y alrededores · Flores frescas cada semana</span>
   <a href="#contacto">Más info</a>
 </div>
 
@@ -27,7 +27,6 @@
     </a>
     <ul class="nav-links" id="nav-links">
       <li><a href="#productos">Tienda</a></li>
-      <li><a href="#nosotros">Historia</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <div class="nav-actions">
@@ -49,7 +48,6 @@
     </div>
     <ul id="mobile-nav-links">
       <li><a href="#productos">Tienda</a></li>
-      <li><a href="#nosotros">Historia</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <div class="mobile-nav-social">
@@ -74,8 +72,8 @@
     </div>
     <div class="hero-tags" id="hero-tags">
       <span>Valencia ciudad</span>
-      <span>Entrega el mismo día</span>
-      <span>Flores frescas diarias</span>
+      <span>Entrega a domicilio gratis</span>
+      <span>Flores frescas cada semana</span>
       <span>Bizum · Efectivo · Transferencia</span>
     </div>
   </div>
@@ -113,8 +111,8 @@
   <div class="services-grid" id="services-grid">
     <div class="service-card">
       <div class="service-icon">🌸</div>
-      <h3>Flores del mercado</h3>
-      <p>Seleccionamos personalmente las flores más frescas cada mañana en el Mercado Central de Valencia</p>
+      <h3>Flores frescas cada semana</h3>
+      <p>Cada semana llegan flores frescas para crear ramos y composiciones especiales</p>
     </div>
     <div class="service-card">
       <div class="service-icon">✂️</div>
@@ -123,26 +121,26 @@
     </div>
     <div class="service-card">
       <div class="service-icon">🚚</div>
-      <h3>Entrega hoy</h3>
-      <p>Pedidos antes de las 17:00, entrega el mismo día en toda la ciudad de Valencia</p>
+      <h3>Entrega a domicilio</h3>
+      <p>Entrega gratis en Valencia ciudad y alrededores</p>
     </div>
     <div class="service-card">
       <div class="service-icon">💍</div>
-      <h3>Bodas y eventos</h3>
-      <p>Diseñamos la decoración floral completa para tu celebración más especial</p>
+      <h3>Evento</h3>
+      <p>Diseñamos decoración floral para celebraciones y momentos especiales</p>
     </div>
   </div>
 </section>
 
 <!-- ===== ABOUT ===== -->
-<section class="section section-alt" id="nosotros">
+<section class="section section-alt" id="nosotros" style="display:none">
   <div class="about-grid">
     <div class="about-image-wrap">
       <div class="about-img" id="about-img">✿</div>
       <div class="about-decor"></div>
     </div>
     <div class="about-text">
-      <h2>Hola, soy <span id="about-name">Isabel</span></h2>
+      <h2><span id="about-name"></span></h2>
       <p id="about-text"></p>
       <div class="about-stats" id="about-stats">
         <div class="stat-item">
@@ -163,14 +161,14 @@
   </div>
 </section>
 
-<!-- ===== WEDDINGS ===== -->
-<section class="section" id="bodas">
+<!-- ===== EVENTS ===== -->
+<section class="section" id="eventos">
   <div class="section-header">
-    <h2>❦ Bodas y Eventos</h2>
-    <p>Desde el ramo de novia hasta la decoración completa del espacio</p>
+    <h2>❦ Evento</h2>
+    <p>Decoración floral para celebraciones y momentos especiales</p>
   </div>
   <div class="wedding-card">
-    <p id="wedding-text">Cada boda es única y merece flores que lo sean también. Cuéntame tu historia, tus colores favoritos y tu fecha, y diseñaremos juntos el sueño floral que imaginas.</p>
+    <p id="wedding-text">Decoración floral para eventos, celebraciones y momentos especiales. Cuéntanos tu idea y prepararemos una propuesta a medida.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
       <a id="wedding-wa" href="#" target="_blank" class="btn btn-whatsapp" onclick="openWeddingWA(event)">
         PEDIR PRESUPUESTO
@@ -251,7 +249,7 @@
         </div>
         <div class="form-group">
           <label for="form-phone">TELÉFONO</label>
-          <input id="form-phone" type="tel" placeholder="+34 600 000 000" required>
+          <input id="form-phone" type="tel" placeholder="+34 614 506 761" required>
         </div>
         <div class="form-group">
           <label for="form-type">TIPO DE PEDIDO</label>
@@ -259,7 +257,7 @@
             <option>Ramo del día</option>
             <option>Composición personalizada</option>
             <option>Entrega a domicilio</option>
-            <option>Boda / Evento</option>
+            <option>Evento</option>
             <option>Suscripción semanal</option>
             <option>Otro</option>
           </select>
