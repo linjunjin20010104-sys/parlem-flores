@@ -10,7 +10,7 @@
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f6f1ec;color:#241d19;min-height:100vh}
 button,input,select,textarea{font:inherit}
 .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.login-card{width:390px;background:white;border:1px solid #e7ddd4;border-radius:10px;padding:28px;box-shadow:0 12px 40px rgba(56,40,30,.08)}
+.login-card{width:min(430px,100%);background:white;border:1px solid #e7ddd4;border-radius:10px;padding:28px;box-shadow:0 12px 40px rgba(56,40,30,.08)}
 .logo{text-align:center;color:#7f1f28;font-family:Georgia,serif;font-size:28px;margin-bottom:6px}
 .login-card h1{text-align:center;font-size:19px;margin-bottom:6px}
 .hint{text-align:center;color:#7c7068;font-size:13px;line-height:1.5;margin-bottom:22px}
@@ -24,7 +24,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .btn-primary:hover{background:#661820}
 .btn-danger{color:#ad3f3f;border-color:#e7bcbc;background:#fff8f8}
 .btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.full{width:100%;justify-content:center;margin-top:18px}
+.full{display:flex;width:100%;align-items:center;justify-content:center;margin-top:10px;text-align:center;line-height:1.25;min-height:44px;text-decoration:none}
+.hint+.full{margin-top:18px}
 .error{display:none;color:#b43b3b;font-size:13px;text-align:center;margin-top:12px}
 .app{display:none;min-height:100vh}
 .top{height:58px;background:white;border-bottom:1px solid #e7ddd4;display:flex;align-items:center;gap:12px;padding:0 18px;position:sticky;top:0;z-index:2}
@@ -86,8 +87,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <h1>Parlem Flores Admin</h1>
     <p class="hint">Entra con tu cuenta de Netlify para actualizar productos, fotos y textos de la web.</p>
     <button class="btn btn-primary full" onclick="login()">Entrar con cuenta</button>
-    <a class="btn full" href="/admin/cms.html" style="text-decoration:none;text-align:center">Abrir editor avanzado</a>
-    <a class="btn full" href="/admin/token.html" style="text-decoration:none;text-align:center">Acceso de emergencia con token</a>
+    <a class="btn full" href="/admin/cms.html">Abrir editor avanzado</a>
+    <a class="btn full" href="/admin/token.html">Acceso de emergencia con token</a>
     <div class="error" id="login-error">No se pudo conectar con Netlify. Revisa que hayas iniciado sesión.</div>
   </div>
 </section>
