@@ -84,9 +84,11 @@ function renderHero() {
   if (s.hero_image) {
     const imgSrc = s.hero_image.startsWith('data:') ? s.hero_image : s.hero_image;
     bg.style.backgroundImage = `url('${imgSrc}')`;
+    bg.style.opacity = String((Number(s.hero_image_opacity ?? 70) || 70) / 100);
     bg.classList.add('active');
   } else if (bg) {
     bg.style.backgroundImage = '';
+    bg.style.opacity = '';
     bg.classList.remove('active');
   }
 

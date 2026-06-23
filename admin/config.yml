@@ -23,6 +23,7 @@ collections:
               - { label: "Título principal", name: "hero_title", widget: "string" }
               - { label: "Subtítulo principal", name: "hero_subtitle", widget: "text" }
               - { label: "Imagen principal", name: "hero_image", widget: "image", required: false }
+              - { label: "Opacidad imagen principal", name: "hero_image_opacity", widget: "number", min: 20, max: 100, value_type: "int", default: 70 }
               - { label: "Nombre florista", name: "about_name", widget: "string" }
               - { label: "Texto historia", name: "about_text", widget: "text" }
               - { label: "Dirección", name: "address", widget: "string" }
