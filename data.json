@@ -244,22 +244,22 @@
       "price": 45,
       "price_max": 130,
       "price_label": "Según tamaño",
-      "image": "/img/1782337899890-centro-estatice.jpg",
+      "image": "/img/1782339696965-centro-estatice.jpg",
       "badge": "Premium",
       "available": true
     },
     {
       "id": 6,
       "category": "centros-flores",
-      "name": "Jarrón Artístico",
-      "description": "Composición en jarrón cerámica incluido.",
-      "price": 75,
-      "price_max": 0,
+      "subcategory": "",
+      "name": "Centro Primavera",
+      "description": "",
+      "price": 65,
+      "price_max": 200,
       "price_label": "",
-      "image": "",
+      "image": "/img/1782339746832-centro-primavera.jpg",
       "badge": "",
-      "available": true,
-      "subcategory": ""
+      "available": true
     },
     {
       "id": 7,
