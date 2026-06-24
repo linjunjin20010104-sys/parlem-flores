@@ -197,7 +197,11 @@ let token="",data=null,dataSha="",filter="all",searchTerm="",editingId=null,edit
 
 async function gh(path,opts={}){
   const res=await fetch(`${api}/${path}`,{...opts,headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json",...(opts.headers||{})}});
-  if(!res.ok) throw new Error(await res.text());
+  if(!res.ok){
+    let msg=await res.text();
+    try{msg=JSON.parse(msg).message||msg}catch{}
+    throw new Error(msg);
+  }
   return res.json();
 }
 function show(msg){const el=document.getElementById("status");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),4200)}
@@ -208,6 +212,11 @@ function setDirty(v=true){
 }
 window.addEventListener("beforeunload", e => { if(dirty){ e.preventDefault(); e.returnValue=""; } });
 function b64utf8(str){return btoa(unescape(encodeURIComponent(str)))}
+function b64ToUtf8(str){
+  const bin=atob(String(str||"").replace(/\n/g,""));
+  const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
 function fileB64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file)})}
 function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48)||"flor"}
 function loadImageFile(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("No se pudo leer la foto. Usa JPG, PNG o WebP. Si es HEIC del iPhone, guárdala como JPG antes de subirla."))};img.src=url})}
@@ -246,8 +255,7 @@ async function start(){
 async function loadData(){
   const file=await gh("data.json?ref="+branch);
   dataSha=file.sha;
-  const res=await fetch(raw+"?v="+Date.now());
-  data=await res.json();
+  data=JSON.parse(b64ToUtf8(file.content));
   dirty=false;
   renderAll();
   setDirty(false);
@@ -402,20 +410,26 @@ async function handleHeroImage(e){
   }
 }
 async function saveAll(){
-  show("Guardando en GitHub...");
-  if(pendingHeroImage){
-    const ext="jpg";
-    const imgPath=`img/${Date.now()}-portada-inicio.${ext}`;
-    await uploadImage(imgPath,pendingHeroImage,"Upload homepage cover photo");
-    data.site.hero_image="/"+imgPath;
-    pendingHeroImage=null;
+  try{
+    show("Guardando en GitHub...");
+    if(pendingHeroImage){
+      const ext="jpg";
+      const imgPath=`img/${Date.now()}-portada-inicio.${ext}`;
+      await uploadImage(imgPath,pendingHeroImage,"Upload homepage cover photo");
+      data.site.hero_image="/"+imgPath;
+      pendingHeroImage=null;
+    }
+    const latest=await gh("data.json?ref="+branch);
+    dataSha=latest.sha;
+    const saved=await gh("data.json",{method:"PUT",body:JSON.stringify({message:"Update Parlem Flores data",content:b64utf8(JSON.stringify(data,null,2)+"\n"),sha:dataSha,branch})});
+    dataSha=saved.content.sha;
+    setDirty(false);
+    show("Publicado. La web puede tardar unos minutos en actualizarse.");
+  }catch(err){
+    const msg=err && err.message ? err.message : "Error desconocido";
+    show("No se pudo guardar. Revisa el aviso.");
+    alert("No se pudo guardar en la nube: "+msg);
   }
-  const latest=await gh("data.json?ref="+branch);
-  dataSha=latest.sha;
-  const saved=await gh("data.json",{method:"PUT",body:JSON.stringify({message:"Update Parlem Flores data",content:b64utf8(JSON.stringify(data,null,2)+"\n"),sha:dataSha,branch})});
-  dataSha=saved.content.sha;
-  setDirty(false);
-  show("Publicado. La web puede tardar unos minutos en actualizarse.");
 }
 </script>
 </body>
