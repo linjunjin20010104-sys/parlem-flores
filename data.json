@@ -238,15 +238,15 @@
     {
       "id": 5,
       "category": "centros-flores",
-      "name": "Centro Premium",
-      "description": "Composición de gran formato con las flores más selectas.",
-      "price": 60,
-      "price_max": 120,
+      "subcategory": "",
+      "name": "Centro Estatice",
+      "description": "",
+      "price": 45,
+      "price_max": 130,
       "price_label": "Según tamaño",
-      "image": "",
+      "image": "/img/1782337899890-centro-estatice.jpg",
       "badge": "Premium",
-      "available": true,
-      "subcategory": ""
+      "available": true
     },
     {
       "id": 6,
