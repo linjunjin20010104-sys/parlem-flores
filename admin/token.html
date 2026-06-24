@@ -150,7 +150,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
         <label>Foto</label>
         <div class="upload">
           <input id="f-image" type="file" accept="image/*" onchange="handleImage(event)">
-          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 5 MB. Se guardará en la nube dentro de /img.</p>
+          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p>
           <img id="f-preview" alt="">
         </div>
       </div>
@@ -174,7 +174,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
         <label>Foto</label>
         <div class="upload">
           <input id="s-image" type="file" accept="image/*" onchange="handleSeasonalImage(event)">
-          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 5 MB. Se guardará en la nube dentro de /img.</p>
+          <p class="muted">Sube una foto JPG, PNG o WebP. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p>
           <img id="s-preview" alt="">
         </div>
       </div>
@@ -210,6 +210,32 @@ window.addEventListener("beforeunload", e => { if(dirty){ e.preventDefault(); e.
 function b64utf8(str){return btoa(unescape(encodeURIComponent(str)))}
 function fileB64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file)})}
 function safeName(name){return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48)||"flor"}
+function loadImageFile(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("No se pudo leer la foto. Usa JPG, PNG o WebP. Si es HEIC del iPhone, guárdala como JPG antes de subirla."))};img.src=url})}
+function canvasBlob(canvas,quality=.82){return new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",quality))}
+async function prepareImageFile(file){
+  if(!file)return null;
+  if(!file.type.startsWith("image/")) throw new Error("El archivo no es una foto.");
+  if(file.size>25*1024*1024) throw new Error("La foto es demasiado grande. Máximo 25 MB.");
+  const img=await loadImageFile(file);
+  const max=1800;
+  const scale=Math.min(1,max/Math.max(img.width,img.height));
+  const w=Math.max(1,Math.round(img.width*scale));
+  const h=Math.max(1,Math.round(img.height*scale));
+  const canvas=document.createElement("canvas");
+  canvas.width=w; canvas.height=h;
+  canvas.getContext("2d").drawImage(img,0,0,w,h);
+  const blob=await canvasBlob(canvas,.84);
+  if(!blob) throw new Error("No se pudo preparar la foto.");
+  return new File([blob], safeName(file.name.replace(/\.[^.]+$/,"")||"foto")+".jpg", {type:"image/jpeg"});
+}
+async function uploadImage(path,file,message){
+  try{
+    await gh(path,{method:"PUT",body:JSON.stringify({message,content:await fileB64(file),branch})});
+  }catch(e){
+    alert("No se pudo subir la foto. Revisa tu conexión y que hayas entrado con la cuenta correcta. Detalle: "+String(e.message||e).slice(0,220));
+    throw e;
+  }
+}
 
 async function start(){
   token=document.getElementById("token").value.trim();
@@ -280,20 +306,27 @@ function renderSubcategoryOptions(selected=""){
 function closeProduct(){document.getElementById("modal").classList.remove("open")}
 function toggleAvailable(){available=!available;updateToggle()}
 function updateToggle(){document.getElementById("f-toggle").className="toggle"+(available?" on":"");document.getElementById("f-toggle-label").textContent=available?"Disponible":"Oculto"}
-function handleImage(e){
-  pendingImage=e.target.files[0]||null;
-  if(!pendingImage)return;
-  if(pendingImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingImage=null;return}
-  const prev=document.getElementById("f-preview");prev.src=URL.createObjectURL(pendingImage);prev.style.display="block";
+async function handleImage(e){
+  const original=e.target.files[0]||null;
+  pendingImage=null;
+  if(!original)return;
+  try{
+    pendingImage=await prepareImageFile(original);
+    const prev=document.getElementById("f-preview");prev.src=URL.createObjectURL(pendingImage);prev.style.display="block";
+    show("Foto preparada. Pulsa Guardar producto y después Publicar.");
+  }catch(err){
+    alert(err.message||"No se pudo preparar la foto.");
+    e.target.value="";
+  }
 }
 async function saveProduct(){
   const name=document.getElementById("f-name").value.trim();
   if(!name){alert("El nombre es obligatorio");return}
   let image=editingId?(data.products.find(x=>x.id===editingId)?.image||""):"";
   if(pendingImage){
-    const ext=(pendingImage.name.split(".").pop()||"jpg").toLowerCase();
+    const ext="jpg";
     const imgPath=`img/${Date.now()}-${safeName(name)}.${ext}`;
-    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} photo`,content:await fileB64(pendingImage),branch})});
+    await uploadImage(imgPath,pendingImage,`Upload ${name} photo`);
     image="/"+imgPath;
   }
   const product={id:editingId||Math.max(0,...data.products.map(p=>p.id||0))+1,category:document.getElementById("f-cat").value,subcategory:document.getElementById("f-subcat").value||"",name,description:document.getElementById("f-desc").value.trim(),price:parseFloat(document.getElementById("f-price").value)||0,price_max:parseFloat(document.getElementById("f-pmax").value)||0,price_label:document.getElementById("f-plabel").value.trim(),image,badge:document.getElementById("f-badge").value.trim(),available};
@@ -324,19 +357,26 @@ function openSeasonal(i){
   document.getElementById("seasonal-modal").classList.add("open");
 }
 function closeSeasonal(){document.getElementById("seasonal-modal").classList.remove("open")}
-function handleSeasonalImage(e){
-  pendingSeasonalImage=e.target.files[0]||null;
-  if(!pendingSeasonalImage)return;
-  if(pendingSeasonalImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingSeasonalImage=null;return}
-  const prev=document.getElementById("s-preview");prev.src=URL.createObjectURL(pendingSeasonalImage);prev.style.display="block";
+async function handleSeasonalImage(e){
+  const original=e.target.files[0]||null;
+  pendingSeasonalImage=null;
+  if(!original)return;
+  try{
+    pendingSeasonalImage=await prepareImageFile(original);
+    const prev=document.getElementById("s-preview");prev.src=URL.createObjectURL(pendingSeasonalImage);prev.style.display="block";
+    show("Foto preparada. Pulsa Guardar ramo y después Publicar.");
+  }catch(err){
+    alert(err.message||"No se pudo preparar la foto.");
+    e.target.value="";
+  }
 }
 async function saveSeasonal(){
   const name=document.getElementById("s-name").value.trim()||"Nuevo ramo";
   let image=editingSeasonalIndex!==null?(data.seasonal[editingSeasonalIndex]?.image||""):"";
   if(pendingSeasonalImage){
-    const ext=(pendingSeasonalImage.name.split(".").pop()||"jpg").toLowerCase();
+    const ext="jpg";
     const imgPath=`img/${Date.now()}-${safeName(name)}.${ext}`;
-    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:`Upload ${name} seasonal photo`,content:await fileB64(pendingSeasonalImage),branch})});
+    await uploadImage(imgPath,pendingSeasonalImage,`Upload ${name} seasonal photo`);
     image="/"+imgPath;
   }
   const item={name,image,price:parseFloat(document.getElementById("s-price").value)||0,price_max:parseFloat(document.getElementById("s-pmax").value)||0,price_label:document.getElementById("s-plabel").value.trim(),available:true};
@@ -346,20 +386,27 @@ async function saveSeasonal(){
 }
 function deleteSeasonal(i){if(confirm("¿Borrar este ramo de temporada?")){data.seasonal.splice(i,1);renderSeasonal();setDirty(true)}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
-function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/*" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 5 MB.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div><div class="wide"><label>Opacidad de la foto portada: <span id="hero-opacity-value">${data.site.hero_image_opacity??70}%</span></label><input id="hero-opacity" type="range" min="20" max="100" step="5" value="${data.site.hero_image_opacity??70}" oninput="data.site.hero_image_opacity=parseInt(this.value);document.getElementById('hero-opacity-value').textContent=this.value+'%';setDirty(true)"><p class="muted">100% muestra la foto más clara. 40% deja la portada más oscura y transparente.</p></div>${setting("Historia","about_text","textarea")}</div></div>`}
-function handleHeroImage(e){
-  pendingHeroImage=e.target.files[0]||null;
-  if(!pendingHeroImage)return;
-  if(pendingHeroImage.size>5*1024*1024){alert("La foto es demasiado grande. Máximo 5 MB.");e.target.value="";pendingHeroImage=null;return}
-  const prev=document.getElementById("hero-preview");prev.src=URL.createObjectURL(pendingHeroImage);prev.style.display="block";
-  setDirty(true);
+function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/*" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div><div class="wide"><label>Opacidad de la foto portada: <span id="hero-opacity-value">${data.site.hero_image_opacity??70}%</span></label><input id="hero-opacity" type="range" min="20" max="100" step="5" value="${data.site.hero_image_opacity??70}" oninput="data.site.hero_image_opacity=parseInt(this.value);document.getElementById('hero-opacity-value').textContent=this.value+'%';setDirty(true)"><p class="muted">100% muestra la foto más clara. 40% deja la portada más oscura y transparente.</p></div>${setting("Historia","about_text","textarea")}</div></div>`}
+async function handleHeroImage(e){
+  const original=e.target.files[0]||null;
+  pendingHeroImage=null;
+  if(!original)return;
+  try{
+    pendingHeroImage=await prepareImageFile(original);
+    const prev=document.getElementById("hero-preview");prev.src=URL.createObjectURL(pendingHeroImage);prev.style.display="block";
+    setDirty(true);
+    show("Foto portada preparada. Pulsa Publicar.");
+  }catch(err){
+    alert(err.message||"No se pudo preparar la foto.");
+    e.target.value="";
+  }
 }
 async function saveAll(){
   show("Guardando en GitHub...");
   if(pendingHeroImage){
-    const ext=(pendingHeroImage.name.split(".").pop()||"jpg").toLowerCase();
+    const ext="jpg";
     const imgPath=`img/${Date.now()}-portada-inicio.${ext}`;
-    await gh(imgPath,{method:"PUT",body:JSON.stringify({message:"Upload homepage cover photo",content:await fileB64(pendingHeroImage),branch})});
+    await uploadImage(imgPath,pendingHeroImage,"Upload homepage cover photo");
     data.site.hero_image="/"+imgPath;
     pendingHeroImage=null;
   }
