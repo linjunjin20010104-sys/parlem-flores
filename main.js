@@ -131,7 +131,7 @@ function renderSeasonal() {
   section.style.display = '';
   grid.innerHTML = seasonal.map(s => `
     <div style="text-align:center;padding:1.5rem 1rem;background:var(--white);border:1px solid var(--border-light);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border-light)'">
-      <div style="width:100%;aspect-ratio:1/1;border-radius:4px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;overflow:hidden">${s.image ? `<img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover">` : '<span style="font-size:.75rem;color:var(--text-light);letter-spacing:.08em;text-transform:uppercase">Sin foto</span>'}</div>
+      <div class="seasonal-img">${s.image ? `<button class="image-zoom-btn" type="button" onclick='openImageLightbox(${JSON.stringify(s.image)}, ${JSON.stringify(s.name)})'><img src="${s.image}" alt="${s.name}"></button>` : '<span style="font-size:.75rem;color:var(--text-light);letter-spacing:.08em;text-transform:uppercase">Sin foto</span>'}</div>
       <div style="font-family:var(--font-heading);font-size:.95rem;font-weight:500;letter-spacing:.5px">${s.name}</div>
       ${s.price ? `<div style="font-size:.78rem;color:var(--primary);font-weight:600;margin-top:.35rem">${s.price}€${s.price_max && s.price_max > s.price ? ' - ' + s.price_max + '€' : ''}${s.price_label ? ' ' + s.price_label : ''}</div>` : ''}
     </div>
@@ -219,7 +219,7 @@ function renderProducts(catId, subcategoryId = 'all') {
     return `
     <div class="product-card" data-id="${p.id}">
       <div class="product-img">
-        ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'image-placeholder\\'>Sin foto</span>'">` : '<span class="image-placeholder">Sin foto</span>'}
+        ${p.image ? `<button class="image-zoom-btn" type="button" onclick='openImageLightbox(${JSON.stringify(p.image)}, ${JSON.stringify(p.name)})'><img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.closest('.product-img').innerHTML='<span class=\\'image-placeholder\\'>Sin foto</span>'"></button>` : '<span class="image-placeholder">Sin foto</span>'}
       </div>
       ${p.badge ? `<span class="product-badge ${badgeClass}">${p.badge}</span>` : ''}
       <div class="product-info">
@@ -256,6 +256,38 @@ function renderServices() {
       <p>${s.desc}</p>
     </div>
   `).join('');
+}
+
+function openImageLightbox(src, alt = '') {
+  let modal = document.getElementById('image-lightbox');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'image-lightbox';
+    modal.className = 'image-lightbox';
+    modal.innerHTML = `
+      <button class="image-lightbox-close" type="button" aria-label="Cerrar">×</button>
+      <img alt="">
+    `;
+    modal.addEventListener('click', e => {
+      if (e.target === modal || e.target.classList.contains('image-lightbox-close')) closeImageLightbox();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeImageLightbox();
+    });
+    document.body.appendChild(modal);
+  }
+  const img = modal.querySelector('img');
+  img.src = src;
+  img.alt = alt;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageLightbox() {
+  const modal = document.getElementById('image-lightbox');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 // ---- ABOUT ----
