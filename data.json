@@ -390,6 +390,19 @@
       "image": "/img/1782401988670-ramo-savia.jpg",
       "badge": "Personalizado",
       "available": true
+    },
+    {
+      "id": 17,
+      "category": "centros-cementerio",
+      "subcategory": "",
+      "name": "Centro Cementerio",
+      "description": "",
+      "price": 80,
+      "price_max": 150,
+      "price_label": "Según tamaño",
+      "image": "/img/1782402778227-centro-cementerio.jpg",
+      "badge": "Personalizado",
+      "available": true
     }
   ],
   "testimonials": [
