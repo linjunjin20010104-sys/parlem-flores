@@ -256,7 +256,7 @@
       "description": "",
       "price": 65,
       "price_max": 200,
-      "price_label": "",
+      "price_label": "Según tamaño",
       "image": "/img/1782339746832-centro-primavera.jpg",
       "badge": "",
       "available": true
@@ -264,28 +264,28 @@
     {
       "id": 7,
       "category": "centros-flores",
-      "name": "Ramo de Novia Clásico",
-      "description": "Rosas garden y hortensias. Personalizamos cada detalle.",
-      "price": 120,
-      "price_max": 250,
-      "price_label": "Según diseño",
-      "image": "",
-      "badge": "Evento",
-      "available": true,
-      "subcategory": ""
+      "subcategory": "",
+      "name": "Centro Bosque Blanco",
+      "description": "",
+      "price": 65,
+      "price_max": 260,
+      "price_label": "Según tamaño",
+      "image": "/img/1782386369018-centro-bosque-blanco.jpg",
+      "badge": "Premium",
+      "available": true
     },
     {
       "id": 8,
       "category": "centros-flores",
-      "name": "Decoración Completa",
-      "description": "Centros de mesa, arco floral, pétalos y detalles.",
-      "price": 0,
-      "price_max": 0,
-      "price_label": "",
-      "image": "",
-      "badge": "Consultar",
-      "available": true,
-      "subcategory": ""
+      "subcategory": "",
+      "name": "Centro Amarillo Silvestre",
+      "description": "",
+      "price": 65,
+      "price_max": 220,
+      "price_label": "Según tamaño",
+      "image": "/img/1782386486216-centro-amarillo-silvestre.jpg",
+      "badge": "Premium",
+      "available": true
     },
     {
       "id": 9,
@@ -312,6 +312,19 @@
       "badge": "Nuevo",
       "available": true,
       "subcategory": ""
+    },
+    {
+      "id": 11,
+      "category": "centros-flores",
+      "subcategory": "",
+      "name": "Centro Osito",
+      "description": "",
+      "price": 110,
+      "price_max": 0,
+      "price_label": "Según tamaño",
+      "image": "/img/1782386617929-centro-osito.jpg",
+      "badge": "",
+      "available": true
     }
   ],
   "testimonials": [
