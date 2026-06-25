@@ -288,32 +288,6 @@
       "available": true
     },
     {
-      "id": 9,
-      "category": "cestas-ramos-secos",
-      "name": "Caja de Flores",
-      "description": "Flores premium presentadas en caja elegante.",
-      "price": 45,
-      "price_max": 80,
-      "price_label": "",
-      "image": "",
-      "badge": "Regalo ideal",
-      "available": true,
-      "subcategory": ""
-    },
-    {
-      "id": 10,
-      "category": "cestas-ramos-secos",
-      "name": "Suscripción Semanal",
-      "description": "Recibe un ramo fresco cada semana en tu casa.",
-      "price": 55,
-      "price_max": 0,
-      "price_label": "/semana",
-      "image": "",
-      "badge": "Nuevo",
-      "available": true,
-      "subcategory": ""
-    },
-    {
       "id": 11,
       "category": "centros-flores",
       "subcategory": "",
@@ -467,6 +441,32 @@
       "price_label": "Según tamaño",
       "image": "/img/1782403500663-ramo-corazom.jpg",
       "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 23,
+      "category": "flores-preservadas",
+      "subcategory": "",
+      "name": "Ramo Rosa Azul Preservada",
+      "description": "",
+      "price": 25,
+      "price_max": 350,
+      "price_label": "Según tamaño",
+      "image": "/img/1782403872847-ramo-rosa-azul-preservada.jpg",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 24,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Cesta suerte",
+      "description": "",
+      "price": 100,
+      "price_max": 300,
+      "price_label": "Según diseño",
+      "image": "/img/1782403908029-cesta-suerte.jpg",
+      "badge": "Más vendido",
       "available": true
     }
   ],
