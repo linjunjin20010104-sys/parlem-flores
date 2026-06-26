@@ -463,19 +463,23 @@ a { color: inherit; text-decoration: none; }
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 0;
+  gap: 16px;
   max-width: var(--max-width); margin: 0 auto;
-  border: 1px solid var(--border-light);
 }
 .product-card {
   background: var(--white);
-  border-right: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
+  border: 1px solid var(--border-light);
   overflow: hidden;
   transition: all .2s;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
-.product-card:hover { background: var(--bg-alt); }
+.product-card:hover {
+  background: var(--bg-alt);
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
 .product-img {
   width: 100%; height: 260px;
   background: var(--bg-alt);
@@ -530,7 +534,12 @@ a { color: inherit; text-decoration: none; }
 }
 .product-badge.consultar { background: var(--accent); color: var(--text); }
 .product-badge.nuevo { background: var(--secondary); color: var(--white); }
-.product-info { padding: 1.3rem 1.3rem 1.4rem; }
+.product-info {
+  padding: 1.3rem 1.3rem 1.4rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
 .product-name {
   font-family: var(--font-heading);
   font-size: 1.1rem;
@@ -550,7 +559,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.2px;
 }
 .product-desc { font-size: 0.8rem; color: var(--text-light); margin-bottom: 1rem; line-height: 1.65; }
-.product-footer { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.product-footer { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-top: auto; }
 .product-price { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 600; color: var(--primary); }
 .product-price small { font-family: var(--font-body); font-size: 0.68rem; color: var(--text-light); font-weight: 400; letter-spacing: 0; }
 .product-price-range { font-size: 0.68rem; color: var(--text-lighter); display: block; margin-top: 2px; }
@@ -710,7 +719,7 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.62);
 }
 .wedding-card {
-  max-width: 620px; margin: 0 auto;
+  max-width: 860px; margin: 0 auto;
   text-align: center;
   padding: 3rem;
   background: rgba(255,255,255,0.06);
@@ -723,6 +732,22 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 1.8rem;
   line-height: 1.9;
   font-style: italic;
+}
+.event-service-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 auto 2rem;
+  max-width: 720px;
+}
+.event-service-list span {
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.78);
+  padding: 10px 12px;
+  font-size: 0.66rem;
+  font-weight: 650;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 #eventos .btn-outline {
   color: var(--white);
@@ -936,4 +961,6 @@ html { scroll-padding-top: calc(var(--topbar-h) + var(--header-h) + 20px); }
   .service-card { border-right: none; border-bottom: 1px solid var(--border-light); }
   .service-card:last-child { border-bottom: none; }
   .tab-btn { padding: 7px 14px; font-size: 0.62rem; letter-spacing: 1.5px; }
+  .event-service-list { grid-template-columns: 1fr; }
+  .wedding-card { padding: 2rem 1.2rem; }
 }
