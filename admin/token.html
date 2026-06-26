@@ -44,8 +44,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .search{width:min(340px,100%);background:white}
 .dirty{display:none;background:#fff3cd;color:#745500;border:1px solid #ead48a;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:750}
 .dirty.show{display:inline-flex}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.tab{border:1px solid #ddd1c7;background:white;border-radius:999px;padding:7px 13px;cursor:pointer;color:#655951}
+	.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+	.subtabs{width:100%;margin-top:-6px;margin-bottom:6px}
+	.subtabs .tab{font-size:13px;padding:6px 11px;background:#fbf8f5}
+	.tab{border:1px solid #ddd1c7;background:white;border-radius:999px;padding:7px 13px;cursor:pointer;color:#655951}
 .tab.active{background:#7f1f28;color:white;border-color:#7f1f28}
 .grid{display:grid;gap:10px}
 .product{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px;display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center}
@@ -109,6 +111,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="summary" id="summary"></div>
       <div class="toolbar">
         <div class="tabs" id="tabs"></div>
+        <div class="tabs subtabs" id="subtabs"></div>
         <input class="search" id="search" type="search" placeholder="Buscar producto..." oninput="searchTerm=this.value.toLowerCase();renderProducts()">
       </div>
       <div class="grid" id="products"></div>
@@ -193,7 +196,7 @@ const repo="parlem-flores";
 const branch="main";
 const api=`https://api.github.com/repos/${owner}/${repo}/contents`;
 const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/data.json`;
-let token="",data=null,dataSha="",filter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
+let token="",data=null,dataSha="",filter="all",subfilter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
 
 async function gh(path,opts={}){
   const res=await fetch(`${api}/${path}`,{cache:"no-store",...opts,headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json",...(opts.headers||{})}});
@@ -258,6 +261,7 @@ async function loadData(){
   dataSha=file.sha;
   data=JSON.parse(b64ToUtf8(file.content));
   filter="all";
+  subfilter="all";
   searchTerm="";
   const search=document.getElementById("search");
   if(search) search.value="";
@@ -270,8 +274,19 @@ function renderAll(){if(!data)return;renderSummary();renderTabs();renderProducts
 function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
 function renderTabs(){
   const cats=[{id:"all",name:"Todos"},...(data.categories||[])];
-  document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';renderTabs();renderProducts()">${c.name}</button>`).join("");
+  document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';subfilter='all';renderTabs();renderProducts()">${c.name}</button>`).join("");
+  renderAdminSubtabs();
   document.getElementById("f-cat").innerHTML=(data.categories||[]).map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+}
+function renderAdminSubtabs(){
+  const box=document.getElementById("subtabs");
+  if(!box)return;
+  const cat=(data.categories||[]).find(c=>c.id===filter);
+  const subs=cat?.subcategories||[];
+  if(!subs.length){box.innerHTML="";box.style.display="none";return}
+  box.style.display="flex";
+  const items=[{id:"all",name:"Todos"},...subs];
+  box.innerHTML=items.map(s=>`<button class="tab ${subfilter===s.id?"active":""}" onclick="subfilter='${s.id}';renderAdminSubtabs();renderProducts()">${s.name}</button>`).join("");
 }
 function renderSummary(){
   const total=data.products.length;
@@ -289,7 +304,8 @@ function catName(id){const c=(data.categories||[]).find(x=>x.id===id);return c?c
 function subcatName(catId,subcatId){const c=(data.categories||[]).find(x=>x.id===catId);const s=(c?.subcategories||[]).find(x=>x.id===subcatId);return s?s.name:""}
 function renderProducts(){
   const byCat=filter==="all"?data.products:data.products.filter(p=>p.category===filter);
-  const items=searchTerm?byCat.filter(p=>`${p.name} ${p.description||""} ${p.badge||""}`.toLowerCase().includes(searchTerm)):byCat;
+  const bySub=subfilter==="all"?byCat:byCat.filter(p=>p.subcategory===subfilter);
+  const items=searchTerm?bySub.filter(p=>`${p.name} ${p.description||""} ${p.badge||""} ${catName(p.category)} ${subcatName(p.category,p.subcategory)}`.toLowerCase().includes(searchTerm)):bySub;
   document.getElementById("products").innerHTML=items.map(p=>`
     <div class="product" style="${p.available?"":"opacity:.55"}">
       <div class="thumb">${p.image?`<img src="${p.image}" alt="${p.name}">`:`<span class="muted">Sin foto</span>`}</div>
@@ -300,7 +316,9 @@ function renderProducts(){
 function openProduct(id){
   editingId=id||null;pendingImage=null;available=true;
   document.getElementById("modal-title").textContent=id?"Editar producto":"Nuevo producto";
-  const p=id?data.products.find(x=>x.id===id):{category:(data.categories||[])[0]?.id||"ramos-bouquets",name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
+  const defaultCategory=filter!=="all"?filter:((data.categories||[])[0]?.id||"ramos-bouquets");
+  const defaultSubcategory=subfilter!=="all"?subfilter:"";
+  const p=id?data.products.find(x=>x.id===id):{category:defaultCategory,subcategory:defaultSubcategory,name:"",description:"",price:"",price_max:"",price_label:"",image:"",badge:"",available:true};
   ["name","desc","price","pmax","badge","plabel"].forEach(x=>document.getElementById("f-"+x).value="");
   document.getElementById("f-name").value=p.name||"";document.getElementById("f-cat").value=p.category||"ramos-bouquets";document.getElementById("f-desc").value=p.description||"";document.getElementById("f-price").value=p.price||"";document.getElementById("f-pmax").value=p.price_max||"";document.getElementById("f-badge").value=p.badge||"";document.getElementById("f-plabel").value=p.price_label||"";
   renderSubcategoryOptions(p.subcategory||"");
