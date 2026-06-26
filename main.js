@@ -13,7 +13,6 @@ function renderAll() {
   renderNavLinks();
   renderHero();
   renderOccasions();
-  renderSeasonal();
   renderProducts('all');
   renderCategoryTabs();
   renderServices();
@@ -121,23 +120,6 @@ function filterByOccasion(label) {
   }, 100);
 }
 
-// ---- SEASONAL ----
-function renderSeasonal() {
-  const section = document.getElementById('seasonal');
-  const grid = document.getElementById('seasonal-grid');
-  if (!section || !grid) return;
-  const seasonal = siteData.seasonal || [];
-  if (seasonal.length === 0) { section.style.display = 'none'; return; }
-  section.style.display = '';
-  grid.innerHTML = seasonal.map(s => `
-    <div style="text-align:center;padding:1.5rem 1rem;background:var(--white);border:1px solid var(--border-light);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border-light)'">
-      <div class="seasonal-img">${s.image ? `<button class="image-zoom-btn" type="button" onclick='openImageLightbox(${JSON.stringify(s.image)}, ${JSON.stringify(s.name)})'><img src="${s.image}" alt="${s.name}"></button>` : '<span style="font-size:.75rem;color:var(--text-light);letter-spacing:.08em;text-transform:uppercase">Sin foto</span>'}</div>
-      <div style="font-family:var(--font-heading);font-size:.95rem;font-weight:500;letter-spacing:.5px">${s.name}</div>
-      ${s.price ? `<div style="font-size:.78rem;color:var(--primary);font-weight:600;margin-top:.35rem">${s.price}€${s.price_max && s.price_max > s.price ? ' - ' + s.price_max + '€' : ''}${s.price_label ? ' ' + s.price_label : ''}</div>` : ''}
-    </div>
-  `).join('');
-}
-
 // ---- CATEGORY TABS ----
 function renderCategoryTabs() {
   const tabs = document.getElementById('category-tabs');
@@ -187,9 +169,10 @@ function filterProductsBySubcategory(catId, subcategoryId, btn) {
 function renderProducts(catId, subcategoryId = 'all') {
   const grid = document.getElementById('products-grid');
   if (catId === 'all') renderSubcategoryTabs('all');
+  const isVisibleProduct = p => p.available && p.image;
   const products = catId === 'all'
-    ? siteData.products.filter(p => p.available)
-    : siteData.products.filter(p => p.category === catId && p.available && (subcategoryId === 'all' || p.subcategory === subcategoryId));
+    ? siteData.products.filter(isVisibleProduct)
+    : siteData.products.filter(p => p.category === catId && isVisibleProduct(p) && (subcategoryId === 'all' || p.subcategory === subcategoryId));
 
   if (products.length === 0) {
     grid.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:3rem;grid-column:1/-1">No hay productos disponibles en esta categoría.</p>';
@@ -228,8 +211,8 @@ function renderProducts(catId, subcategoryId = 'all') {
         <div class="product-desc">${p.description}</div>
         <div class="product-footer">
           ${priceHtml}
-          <a class="btn-order" href="https://wa.me/${siteData.site.whatsapp}?text=Hola%21%20Me%20interesa%3A%20*${encodeURIComponent(p.name)}*" target="_blank">
-            Pedir
+          <a class="btn-order" href="https://wa.me/${siteData.site.whatsapp}?text=${encodeURIComponent(`Hola Parlem Flores, me interesa ${p.name}. ¿Me puedes dar más información?`)}" target="_blank">
+            WhatsApp
           </a>
         </div>
       </div>
