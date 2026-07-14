@@ -754,6 +754,19 @@
       "image": "/img/1784030428202-ramo-seco-azul.jpg",
       "badge": "Premium",
       "available": true
+    },
+    {
+      "id": 47,
+      "category": "ramos-bouquets",
+      "subcategory": "",
+      "name": "Ramo de Jardín Verano",
+      "description": "La de foto es tamaño entre M-L",
+      "price": 80,
+      "price_max": 300,
+      "price_label": "Según tamaño",
+      "image": "/img/1784030826986-ramo-de-jardin-verano.jpg",
+      "badge": "",
+      "available": true
     }
   ],
   "testimonials": [
