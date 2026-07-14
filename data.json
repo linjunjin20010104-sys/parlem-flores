@@ -663,6 +663,71 @@
       "image": "/img/1783166964255-ramo-rosa-con-lilium.jpg",
       "badge": "",
       "available": true
+    },
+    {
+      "id": 40,
+      "category": "centros-cementerio",
+      "subcategory": "",
+      "name": "Centro Estatice",
+      "description": "",
+      "price": 60,
+      "price_max": 300,
+      "price_label": "Según tamaño",
+      "image": "/img/1784029479896-centro-estatice.jpg",
+      "badge": "Más vendido",
+      "available": true
+    },
+    {
+      "id": 41,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Preservado Azul",
+      "description": "",
+      "price": 60,
+      "price_max": 0,
+      "price_label": "Según tamaño",
+      "image": "/img/1784029829034-ramo-preservado-azul.jpg",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 42,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Preservado Amarillo",
+      "description": "",
+      "price": 60,
+      "price_max": 0,
+      "price_label": "",
+      "image": "/img/1784029875234-ramo-preservado-amarillo.jpg",
+      "badge": "",
+      "available": true
+    },
+    {
+      "id": 43,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Seco Naranja",
+      "description": "",
+      "price": 35,
+      "price_max": 0,
+      "price_label": "",
+      "image": "/img/1784029987351-ramo-seco-naranja.jpg",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 44,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Seco Rosa",
+      "description": "",
+      "price": 35,
+      "price_max": 0,
+      "price_label": "",
+      "image": "/img/1784030084534-ramo-seco-rosa.jpg",
+      "badge": "Premium",
+      "available": true
     }
   ],
   "testimonials": [
