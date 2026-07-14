@@ -679,7 +679,7 @@
     },
     {
       "id": 41,
-      "category": "cestas-ramos-secos",
+      "category": "flores-preservadas",
       "subcategory": "",
       "name": "Ramo Preservado Azul",
       "description": "",
@@ -692,7 +692,7 @@
     },
     {
       "id": 42,
-      "category": "cestas-ramos-secos",
+      "category": "flores-preservadas",
       "subcategory": "",
       "name": "Ramo Preservado Amarillo",
       "description": "",
@@ -726,6 +726,32 @@
       "price_max": 0,
       "price_label": "",
       "image": "/img/1784030084534-ramo-seco-rosa.jpg",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 45,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Seco Amarillo",
+      "description": "",
+      "price": 25,
+      "price_max": 0,
+      "price_label": "",
+      "image": "/img/1784030339485-ramo-seco-amarillo.jpg",
+      "badge": "Premium",
+      "available": true
+    },
+    {
+      "id": 46,
+      "category": "cestas-ramos-secos",
+      "subcategory": "",
+      "name": "Ramo Seco Azul",
+      "description": "",
+      "price": 35,
+      "price_max": 0,
+      "price_label": "",
+      "image": "/img/1784030428202-ramo-seco-azul.jpg",
       "badge": "Premium",
       "available": true
     }
