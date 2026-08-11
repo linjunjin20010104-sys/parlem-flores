@@ -72,6 +72,8 @@
     "hero_image_opacity": 70
   },
   "occasions": [],
+  "members": [],
+  "member_transactions": [],
   "seasonal": [
     {
       "name": "Tulipanes",

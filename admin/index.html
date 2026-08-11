@@ -77,9 +77,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .seasonal-emoji{width:64px;height:64px;border-radius:6px;background:#f0e7df;display:flex;align-items:center;justify-content:center;font-size:28px}
 .seasonal-emoji img{width:100%;height:100%;object-fit:cover}
 .seasonal-name{font-weight:750;font-size:16px}
+.member{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.member-name{font-weight:750;margin-bottom:4px}
+.member-line{font-size:13px;color:#7c7068;line-height:1.45}
+.member-total{font-weight:800;color:#7f1f28;font-size:15px}
+.table-wrap{background:white;border:1px solid #e7ddd4;border-radius:8px;overflow:auto}
+.records-table{width:100%;border-collapse:collapse;min-width:760px}
+.records-table th,.records-table td{padding:10px;border-bottom:1px solid #e7ddd4;text-align:left;font-size:13px;vertical-align:top}
+.records-table th{background:#fbf8f5;color:#655951;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.records-table tr:last-child td{border-bottom:0}
 .status{position:fixed;right:16px;bottom:16px;background:#241d19;color:white;border-radius:8px;padding:11px 14px;box-shadow:0 10px 28px rgba(0,0,0,.18);display:none;max-width:360px;font-size:13px}
 .status.show{display:block}
-@media(max-width:720px){.top{overflow-x:auto}.product{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.top{overflow-x:auto}.product,.member{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -100,6 +109,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <div class="brand">✿ <span>Parlem Admin</span></div>
     <button class="nav active" onclick="showPage('products',this)">Productos</button>
     <button class="nav" onclick="showPage('seasonal',this)">Temporada de Ramos</button>
+    <button class="nav" onclick="showPage('members',this)">Miembros</button>
+    <button class="nav" onclick="showPage('transactions',this)">Consumos</button>
     <button class="nav" onclick="showPage('settings',this)">Configuración</button>
     <button class="nav" onclick="showPage('publish',this)">Publicar</button>
     <span class="dirty" id="dirty">Cambios sin publicar</span>
@@ -120,6 +131,21 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <section class="page" id="page-seasonal">
       <div class="head"><h2>Temporada de Ramos</h2><button class="btn btn-primary" onclick="openSeasonal()">+ Nuevo ramo</button></div>
       <div class="seasonal" id="seasonal"></div>
+    </section>
+    <section class="page" id="page-members">
+      <div class="head"><h2>Miembros</h2><button class="btn btn-primary" onclick="openMember()">+ Nuevo miembro</button></div>
+      <div class="summary" id="member-summary"></div>
+      <div class="toolbar">
+        <input class="search" id="member-search" type="search" placeholder="Buscar miembro..." oninput="memberSearchTerm=this.value.toLowerCase();renderMembers()">
+      </div>
+      <div class="grid" id="members"></div>
+    </section>
+    <section class="page" id="page-transactions">
+      <div class="head"><h2>Consumos</h2><button class="btn btn-primary" onclick="openTransaction()">+ Nuevo consumo</button></div>
+      <div class="toolbar">
+        <select class="search" id="transaction-member-filter" onchange="transactionFilter=this.value;renderTransactions()"></select>
+      </div>
+      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Importe</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
     </section>
     <section class="page" id="page-settings">
       <div class="head"><h2>Configuración</h2></div>
@@ -189,6 +215,41 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     </div>
   </div>
 </div>
+<div class="modal-bg" id="member-modal">
+  <div class="modal">
+    <h3 id="member-modal-title">Nuevo miembro</h3>
+    <div class="form-grid">
+      <div><label>Nombre</label><input id="m-name"></div>
+      <div><label>Teléfono</label><input id="m-phone"></div>
+      <div><label>Email</label><input id="m-email" type="email"></div>
+      <div><label>Cumpleaños</label><input id="m-birthday" type="date"></div>
+      <div><label>Nivel manual</label><select id="m-level"><option value="">Automático</option><option>Bronce</option><option>Plata</option><option>Oro</option><option>VIP</option></select></div>
+      <div><label>Estado</label><select id="m-status"><option value="active">Activo</option><option value="inactive">Inactivo</option></select></div>
+      <div class="wide"><label>Notas</label><textarea id="m-notes"></textarea></div>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
+      <button class="btn" onclick="closeMember()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMember()">Guardar miembro</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="transaction-modal">
+  <div class="modal">
+    <h3 id="transaction-modal-title">Nuevo consumo</h3>
+    <div class="form-grid">
+      <div class="wide"><label>Miembro</label><select id="t-member"></select></div>
+      <div><label>Fecha</label><input id="t-date" type="date"></div>
+      <div><label>Importe</label><input id="t-amount" type="number" min="0" step="0.01"></div>
+      <div><label>Método de pago</label><select id="t-payment"><option>Bizum</option><option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Otro</option></select></div>
+      <div><label>Pedido</label><input id="t-order" placeholder="Ramo, centro, evento..."></div>
+      <div class="wide"><label>Notas</label><textarea id="t-notes"></textarea></div>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
+      <button class="btn" onclick="closeTransaction()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveTransaction()">Guardar consumo</button>
+    </div>
+  </div>
+</div>
 <div class="status" id="status"></div>
 
 <script>
@@ -197,7 +258,7 @@ const repo="parlem-flores";
 const branch="main";
 const api="/.netlify/git/github/contents";
 const raw="/data.json";
-let data=null,dataSha="",filter="all",subfilter="all",searchTerm="",editingId=null,editingSeasonalIndex=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
+let data=null,dataSha="",filter="all",subfilter="all",searchTerm="",memberSearchTerm="",transactionFilter="all",editingId=null,editingSeasonalIndex=null,editingMemberId=null,editingTransactionId=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
 
 async function identityToken(){
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -288,18 +349,24 @@ async function loadData(){
   const file=await gh(`data.json?ref=${branch}&v=${Date.now()}`);
   dataSha=file.sha;
   data=JSON.parse(b64ToUtf8(file.content));
-  filter="all";
-  subfilter="all";
-  searchTerm="";
-  const search=document.getElementById("search");
-  if(search) search.value="";
-  dirty=false;
-  renderAll();
-  setDirty(false);
-  show(`Datos actualizados: ${(data.products||[]).length} productos`);
-}
-function renderAll(){if(!data)return;renderSummary();renderTabs();renderProducts();renderSeasonal();renderSettings()}
-function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
+	  filter="all";
+	  subfilter="all";
+	  searchTerm="";
+	  memberSearchTerm="";
+	  transactionFilter="all";
+	  ensureMemberData();
+	  const search=document.getElementById("search");
+	  if(search) search.value="";
+	  const memberSearch=document.getElementById("member-search");
+	  if(memberSearch) memberSearch.value="";
+	  dirty=false;
+	  renderAll();
+	  setDirty(false);
+	  show(`Datos actualizados: ${(data.products||[]).length} productos`);
+	}
+	function ensureMemberData(){data.members=data.members||[];data.member_transactions=data.member_transactions||[]}
+	function renderAll(){if(!data)return;ensureMemberData();renderSummary();renderTabs();renderProducts();renderSeasonal();renderMembers();renderTransactions();renderSettings()}
+	function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
 function renderTabs(){
   const cats=[{id:"all",name:"Todos"},...(data.categories||[])];
   document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';subfilter='all';renderTabs();renderProducts()">${c.name}</button>`).join("");
@@ -458,6 +525,110 @@ async function saveSeasonal(){
   }
 }
 function deleteSeasonal(i){if(confirm("¿Borrar este ramo de temporada?")){data.seasonal.splice(i,1);renderSeasonal();setDirty(true)}}
+function euro(n){return `${(Number(n)||0).toFixed(2)}€`}
+function today(){return new Date().toISOString().slice(0,10)}
+function memberTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+(Number(t.amount)||0),0)}
+function memberCount(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).length}
+function memberLastDate(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).map(t=>t.date||"").sort().pop()||""}
+function autoLevel(total){if(total>=1000)return"VIP";if(total>=500)return"Oro";if(total>=250)return"Plata";return"Bronce"}
+function memberLevel(m){return m.level||autoLevel(memberTotal(m.id))}
+function memberName(id){const m=(data.members||[]).find(x=>x.id===id);return m?m.name:"Miembro borrado"}
+function renderMemberSummary(){
+  const members=data.members||[];
+  const active=members.filter(m=>m.status!=="inactive").length;
+  const total=(data.member_transactions||[]).reduce((sum,t)=>sum+(Number(t.amount)||0),0);
+  document.getElementById("member-summary").innerHTML=`
+    <div class="stat"><strong>${members.length}</strong><span>Miembros</span></div>
+    <div class="stat"><strong>${active}</strong><span>Activos</span></div>
+    <div class="stat"><strong>${(data.member_transactions||[]).length}</strong><span>Consumos</span></div>
+    <div class="stat"><strong>${euro(total)}</strong><span>Total consumido</span></div>`;
+}
+function renderMembers(){
+  renderMemberSummary();
+  const members=(data.members||[]).filter(m=>{
+    const text=`${m.name||""} ${m.phone||""} ${m.email||""} ${m.notes||""} ${memberLevel(m)}`.toLowerCase();
+    return !memberSearchTerm || text.includes(memberSearchTerm);
+  });
+  document.getElementById("members").innerHTML=members.map(m=>`
+    <div class="member" style="${m.status==="inactive"?"opacity:.55":""}">
+      <div>
+        <div class="member-name">${m.name||"Sin nombre"}</div>
+        <div class="member-line">${m.phone||"Sin teléfono"}${m.email?" · "+m.email:""}${m.birthday?" · Cumpleaños: "+m.birthday:""}</div>
+        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
+        ${m.notes?`<div class="member-line">${m.notes}</div>`:""}
+      </div>
+      <div class="actions"><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
+    </div>`).join("")||'<p class="muted">No hay miembros todavía.</p>';
+  renderTransactionMemberOptions();
+}
+function openMember(id){
+  editingMemberId=id||null;
+  const m=id?data.members.find(x=>x.id===id):{name:"",phone:"",email:"",birthday:"",level:"",status:"active",notes:""};
+  document.getElementById("member-modal-title").textContent=id?"Editar miembro":"Nuevo miembro";
+  document.getElementById("m-name").value=m.name||"";
+  document.getElementById("m-phone").value=m.phone||"";
+  document.getElementById("m-email").value=m.email||"";
+  document.getElementById("m-birthday").value=m.birthday||"";
+  document.getElementById("m-level").value=m.level||"";
+  document.getElementById("m-status").value=m.status||"active";
+  document.getElementById("m-notes").value=m.notes||"";
+  document.getElementById("member-modal").classList.add("open");
+}
+function closeMember(){document.getElementById("member-modal").classList.remove("open")}
+function saveMember(){
+  const name=document.getElementById("m-name").value.trim();
+  if(!name){alert("El nombre es obligatorio");return}
+  const member={id:editingMemberId||Math.max(0,...data.members.map(m=>m.id||0))+1,name,phone:document.getElementById("m-phone").value.trim(),email:document.getElementById("m-email").value.trim(),birthday:document.getElementById("m-birthday").value,level:document.getElementById("m-level").value,status:document.getElementById("m-status").value,notes:document.getElementById("m-notes").value.trim(),created_at:editingMemberId?(data.members.find(m=>m.id===editingMemberId)?.created_at||today()):today()};
+  if(editingMemberId){data.members[data.members.findIndex(m=>m.id===editingMemberId)]=member}else data.members.push(member);
+  closeMember();renderMembers();renderTransactions();setDirty(true);show("Miembro guardado. Pulsa Publicar para subirlo.");
+}
+function deleteMember(id){
+  const m=data.members.find(x=>x.id===id);
+  const count=memberCount(id);
+  const msg=count?`Borrar "${m.name}" también eliminará ${count} consumo(s).`:`¿Borrar "${m.name}"?`;
+  if(confirm(msg)){data.members=data.members.filter(x=>x.id!==id);data.member_transactions=data.member_transactions.filter(t=>t.member_id!==id);renderMembers();renderTransactions();setDirty(true)}
+}
+function renderTransactionMemberOptions(){
+  const opts=['<option value="all">Todos los miembros</option>',...(data.members||[]).map(m=>`<option value="${m.id}" ${String(transactionFilter)===String(m.id)?"selected":""}>${m.name}</option>`)].join("");
+  const filterEl=document.getElementById("transaction-member-filter");
+  if(filterEl) filterEl.innerHTML=opts;
+  const memberEl=document.getElementById("t-member");
+  if(memberEl) memberEl.innerHTML=(data.members||[]).map(m=>`<option value="${m.id}">${m.name} · ${m.phone||"sin teléfono"}</option>`).join("");
+}
+function renderTransactions(){
+  renderTransactionMemberOptions();
+  const items=(data.member_transactions||[]).filter(t=>transactionFilter==="all"||String(t.member_id)===String(transactionFilter)).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+  document.getElementById("transactions").innerHTML=items.map(t=>`
+    <tr>
+      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td><strong>${euro(t.amount)}</strong></td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
+      <td><div class="btn-row"><button class="btn" onclick="openTransaction(${t.id})">Editar</button><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">Borrar</button></div></td>
+    </tr>`).join("")||'<tr><td colspan="7" class="muted">No hay consumos todavía.</td></tr>';
+}
+function openTransaction(id,memberId=null){
+  if(!(data.members||[]).length){alert("Primero crea un miembro.");return}
+  editingTransactionId=id||null;
+  renderTransactionMemberOptions();
+  const t=id?data.member_transactions.find(x=>x.id===id):{member_id:memberId||data.members[0].id,date:today(),amount:"",payment:"Bizum",order:"",notes:""};
+  document.getElementById("transaction-modal-title").textContent=id?"Editar consumo":"Nuevo consumo";
+  document.getElementById("t-member").value=t.member_id;
+  document.getElementById("t-date").value=t.date||today();
+  document.getElementById("t-amount").value=t.amount||"";
+  document.getElementById("t-payment").value=t.payment||"Bizum";
+  document.getElementById("t-order").value=t.order||"";
+  document.getElementById("t-notes").value=t.notes||"";
+  document.getElementById("transaction-modal").classList.add("open");
+}
+function closeTransaction(){document.getElementById("transaction-modal").classList.remove("open")}
+function saveTransaction(){
+  const memberId=parseInt(document.getElementById("t-member").value,10);
+  const amount=parseFloat(document.getElementById("t-amount").value)||0;
+  if(!memberId){alert("El miembro es obligatorio");return}
+  if(amount<=0){alert("El importe debe ser mayor que 0");return}
+  const record={id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),amount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),notes:document.getElementById("t-notes").value.trim()};
+  if(editingTransactionId){data.member_transactions[data.member_transactions.findIndex(t=>t.id===editingTransactionId)]=record}else data.member_transactions.push(record);
+  closeTransaction();renderMembers();renderTransactions();setDirty(true);show("Consumo guardado. Pulsa Publicar para subirlo.");
+}
+function deleteTransaction(id){if(confirm("¿Borrar este consumo?")){data.member_transactions=data.member_transactions.filter(t=>t.id!==id);renderMembers();renderTransactions();setDirty(true)}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
 function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div><div class="wide"><label>Opacidad de la foto portada: <span id="hero-opacity-value">${data.site.hero_image_opacity??70}%</span></label><input id="hero-opacity" type="range" min="20" max="100" step="5" value="${data.site.hero_image_opacity??70}" oninput="data.site.hero_image_opacity=parseInt(this.value);document.getElementById('hero-opacity-value').textContent=this.value+'%';setDirty(true)"><p class="muted">100% muestra la foto más clara. 40% deja la portada más oscura y transparente.</p></div>${setting("Historia","about_text","textarea")}</div></div>`}
 async function handleHeroImage(e){
