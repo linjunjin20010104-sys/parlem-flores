@@ -62,6 +62,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .dot{width:8px;height:8px;border-radius:50%;background:#41945c}.dot.off{background:#bbb}
 .actions{display:flex;flex-direction:column;gap:7px}
 .card{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:16px;margin-bottom:14px}
+.rule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px}
+.rule-item{border:1px solid #e7ddd4;border-radius:8px;padding:11px;background:#fbf8f5}
+.rule-item strong{display:block;color:#7f1f28;margin-bottom:4px}
+.rule-item span{display:block;color:#75685f;font-size:12px;line-height:1.45}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-grid .wide{grid-column:1/-1}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);align-items:center;justify-content:center;padding:18px;z-index:10}
@@ -135,6 +139,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <section class="page" id="page-members">
       <div class="head"><h2>Miembros</h2><button class="btn btn-primary" onclick="openMember()">+ Nuevo miembro</button></div>
       <div class="summary" id="member-summary"></div>
+      <div class="card" id="loyalty-rules"></div>
       <div class="toolbar">
         <input class="search" id="member-search" type="search" placeholder="Buscar miembro..." oninput="memberSearchTerm=this.value.toLowerCase();renderMembers()">
       </div>
@@ -366,7 +371,7 @@ async function loadData(){
 	  show(`Datos actualizados: ${(data.products||[]).length} productos`);
 	}
 	function ensureMemberData(){data.members=data.members||[];data.member_transactions=data.member_transactions||[]}
-	function renderAll(){if(!data)return;ensureMemberData();renderSummary();renderTabs();renderProducts();renderSeasonal();renderMembers();renderTransactions();renderSettings()}
+function renderAll(){if(!data)return;ensureMemberData();renderSummary();renderTabs();renderProducts();renderSeasonal();renderLoyaltyRules();renderMembers();renderTransactions();renderSettings()}
 	function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
 function renderTabs(){
   const cats=[{id:"all",name:"Todos"},...(data.categories||[])];
@@ -538,21 +543,44 @@ function redeemableFromPoints(points){return (Number(points)||0)*0.05}
 function transactionPoints(t){return Math.floor(Number(t.amount)||0)}
 function transactionTotal(t){return Number(t.total_amount??((Number(t.amount)||0)+(Number(t.discount)||0)))||0}
 function transactionDiscount(t){return Number(t.discount??redeemableFromPoints(t.points_used||0))||0}
-function autoLevel(total){if(total>=1000)return"VIP";if(total>=500)return"Oro";if(total>=250)return"Plata";return"Bronce"}
+function loyaltyTiers(){return[{name:"Bronce",min:0,benefit:"Inicio del programa"},{name:"Plata",min:250,benefit:"Cliente frecuente"},{name:"Oro",min:500,benefit:"Cliente preferente"},{name:"VIP",min:1000,benefit:"Mejor nivel"}]}
+function autoLevel(total){return loyaltyTiers().slice().reverse().find(t=>total>=t.min).name}
 function memberLevel(m){return m.level||autoLevel(memberTotal(m.id))}
 function memberName(id){const m=(data.members||[]).find(x=>x.id===id);return m?m.name:"Miembro borrado"}
+function memberDiscountTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+transactionDiscount(t),0)}
+function memberNextTier(total){return loyaltyTiers().find(t=>total<t.min)||null}
+function memberRewardBadges(m){
+  const total=memberTotal(m.id);
+  const points=memberPoints(m.id);
+  const next=memberNextTier(total);
+  return `<span class="badge">${points} puntos disponibles</span><span class="badge">Disponible: ${euro(redeemableFromPoints(points))}</span><span class="badge">Usados: ${memberUsedPoints(m.id)} puntos</span><span class="badge">Ahorrado: ${euro(memberDiscountTotal(m.id))}</span>${next?`<span class="badge">Faltan ${euro(next.min-total)} para ${next.name}</span>`:'<span class="badge">Nivel máximo</span>'}`;
+}
+function renderLoyaltyRules(){
+  const el=document.getElementById("loyalty-rules");
+  if(!el)return;
+  el.innerHTML=`
+    <h3>Programa de fidelidad</h3>
+    <div class="rule-grid">
+      <div class="rule-item"><strong>Ganar puntos</strong><span>1€ cobrado = 1 punto. Los puntos se calculan sobre el importe realmente pagado.</span></div>
+      <div class="rule-item"><strong>Usar puntos</strong><span>20 puntos = 1€ de descuento. 100 puntos = 5€ disponibles para descontar.</span></div>
+      <div class="rule-item"><strong>Después del descuento</strong><span>Si un pedido de 100€ usa 5€ de puntos, se cobra 95€ y se guardan 95 puntos nuevos.</span></div>
+      <div class="rule-item"><strong>Niveles</strong><span>Bronce 0€, Plata 250€, Oro 500€, VIP 1000€ de consumo cobrado acumulado.</span></div>
+    </div>`;
+}
 function renderMemberSummary(){
   const members=data.members||[];
   const active=members.filter(m=>m.status!=="inactive").length;
   const total=(data.member_transactions||[]).reduce((sum,t)=>sum+(Number(t.amount)||0),0);
   const points=members.reduce((sum,m)=>sum+memberPoints(m.id),0);
+  const saved=(data.member_transactions||[]).reduce((sum,t)=>sum+transactionDiscount(t),0);
   document.getElementById("member-summary").innerHTML=`
     <div class="stat"><strong>${members.length}</strong><span>Miembros</span></div>
     <div class="stat"><strong>${active}</strong><span>Activos</span></div>
     <div class="stat"><strong>${(data.member_transactions||[]).length}</strong><span>Consumos</span></div>
     <div class="stat"><strong>${euro(total)}</strong><span>Total consumido</span></div>
     <div class="stat"><strong>${points}</strong><span>Puntos acumulados</span></div>
-    <div class="stat"><strong>${euro(redeemableFromPoints(points))}</strong><span>Disponible para descontar</span></div>`;
+    <div class="stat"><strong>${euro(redeemableFromPoints(points))}</strong><span>Disponible para descontar</span></div>
+    <div class="stat"><strong>${euro(saved)}</strong><span>Ahorro aplicado</span></div>`;
 }
 function renderMembers(){
   renderMemberSummary();
@@ -565,7 +593,7 @@ function renderMembers(){
       <div>
         <div class="member-name">${m.name||"Sin nombre"}</div>
         <div class="member-line">${m.phone||"Sin teléfono"}${m.email?" · "+m.email:""}${m.birthday?" · Cumpleaños: "+m.birthday:""}</div>
-        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span><span class="badge">${memberPoints(m.id)} puntos disponibles</span><span class="badge">Disponible: ${euro(redeemableFromPoints(memberPoints(m.id)))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
+        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span>${memberRewardBadges(m)}${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
         ${m.notes?`<div class="member-line">${m.notes}</div>`:""}
       </div>
       <div class="actions"><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
