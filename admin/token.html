@@ -143,7 +143,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="toolbar">
         <select class="search" id="transaction-member-filter" onchange="transactionFilter=this.value;renderTransactions()"></select>
       </div>
-      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Importe</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
+      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Importe</th><th>Puntos</th><th>Disponible</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
     </section>
     <section class="page" id="page-settings">
       <div class="head"><h2>Configuración</h2></div>
@@ -501,6 +501,9 @@ function today(){return new Date().toISOString().slice(0,10)}
 function memberTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+(Number(t.amount)||0),0)}
 function memberCount(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).length}
 function memberLastDate(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).map(t=>t.date||"").sort().pop()||""}
+function memberPoints(id){return Math.floor(memberTotal(id))}
+function redeemableFromPoints(points){return (Number(points)||0)*0.05}
+function transactionPoints(t){return Math.floor(Number(t.amount)||0)}
 function autoLevel(total){if(total>=1000)return"VIP";if(total>=500)return"Oro";if(total>=250)return"Plata";return"Bronce"}
 function memberLevel(m){return m.level||autoLevel(memberTotal(m.id))}
 function memberName(id){const m=(data.members||[]).find(x=>x.id===id);return m?m.name:"Miembro borrado"}
@@ -508,11 +511,14 @@ function renderMemberSummary(){
   const members=data.members||[];
   const active=members.filter(m=>m.status!=="inactive").length;
   const total=(data.member_transactions||[]).reduce((sum,t)=>sum+(Number(t.amount)||0),0);
+  const points=Math.floor(total);
   document.getElementById("member-summary").innerHTML=`
     <div class="stat"><strong>${members.length}</strong><span>Miembros</span></div>
     <div class="stat"><strong>${active}</strong><span>Activos</span></div>
     <div class="stat"><strong>${(data.member_transactions||[]).length}</strong><span>Consumos</span></div>
-    <div class="stat"><strong>${euro(total)}</strong><span>Total consumido</span></div>`;
+    <div class="stat"><strong>${euro(total)}</strong><span>Total consumido</span></div>
+    <div class="stat"><strong>${points}</strong><span>Puntos acumulados</span></div>
+    <div class="stat"><strong>${euro(redeemableFromPoints(points))}</strong><span>Disponible para descontar</span></div>`;
 }
 function renderMembers(){
   renderMemberSummary();
@@ -525,7 +531,7 @@ function renderMembers(){
       <div>
         <div class="member-name">${m.name||"Sin nombre"}</div>
         <div class="member-line">${m.phone||"Sin teléfono"}${m.email?" · "+m.email:""}${m.birthday?" · Cumpleaños: "+m.birthday:""}</div>
-        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
+        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span><span class="badge">${memberPoints(m.id)} puntos</span><span class="badge">Disponible: ${euro(redeemableFromPoints(memberPoints(m.id)))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
         ${m.notes?`<div class="member-line">${m.notes}</div>`:""}
       </div>
       <div class="actions"><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
@@ -571,9 +577,9 @@ function renderTransactions(){
   const items=(data.member_transactions||[]).filter(t=>transactionFilter==="all"||String(t.member_id)===String(transactionFilter)).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
   document.getElementById("transactions").innerHTML=items.map(t=>`
     <tr>
-      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td><strong>${euro(t.amount)}</strong></td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
+      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td><strong>${euro(t.amount)}</strong></td><td>${transactionPoints(t)}</td><td>${euro(redeemableFromPoints(memberPoints(t.member_id)))}</td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
       <td><div class="btn-row"><button class="btn" onclick="openTransaction(${t.id})">Editar</button><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">Borrar</button></div></td>
-    </tr>`).join("")||'<tr><td colspan="7" class="muted">No hay consumos todavía.</td></tr>';
+    </tr>`).join("")||'<tr><td colspan="9" class="muted">No hay consumos todavía.</td></tr>';
 }
 function openTransaction(id,memberId=null){
   if(!(data.members||[]).length){alert("Primero crea un miembro.");return}
