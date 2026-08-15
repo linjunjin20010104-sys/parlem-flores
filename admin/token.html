@@ -81,7 +81,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .member-line{font-size:13px;color:#7c7068;line-height:1.45}
 .member-total{font-weight:800;color:#7f1f28;font-size:15px}
 .table-wrap{background:white;border:1px solid #e7ddd4;border-radius:8px;overflow:auto}
-.records-table{width:100%;border-collapse:collapse;min-width:760px}
+.records-table{width:100%;border-collapse:collapse;min-width:980px}
 .records-table th,.records-table td{padding:10px;border-bottom:1px solid #e7ddd4;text-align:left;font-size:13px;vertical-align:top}
 .records-table th{background:#fbf8f5;color:#655951;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
 .records-table tr:last-child td{border-bottom:0}
@@ -143,7 +143,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="toolbar">
         <select class="search" id="transaction-member-filter" onchange="transactionFilter=this.value;renderTransactions()"></select>
       </div>
-      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Importe</th><th>Puntos</th><th>Disponible</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
+      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Total</th><th>Descuento</th><th>Cobrado</th><th>Puntos</th><th>Disponible</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
     </section>
     <section class="page" id="page-settings">
       <div class="head"><h2>Configuración</h2></div>
@@ -235,9 +235,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
   <div class="modal">
     <h3 id="transaction-modal-title">Nuevo consumo</h3>
     <div class="form-grid">
-      <div class="wide"><label>Miembro</label><select id="t-member"></select></div>
+      <div class="wide"><label>Miembro</label><select id="t-member" onchange="updateTransactionPreview()"></select></div>
       <div><label>Fecha</label><input id="t-date" type="date"></div>
-      <div><label>Importe</label><input id="t-amount" type="number" min="0" step="0.01"></div>
+      <div><label>Importe antes descuento</label><input id="t-amount" type="number" min="0" step="0.01" oninput="updateTransactionPreview()"></div>
+      <div class="wide"><label><input id="t-use-points" type="checkbox" style="width:auto;margin-right:8px" onchange="updateTransactionPreview()"> Usar puntos disponibles</label><p class="muted" id="t-points-preview">Sin descuento por puntos.</p></div>
       <div><label>Método de pago</label><select id="t-payment"><option>Bizum</option><option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Otro</option></select></div>
       <div><label>Pedido</label><input id="t-order" placeholder="Ramo, centro, evento..."></div>
       <div class="wide"><label>Notas</label><textarea id="t-notes"></textarea></div>
@@ -501,9 +502,13 @@ function today(){return new Date().toISOString().slice(0,10)}
 function memberTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+(Number(t.amount)||0),0)}
 function memberCount(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).length}
 function memberLastDate(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).map(t=>t.date||"").sort().pop()||""}
-function memberPoints(id){return Math.floor(memberTotal(id))}
+function memberEarnedPoints(id,excludeId=null){return (data.member_transactions||[]).filter(t=>t.member_id===id&&t.id!==excludeId).reduce((sum,t)=>sum+transactionPoints(t),0)}
+function memberUsedPoints(id,excludeId=null){return (data.member_transactions||[]).filter(t=>t.member_id===id&&t.id!==excludeId).reduce((sum,t)=>sum+(Number(t.points_used)||0),0)}
+function memberPoints(id,excludeId=null){return Math.max(0,memberEarnedPoints(id,excludeId)-memberUsedPoints(id,excludeId))}
 function redeemableFromPoints(points){return (Number(points)||0)*0.05}
 function transactionPoints(t){return Math.floor(Number(t.amount)||0)}
+function transactionTotal(t){return Number(t.total_amount??((Number(t.amount)||0)+(Number(t.discount)||0)))||0}
+function transactionDiscount(t){return Number(t.discount??redeemableFromPoints(t.points_used||0))||0}
 function autoLevel(total){if(total>=1000)return"VIP";if(total>=500)return"Oro";if(total>=250)return"Plata";return"Bronce"}
 function memberLevel(m){return m.level||autoLevel(memberTotal(m.id))}
 function memberName(id){const m=(data.members||[]).find(x=>x.id===id);return m?m.name:"Miembro borrado"}
@@ -511,7 +516,7 @@ function renderMemberSummary(){
   const members=data.members||[];
   const active=members.filter(m=>m.status!=="inactive").length;
   const total=(data.member_transactions||[]).reduce((sum,t)=>sum+(Number(t.amount)||0),0);
-  const points=Math.floor(total);
+  const points=members.reduce((sum,m)=>sum+memberPoints(m.id),0);
   document.getElementById("member-summary").innerHTML=`
     <div class="stat"><strong>${members.length}</strong><span>Miembros</span></div>
     <div class="stat"><strong>${active}</strong><span>Activos</span></div>
@@ -531,7 +536,7 @@ function renderMembers(){
       <div>
         <div class="member-name">${m.name||"Sin nombre"}</div>
         <div class="member-line">${m.phone||"Sin teléfono"}${m.email?" · "+m.email:""}${m.birthday?" · Cumpleaños: "+m.birthday:""}</div>
-        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span><span class="badge">${memberPoints(m.id)} puntos</span><span class="badge">Disponible: ${euro(redeemableFromPoints(memberPoints(m.id)))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
+        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span><span class="badge">${memberPoints(m.id)} puntos disponibles</span><span class="badge">Disponible: ${euro(redeemableFromPoints(memberPoints(m.id)))}</span>${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
         ${m.notes?`<div class="member-line">${m.notes}</div>`:""}
       </div>
       <div class="actions"><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
@@ -577,31 +582,51 @@ function renderTransactions(){
   const items=(data.member_transactions||[]).filter(t=>transactionFilter==="all"||String(t.member_id)===String(transactionFilter)).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
   document.getElementById("transactions").innerHTML=items.map(t=>`
     <tr>
-      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td><strong>${euro(t.amount)}</strong></td><td>${transactionPoints(t)}</td><td>${euro(redeemableFromPoints(memberPoints(t.member_id)))}</td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
+      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td>${euro(transactionTotal(t))}</td><td>${t.points_used?`${t.points_used} pts · ${euro(transactionDiscount(t))}`:"-"}</td><td><strong>${euro(t.amount)}</strong></td><td>${transactionPoints(t)}</td><td>${euro(redeemableFromPoints(memberPoints(t.member_id)))}</td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
       <td><div class="btn-row"><button class="btn" onclick="openTransaction(${t.id})">Editar</button><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">Borrar</button></div></td>
-    </tr>`).join("")||'<tr><td colspan="9" class="muted">No hay consumos todavía.</td></tr>';
+    </tr>`).join("")||'<tr><td colspan="11" class="muted">No hay consumos todavía.</td></tr>';
 }
 function openTransaction(id,memberId=null){
   if(!(data.members||[]).length){alert("Primero crea un miembro.");return}
   editingTransactionId=id||null;
   renderTransactionMemberOptions();
-  const t=id?data.member_transactions.find(x=>x.id===id):{member_id:memberId||data.members[0].id,date:today(),amount:"",payment:"Bizum",order:"",notes:""};
+  const t=id?data.member_transactions.find(x=>x.id===id):{member_id:memberId||data.members[0].id,date:today(),amount:"",total_amount:"",points_used:0,payment:"Bizum",order:"",notes:""};
   document.getElementById("transaction-modal-title").textContent=id?"Editar consumo":"Nuevo consumo";
   document.getElementById("t-member").value=t.member_id;
   document.getElementById("t-date").value=t.date||today();
-  document.getElementById("t-amount").value=t.amount||"";
+  document.getElementById("t-amount").value=t.total_amount||((Number(t.amount)||0)+(Number(t.discount)||0))||"";
+  document.getElementById("t-use-points").checked=!!(Number(t.points_used)||0);
   document.getElementById("t-payment").value=t.payment||"Bizum";
   document.getElementById("t-order").value=t.order||"";
   document.getElementById("t-notes").value=t.notes||"";
+  updateTransactionPreview();
   document.getElementById("transaction-modal").classList.add("open");
 }
 function closeTransaction(){document.getElementById("transaction-modal").classList.remove("open")}
+function calculateTransactionAmounts(memberId,total,usePoints,excludeId=null){
+  const available=memberPoints(memberId,excludeId);
+  const maxByTotal=Math.floor((Number(total)||0)/0.05);
+  const pointsUsed=usePoints?Math.min(available,maxByTotal):0;
+  const discount=redeemableFromPoints(pointsUsed);
+  const paid=Math.max(0,(Number(total)||0)-discount);
+  return {available,pointsUsed,discount,paid,earned:Math.floor(paid)};
+}
+function updateTransactionPreview(){
+  const el=document.getElementById("t-points-preview");
+  if(!el||!data)return;
+  const memberId=parseInt(document.getElementById("t-member").value,10);
+  const total=parseFloat(document.getElementById("t-amount").value)||0;
+  const usePoints=document.getElementById("t-use-points").checked;
+  const calc=calculateTransactionAmounts(memberId,total,usePoints,editingTransactionId);
+  el.textContent=usePoints?`Usa ${calc.pointsUsed} puntos (${euro(calc.discount)}). Cobrar ${euro(calc.paid)}. Este consumo suma ${calc.earned} puntos.`:`Disponible: ${calc.available} puntos (${euro(redeemableFromPoints(calc.available))}). Este consumo suma ${calc.earned} puntos.`;
+}
 function saveTransaction(){
   const memberId=parseInt(document.getElementById("t-member").value,10);
-  const amount=parseFloat(document.getElementById("t-amount").value)||0;
+  const total=parseFloat(document.getElementById("t-amount").value)||0;
   if(!memberId){alert("El miembro es obligatorio");return}
-  if(amount<=0){alert("El importe debe ser mayor que 0");return}
-  const record={id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),amount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),notes:document.getElementById("t-notes").value.trim()};
+  if(total<=0){alert("El importe debe ser mayor que 0");return}
+  const calc=calculateTransactionAmounts(memberId,total,document.getElementById("t-use-points").checked,editingTransactionId);
+  const record={id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),total_amount:total,amount:calc.paid,points_used:calc.pointsUsed,discount:calc.discount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),notes:document.getElementById("t-notes").value.trim()};
   if(editingTransactionId){data.member_transactions[data.member_transactions.findIndex(t=>t.id===editingTransactionId)]=record}else data.member_transactions.push(record);
   closeTransaction();renderMembers();renderTransactions();setDirty(true);show("Consumo guardado. Pulsa Publicar para subirlo.");
 }
