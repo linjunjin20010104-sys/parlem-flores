@@ -586,18 +586,19 @@ function openMember(id){
   document.getElementById("member-modal").classList.add("open");
 }
 function closeMember(){document.getElementById("member-modal").classList.remove("open")}
-function saveMember(){
+async function saveMember(){
   const name=document.getElementById("m-name").value.trim();
   if(!name){alert("El nombre es obligatorio");return}
   const member={id:editingMemberId||Math.max(0,...data.members.map(m=>m.id||0))+1,name,phone:document.getElementById("m-phone").value.trim(),email:document.getElementById("m-email").value.trim(),birthday:document.getElementById("m-birthday").value,level:document.getElementById("m-level").value,status:document.getElementById("m-status").value,notes:document.getElementById("m-notes").value.trim(),created_at:editingMemberId?(data.members.find(m=>m.id===editingMemberId)?.created_at||today()):today()};
   if(editingMemberId){data.members[data.members.findIndex(m=>m.id===editingMemberId)]=member}else data.members.push(member);
-  closeMember();renderMembers();renderTransactions();setDirty(true);show("Miembro guardado. Pulsa Publicar para subirlo.");
+  closeMember();renderMembers();renderTransactions();setDirty(true);show("Miembro guardado. Publicando...");
+  await saveAll();
 }
-function deleteMember(id){
+async function deleteMember(id){
   const m=data.members.find(x=>x.id===id);
   const count=memberCount(id);
   const msg=count?`Borrar "${m.name}" también eliminará ${count} consumo(s).`:`¿Borrar "${m.name}"?`;
-  if(confirm(msg)){data.members=data.members.filter(x=>x.id!==id);data.member_transactions=data.member_transactions.filter(t=>t.member_id!==id);renderMembers();renderTransactions();setDirty(true)}
+  if(confirm(msg)){data.members=data.members.filter(x=>x.id!==id);data.member_transactions=data.member_transactions.filter(t=>t.member_id!==id);renderMembers();renderTransactions();setDirty(true);show("Miembro borrado. Publicando...");await saveAll()}
 }
 function renderTransactionMemberOptions(){
   const opts=['<option value="all">Todos los miembros</option>',...(data.members||[]).map(m=>`<option value="${m.id}" ${String(transactionFilter)===String(m.id)?"selected":""}>${m.name}</option>`)].join("");
@@ -649,7 +650,7 @@ function updateTransactionPreview(){
   const calc=calculateTransactionAmounts(memberId,total,usePoints,editingTransactionId);
   el.textContent=usePoints?`Usa ${calc.pointsUsed} puntos (${euro(calc.discount)}). Cobrar ${euro(calc.paid)}. Este consumo suma ${calc.earned} puntos.`:`Disponible: ${calc.available} puntos (${euro(redeemableFromPoints(calc.available))}). Este consumo suma ${calc.earned} puntos.`;
 }
-function saveTransaction(){
+async function saveTransaction(){
   const memberId=parseInt(document.getElementById("t-member").value,10);
   const total=parseFloat(document.getElementById("t-amount").value)||0;
   if(!memberId){alert("El miembro es obligatorio");return}
@@ -657,9 +658,10 @@ function saveTransaction(){
   const calc=calculateTransactionAmounts(memberId,total,document.getElementById("t-use-points").checked,editingTransactionId);
   const record={id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),total_amount:total,amount:calc.paid,points_used:calc.pointsUsed,discount:calc.discount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),notes:document.getElementById("t-notes").value.trim()};
   if(editingTransactionId){data.member_transactions[data.member_transactions.findIndex(t=>t.id===editingTransactionId)]=record}else data.member_transactions.push(record);
-  closeTransaction();renderMembers();renderTransactions();setDirty(true);show("Consumo guardado. Pulsa Publicar para subirlo.");
+  closeTransaction();renderMembers();renderTransactions();setDirty(true);show("Consumo guardado. Publicando...");
+  await saveAll();
 }
-function deleteTransaction(id){if(confirm("¿Borrar este consumo?")){data.member_transactions=data.member_transactions.filter(t=>t.id!==id);renderMembers();renderTransactions();setDirty(true)}}
+async function deleteTransaction(id){if(confirm("¿Borrar este consumo?")){data.member_transactions=data.member_transactions.filter(t=>t.id!==id);renderMembers();renderTransactions();setDirty(true);show("Consumo borrado. Publicando...");await saveAll()}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
 function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div><div class="wide"><label>Opacidad de la foto portada: <span id="hero-opacity-value">${data.site.hero_image_opacity??70}%</span></label><input id="hero-opacity" type="range" min="20" max="100" step="5" value="${data.site.hero_image_opacity??70}" oninput="data.site.hero_image_opacity=parseInt(this.value);document.getElementById('hero-opacity-value').textContent=this.value+'%';setDirty(true)"><p class="muted">100% muestra la foto más clara. 40% deja la portada más oscura y transparente.</p></div>${setting("Historia","about_text","textarea")}</div></div>`}
 async function handleHeroImage(e){
