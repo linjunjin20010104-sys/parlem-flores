@@ -97,6 +97,18 @@
       "payment": "Bizum",
       "order": "",
       "notes": ""
+    },
+    {
+      "id": 2,
+      "member_id": 1,
+      "date": "2026-08-17",
+      "total_amount": 100,
+      "amount": 95,
+      "points_used": 100,
+      "discount": 5,
+      "payment": "Bizum",
+      "order": "",
+      "notes": ""
     }
   ],
   "seasonal": [
