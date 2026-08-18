@@ -85,14 +85,48 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .member-name{font-weight:750;margin-bottom:4px}
 .member-line{font-size:13px;color:#7c7068;line-height:1.45}
 .member-total{font-weight:800;color:#7f1f28;font-size:15px}
+.member-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.profile-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px}
+.profile-head h3{margin:0 0 4px;font-size:23px}
+.profile-section{border-top:1px solid #e7ddd4;padding-top:16px;margin-top:16px}
+.profile-section h4{font-size:15px;margin-bottom:10px}
+.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px}
+.detail-item span{display:block;color:#7c7068;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:3px}
+.detail-item strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.analysis-intro{background:#fff8ef;border:1px solid #ead7b7;border-left:4px solid #b57924;border-radius:8px;padding:14px 16px;margin-bottom:14px;line-height:1.5}
+.analysis-intro strong{color:#7f1f28}
+.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.analysis-panel{background:white;border:1px solid #e7ddd4;border-radius:8px;padding:16px;min-width:0}
+.analysis-panel.wide{grid-column:1/-1}
+.analysis-panel h3{font-size:16px;margin-bottom:4px}
+.analysis-panel>.muted{margin-bottom:12px}
+.bar-list{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:minmax(92px,1fr) 2fr auto;gap:10px;align-items:center;font-size:13px}
+.bar-track{height:8px;background:#eee5de;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:#7f1f28;border-radius:4px}
+.bar-value{font-weight:750;min-width:24px;text-align:right}
+.segment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.segment-item{border-left:3px solid #7f1f28;padding:8px 10px;background:#fbf8f5;border-radius:0 6px 6px 0}
+.segment-item strong{display:block;font-size:19px;color:#7f1f28}
+.segment-item span{display:block;font-size:12px;font-weight:700;margin-top:2px}
+.segment-item small{display:block;color:#7c7068;font-size:11px;line-height:1.35;margin-top:4px}
+.action-list{display:grid;gap:8px}
+.action-item{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #eee5de;padding:8px 0}
+.action-item:last-child{border-bottom:0}
+.action-copy strong,.action-copy span{display:block}
+.action-copy span{font-size:12px;color:#7c7068;margin-top:2px}
+.tag{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;background:#f0e7df;color:#655951}
+.tag.alert{background:#fff0d9;color:#86570e}.tag.good{background:#e9f5ec;color:#2f6d3e}.tag.cool{background:#eaf1f8;color:#365f82}
+.empty-state{color:#7c7068;font-size:13px;padding:12px 0}
 .table-wrap{background:white;border:1px solid #e7ddd4;border-radius:8px;overflow:auto}
 .records-table{width:100%;border-collapse:collapse;min-width:980px}
+.records-table.records-wide{min-width:1320px}
 .records-table th,.records-table td{padding:10px;border-bottom:1px solid #e7ddd4;text-align:left;font-size:13px;vertical-align:top}
 .records-table th{background:#fbf8f5;color:#655951;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
 .records-table tr:last-child td{border-bottom:0}
 .status{position:fixed;right:16px;bottom:16px;background:#241d19;color:white;border-radius:8px;padding:11px 14px;box-shadow:0 10px 28px rgba(0,0,0,.18);display:none;max-width:360px;font-size:13px}
 .status.show{display:block}
-@media(max-width:720px){.top{overflow-x:auto}.product,.member{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.top{overflow-x:auto}.product,.member{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.actions{grid-column:1/-1;flex-direction:row}.form-grid,.analysis-grid,.detail-grid{grid-template-columns:1fr}.analysis-panel.wide{grid-column:auto}.bar-row{grid-template-columns:minmax(86px,1fr) 1.4fr auto}.profile-head{display:block}.profile-head .btn-row{margin-top:12px}}
 </style>
 </head>
 <body>
@@ -114,6 +148,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <button class="nav active" onclick="showPage('products',this)">Productos</button>
     <button class="nav" onclick="showPage('seasonal',this)">Temporada de Ramos</button>
     <button class="nav" onclick="showPage('members',this)">Miembros</button>
+    <button class="nav" onclick="showPage('analytics',this)">Análisis</button>
     <button class="nav" onclick="showPage('transactions',this)">Consumos</button>
     <button class="nav" onclick="showPage('settings',this)">Configuración</button>
     <button class="nav" onclick="showPage('publish',this)">Publicar</button>
@@ -142,15 +177,42 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="card" id="loyalty-rules"></div>
       <div class="toolbar">
         <input class="search" id="member-search" type="search" placeholder="Buscar miembro..." oninput="memberSearchTerm=this.value.toLowerCase();renderMembers()">
+        <select class="search" id="member-segment-filter" onchange="memberSegmentFilter=this.value;renderMembers()">
+          <option value="all">Todos los grupos</option>
+          <option value="new">Nuevos</option>
+          <option value="repeat">Recurrentes</option>
+          <option value="loyal">Fieles</option>
+          <option value="high">Alto valor</option>
+          <option value="risk">En riesgo</option>
+          <option value="inactive">Inactivos</option>
+          <option value="birthday">Cumpleaños próximo</option>
+          <option value="no-purchase">Sin compras</option>
+        </select>
       </div>
       <div class="grid" id="members"></div>
+    </section>
+    <section class="page" id="page-analytics">
+      <div class="head"><div><h2>Análisis de clientes</h2><p class="muted">Perfil de la clientela, hábitos de compra y oportunidades de seguimiento.</p></div><button class="btn" onclick="renderAnalytics()">Actualizar</button></div>
+      <div class="summary" id="analytics-summary"></div>
+      <div class="analysis-intro" id="analytics-insight"></div>
+      <div class="analysis-grid">
+        <section class="analysis-panel wide"><h3>Grupos de clientes</h3><p class="muted">Clasificación automática según actividad, frecuencia y valor.</p><div class="segment-grid" id="analytics-segments"></div></section>
+        <section class="analysis-panel"><h3>Niveles de fidelidad</h3><p class="muted">Distribución por consumo acumulado.</p><div class="bar-list" id="analytics-levels"></div></section>
+        <section class="analysis-panel"><h3>Edad de los clientes</h3><p class="muted">Calculada cuando hay fecha de nacimiento.</p><div class="bar-list" id="analytics-ages"></div></section>
+        <section class="analysis-panel"><h3>Origen de los clientes</h3><p class="muted">Cómo conocieron la floristería.</p><div class="bar-list" id="analytics-sources"></div></section>
+        <section class="analysis-panel"><h3>Motivos de compra</h3><p class="muted">Ocasiones registradas en los consumos.</p><div class="bar-list" id="analytics-occasions"></div></section>
+        <section class="analysis-panel"><h3>Productos más solicitados</h3><p class="muted">Tipos de producto registrados.</p><div class="bar-list" id="analytics-products"></div></section>
+        <section class="analysis-panel"><h3>Ciudades</h3><p class="muted">Ubicación declarada por los clientes.</p><div class="bar-list" id="analytics-cities"></div></section>
+        <section class="analysis-panel"><h3>Canales de venta</h3><p class="muted">Dónde se cerraron los pedidos.</p><div class="bar-list" id="analytics-channels"></div></section>
+        <section class="analysis-panel wide"><h3>Próximas acciones</h3><p class="muted">Cumpleaños, clientes sin actividad y miembros próximos a subir de nivel.</p><div class="action-list" id="analytics-actions"></div></section>
+      </div>
     </section>
     <section class="page" id="page-transactions">
       <div class="head"><h2>Consumos</h2><button class="btn btn-primary" onclick="openTransaction()">+ Nuevo consumo</button></div>
       <div class="toolbar">
         <select class="search" id="transaction-member-filter" onchange="transactionFilter=this.value;renderTransactions()"></select>
       </div>
-      <div class="table-wrap"><table class="records-table"><thead><tr><th>Fecha</th><th>Miembro</th><th>Total</th><th>Descuento</th><th>Cobrado</th><th>Puntos</th><th>Disponible</th><th>Pedido</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
+      <div class="table-wrap"><table class="records-table records-wide"><thead><tr><th>Fecha</th><th>Miembro</th><th>Total</th><th>Descuento</th><th>Cobrado</th><th>Puntos</th><th>Disponible</th><th>Pedido</th><th>Motivo</th><th>Producto</th><th>Canal</th><th>Pago</th><th>Notas</th><th></th></tr></thead><tbody id="transactions"></tbody></table></div>
     </section>
     <section class="page" id="page-settings">
       <div class="head"><h2>Configuración</h2></div>
@@ -228,8 +290,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div><label>Teléfono</label><input id="m-phone"></div>
       <div><label>Email</label><input id="m-email" type="email"></div>
       <div><label>Cumpleaños</label><input id="m-birthday" type="date"></div>
+      <div><label>Tipo de cliente</label><select id="m-customer-type"><option>Particular</option><option>Empresa</option></select></div>
+      <div><label>Idioma preferido</label><select id="m-language"><option value="">Sin especificar</option><option>Español</option><option>Valenciano</option><option>Inglés</option><option>Chino</option><option>Otro</option></select></div>
+      <div><label>Ciudad</label><input id="m-city" placeholder="Valencia"></div>
+      <div><label>Código postal</label><input id="m-postal-code" inputmode="numeric" placeholder="46005"></div>
+      <div><label>Cómo nos conoció</label><select id="m-source"><option value="">Sin especificar</option><option>Tienda</option><option>Recomendación</option><option>Google</option><option>Instagram</option><option>Web</option><option>Evento</option><option>Otro</option></select></div>
+      <div><label>Contacto preferido</label><select id="m-preferred-contact"><option value="">Sin especificar</option><option>WhatsApp</option><option>Llamada</option><option>Email</option><option>SMS</option></select></div>
+      <div><label>Flores preferidas</label><input id="m-preferred-flowers" placeholder="Rosas, peonías..."></div>
+      <div><label>Colores preferidos</label><input id="m-preferred-colors" placeholder="Rosa, blanco..."></div>
+      <div><label>Presupuesto habitual</label><select id="m-budget"><option value="">Sin especificar</option><option>Menos de 30€</option><option>30€ - 50€</option><option>50€ - 80€</option><option>80€ - 120€</option><option>Más de 120€</option></select></div>
+      <div><label>Aniversario / fecha importante</label><input id="m-anniversary" type="date"></div>
       <div><label>Nivel manual</label><select id="m-level"><option value="">Automático</option><option>Bronce</option><option>Plata</option><option>Oro</option><option>VIP</option></select></div>
       <div><label>Estado</label><select id="m-status"><option value="active">Activo</option><option value="inactive">Inactivo</option></select></div>
+      <div class="wide"><label style="text-transform:none"><input id="m-marketing-consent" type="checkbox" style="width:auto;margin-right:8px"> Autoriza recibir comunicaciones y promociones</label></div>
       <div class="wide"><label>Notas</label><textarea id="m-notes"></textarea></div>
     </div>
     <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
@@ -248,12 +321,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
       <div class="wide"><label><input id="t-use-points" type="checkbox" style="width:auto;margin-right:8px" onchange="updateTransactionPreview()"> Usar puntos disponibles</label><p class="muted" id="t-points-preview">Sin descuento por puntos.</p></div>
       <div><label>Método de pago</label><select id="t-payment"><option>Bizum</option><option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Otro</option></select></div>
       <div><label>Pedido</label><input id="t-order" placeholder="Ramo, centro, evento..."></div>
+      <div><label>Motivo de compra</label><select id="t-occasion"><option value="">Sin especificar</option><option>Cumpleaños</option><option>Aniversario</option><option>Boda</option><option>Evento</option><option>Nacimiento</option><option>Agradecimiento</option><option>Funeral</option><option>Decoración</option><option>Regalo</option><option>Otro</option></select></div>
+      <div><label>Tipo de producto</label><select id="t-product-type"><option value="">Sin especificar</option><option>Ramo</option><option>Centro floral</option><option>Planta</option><option>Flores preservadas</option><option>Evento / boda</option><option>Otro</option></select></div>
+      <div><label>Canal de venta</label><select id="t-channel"><option value="">Sin especificar</option><option>Tienda</option><option>WhatsApp</option><option>Instagram</option><option>Web</option><option>Teléfono</option><option>Otro</option></select></div>
       <div class="wide"><label>Notas</label><textarea id="t-notes"></textarea></div>
     </div>
     <div class="btn-row" style="justify-content:flex-end;margin-top:18px">
       <button class="btn" onclick="closeTransaction()">Cancelar</button>
       <button class="btn btn-primary" onclick="saveTransaction()">Guardar consumo</button>
     </div>
+  </div>
+</div>
+<div class="modal-bg" id="profile-modal">
+  <div class="modal" style="width:min(820px,100%)">
+    <div id="profile-content"></div>
   </div>
 </div>
 <div class="status" id="status"></div>
@@ -264,7 +345,7 @@ const repo="parlem-flores";
 const branch="main";
 const api="/.netlify/git/github/contents";
 const raw="/data.json";
-let data=null,dataSha="",filter="all",subfilter="all",searchTerm="",memberSearchTerm="",transactionFilter="all",editingId=null,editingSeasonalIndex=null,editingMemberId=null,editingTransactionId=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
+let data=null,dataSha="",filter="all",subfilter="all",searchTerm="",memberSearchTerm="",memberSegmentFilter="all",transactionFilter="all",profileMemberId=null,editingId=null,editingSeasonalIndex=null,editingMemberId=null,editingTransactionId=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
 
 async function identityToken(){
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -358,21 +439,24 @@ async function loadData(){
 	  filter="all";
 	  subfilter="all";
 	  searchTerm="";
-	  memberSearchTerm="";
-	  transactionFilter="all";
+		  memberSearchTerm="";
+		  memberSegmentFilter="all";
+		  transactionFilter="all";
 	  ensureMemberData();
 	  const search=document.getElementById("search");
 	  if(search) search.value="";
-	  const memberSearch=document.getElementById("member-search");
-	  if(memberSearch) memberSearch.value="";
+		  const memberSearch=document.getElementById("member-search");
+		  if(memberSearch) memberSearch.value="";
+		  const memberSegment=document.getElementById("member-segment-filter");
+		  if(memberSegment) memberSegment.value="all";
 	  dirty=false;
 	  renderAll();
 	  setDirty(false);
 	  show(`Datos actualizados: ${(data.products||[]).length} productos`);
 	}
 	function ensureMemberData(){data.members=data.members||[];data.member_transactions=data.member_transactions||[]}
-function renderAll(){if(!data)return;ensureMemberData();renderSummary();renderTabs();renderProducts();renderSeasonal();renderLoyaltyRules();renderMembers();renderTransactions();renderSettings()}
-	function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active")}
+	function renderAll(){if(!data)return;ensureMemberData();renderSummary();renderTabs();renderProducts();renderSeasonal();renderLoyaltyRules();renderMembers();renderTransactions();renderAnalytics();renderSettings()}
+		function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));document.getElementById("page-"+id).classList.add("active");if(btn)btn.classList.add("active");if(id==="analytics")renderAnalytics()}
 function renderTabs(){
   const cats=[{id:"all",name:"Todos"},...(data.categories||[])];
   document.getElementById("tabs").innerHTML=cats.map(c=>`<button class="tab ${filter===c.id?"active":""}" onclick="filter='${c.id}';subfilter='all';renderTabs();renderProducts()">${c.name}</button>`).join("");
@@ -533,9 +617,47 @@ async function saveSeasonal(){
 function deleteSeasonal(i){if(confirm("¿Borrar este ramo de temporada?")){data.seasonal.splice(i,1);renderSeasonal();setDirty(true)}}
 function euro(n){return `${(Number(n)||0).toFixed(2)}€`}
 function today(){return new Date().toISOString().slice(0,10)}
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function parseLocalDate(value){
+  const parts=String(value||"").split("-").map(Number);
+  if(parts.length!==3||!parts[0]||!parts[1]||!parts[2])return null;
+  const date=new Date(parts[0],parts[1]-1,parts[2]);
+  return Number.isNaN(date.getTime())?null:date;
+}
+function daysSince(value){
+  const date=parseLocalDate(value);
+  if(!date)return null;
+  const now=new Date();
+  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  return Math.floor((start-date)/86400000);
+}
+function daysUntilAnnual(value){
+  const date=parseLocalDate(value);
+  if(!date)return null;
+  const now=new Date();
+  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  let next=new Date(now.getFullYear(),date.getMonth(),date.getDate());
+  if(next<start)next=new Date(now.getFullYear()+1,date.getMonth(),date.getDate());
+  return Math.round((next-start)/86400000);
+}
+function formatDate(value){const date=parseLocalDate(value);return date?date.toLocaleDateString("es-ES",{day:"2-digit",month:"short",year:"numeric"}):"Sin registrar"}
 function memberTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+(Number(t.amount)||0),0)}
 function memberCount(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).length}
 function memberLastDate(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).map(t=>t.date||"").sort().pop()||""}
+function memberAverage(id){const count=memberCount(id);return count?memberTotal(id)/count:0}
+function memberAge(m){
+  const birth=parseLocalDate(m.birthday);
+  if(!birth)return null;
+  const now=new Date();
+  let age=now.getFullYear()-birth.getFullYear();
+  if(now.getMonth()<birth.getMonth()||(now.getMonth()===birth.getMonth()&&now.getDate()<birth.getDate()))age--;
+  return age>=0&&age<120?age:null;
+}
+function memberAgeGroup(m){const age=memberAge(m);if(age===null)return "Sin fecha";if(age<25)return "Menos de 25";if(age<35)return "25 - 34";if(age<45)return "35 - 44";if(age<55)return "45 - 54";return "55 o más"}
+function memberProfileCompleteness(m){
+  const fields=["phone","email","birthday","customer_type","language","city","postal_code","source","preferred_contact","preferred_flowers","preferred_colors","budget"];
+  return Math.round(fields.filter(key=>String(m[key]||"").trim()).length/fields.length*100);
+}
 function memberEarnedPoints(id,excludeId=null){return (data.member_transactions||[]).filter(t=>t.member_id===id&&t.id!==excludeId).reduce((sum,t)=>sum+transactionPoints(t),0)}
 function memberUsedPoints(id,excludeId=null){return (data.member_transactions||[]).filter(t=>t.member_id===id&&t.id!==excludeId).reduce((sum,t)=>sum+(Number(t.points_used)||0),0)}
 function memberPoints(id,excludeId=null){return Math.max(0,memberEarnedPoints(id,excludeId)-memberUsedPoints(id,excludeId))}
@@ -549,11 +671,107 @@ function memberLevel(m){return m.level||autoLevel(memberTotal(m.id))}
 function memberName(id){const m=(data.members||[]).find(x=>x.id===id);return m?m.name:"Miembro borrado"}
 function memberDiscountTotal(id){return (data.member_transactions||[]).filter(t=>t.member_id===id).reduce((sum,t)=>sum+transactionDiscount(t),0)}
 function memberNextTier(total){return loyaltyTiers().find(t=>total<t.min)||null}
+function memberTags(m){
+  const count=memberCount(m.id);
+  const total=memberTotal(m.id);
+  const lastDays=daysSince(memberLastDate(m.id));
+  const createdDays=daysSince(m.created_at);
+  const birthdayDays=daysUntilAnnual(m.birthday);
+  const tags=[];
+  if(createdDays!==null&&createdDays>=0&&createdDays<=30)tags.push({key:"new",label:"Nuevo",className:"cool"});
+  if(count>=2)tags.push({key:"repeat",label:"Recurrente",className:"good"});
+  if(count>=3&&lastDays!==null&&lastDays<=90)tags.push({key:"loyal",label:"Fiel",className:"good"});
+  if(total>=500)tags.push({key:"high",label:"Alto valor",className:"good"});
+  if(count>0&&lastDays!==null&&lastDays>90&&lastDays<180)tags.push({key:"risk",label:"En riesgo",className:"alert"});
+  if(m.status==="inactive"||(count>0&&lastDays!==null&&lastDays>=180))tags.push({key:"inactive",label:"Inactivo",className:"alert"});
+  if(count===0)tags.push({key:"no-purchase",label:"Sin compras",className:"alert"});
+  if(birthdayDays!==null&&birthdayDays<=30)tags.push({key:"birthday",label:birthdayDays===0?"Cumpleaños hoy":"Cumpleaños próximo",className:"cool"});
+  if(m.customer_type==="Empresa")tags.push({key:"business",label:"Empresa",className:"cool"});
+  return tags;
+}
+function memberMatchesSegment(m,segment){return segment==="all"||memberTags(m).some(tag=>tag.key===segment)}
 function memberRewardBadges(m){
   const total=memberTotal(m.id);
   const points=memberPoints(m.id);
   const next=memberNextTier(total);
   return `<span class="badge">${points} puntos disponibles</span><span class="badge">Disponible: ${euro(redeemableFromPoints(points))}</span><span class="badge">Usados: ${memberUsedPoints(m.id)} puntos</span><span class="badge">Ahorrado: ${euro(memberDiscountTotal(m.id))}</span>${next?`<span class="badge">Faltan ${euro(next.min-total)} para ${next.name}</span>`:'<span class="badge">Nivel máximo</span>'}`;
+}
+function countEntries(values){
+  const counts=new Map();
+  values.forEach(value=>{const label=String(value||"Sin datos").trim()||"Sin datos";counts.set(label,(counts.get(label)||0)+1)});
+  return [...counts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],"es"));
+}
+function renderBars(id,values){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const entries=countEntries(values);
+  if(!entries.length){el.innerHTML='<div class="empty-state">Todavía no hay datos suficientes.</div>';return}
+  const max=Math.max(...entries.map(entry=>entry[1]),1);
+  el.innerHTML=entries.map(([label,count])=>`<div class="bar-row"><span>${esc(label)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(5,count/max*100)}%"></div></div><span class="bar-value">${count}</span></div>`).join("");
+}
+function topKnown(values){return countEntries(values).find(([label])=>label!=="Sin datos"&&label!=="Sin fecha")||null}
+function renderAnalytics(){
+  if(!data)return;
+  const members=data.members||[];
+  const transactions=data.member_transactions||[];
+  const buyers=members.filter(m=>memberCount(m.id)>0);
+  const repeat=members.filter(m=>memberCount(m.id)>=2);
+  const active90=members.filter(m=>{const days=daysSince(memberLastDate(m.id));return days!==null&&days>=0&&days<=90}).length;
+  const new30=members.filter(m=>{const days=daysSince(m.created_at);return days!==null&&days>=0&&days<=30}).length;
+  const total=transactions.reduce((sum,t)=>sum+(Number(t.amount)||0),0);
+  const repeatRate=buyers.length?Math.round(repeat.length/buyers.length*100):0;
+  const completeness=members.length?Math.round(members.reduce((sum,m)=>sum+memberProfileCompleteness(m),0)/members.length):0;
+  const consent=members.filter(m=>m.marketing_consent===true).length;
+  document.getElementById("analytics-summary").innerHTML=`
+    <div class="stat"><strong>${members.length}</strong><span>Clientes registrados</span></div>
+    <div class="stat"><strong>${new30}</strong><span>Nuevos en 30 días</span></div>
+    <div class="stat"><strong>${active90}</strong><span>Activos en 90 días</span></div>
+    <div class="stat"><strong>${repeatRate}%</strong><span>Tasa de repetición</span></div>
+    <div class="stat"><strong>${euro(transactions.length?total/transactions.length:0)}</strong><span>Ticket medio</span></div>
+    <div class="stat"><strong>${completeness}%</strong><span>Perfil completado</span></div>
+    <div class="stat"><strong>${consent}</strong><span>Aceptan promociones</span></div>`;
+  const topAge=topKnown(members.map(memberAgeGroup));
+  const topCity=topKnown(members.map(m=>m.city));
+  const topSource=topKnown(members.map(m=>m.source));
+  const topOccasion=topKnown(transactions.map(t=>t.occasion));
+  const facts=[];
+  if(topAge)facts.push(`el grupo de edad más frecuente es <strong>${esc(topAge[0])}</strong>`);
+  if(topCity)facts.push(`la ciudad principal es <strong>${esc(topCity[0])}</strong>`);
+  if(topSource)facts.push(`el origen más habitual es <strong>${esc(topSource[0])}</strong>`);
+  if(topOccasion)facts.push(`el motivo de compra más frecuente es <strong>${esc(topOccasion[0])}</strong>`);
+  document.getElementById("analytics-insight").innerHTML=facts.length
+    ?`<strong>Resumen automático:</strong> ${facts.join("; ")}. La tasa de repetición actual es <strong>${repeatRate}%</strong>.`
+    :`<strong>Resumen automático:</strong> hay ${members.length} cliente(s), pero faltan datos de perfil y consumo para describir el grupo con precisión. Completitud actual: <strong>${completeness}%</strong>.`;
+  const segments=[
+    ["Nuevos",new30,"Registrados durante los últimos 30 días"],
+    ["Recurrentes",repeat.length,"Han comprado al menos 2 veces"],
+    ["Fieles",members.filter(m=>memberTags(m).some(t=>t.key==="loyal")).length,"3 compras o más y actividad reciente"],
+    ["Alto valor",members.filter(m=>memberTotal(m.id)>=500).length,"500€ o más de consumo cobrado"],
+    ["En riesgo",members.filter(m=>memberTags(m).some(t=>t.key==="risk")).length,"Entre 91 y 179 días sin comprar"],
+    ["Inactivos",members.filter(m=>memberTags(m).some(t=>t.key==="inactive")).length,"180 días sin comprar o baja manual"],
+    ["Sin compras",members.filter(m=>memberCount(m.id)===0).length,"Registrados sin consumo asociado"]
+  ];
+  document.getElementById("analytics-segments").innerHTML=segments.map(([label,count,help])=>`<div class="segment-item"><strong>${count}</strong><span>${label}</span><small>${help}</small></div>`).join("");
+  renderBars("analytics-levels",members.map(memberLevel));
+  renderBars("analytics-ages",members.map(memberAgeGroup));
+  renderBars("analytics-sources",members.map(m=>m.source));
+  renderBars("analytics-occasions",transactions.map(t=>t.occasion));
+  renderBars("analytics-products",transactions.map(t=>t.product_type));
+  renderBars("analytics-cities",members.map(m=>m.city));
+  renderBars("analytics-channels",transactions.map(t=>t.channel));
+  const actions=[];
+  members.forEach(m=>{
+    const birthdayDays=daysUntilAnnual(m.birthday);
+    const lastDays=daysSince(memberLastDate(m.id));
+    const count=memberCount(m.id);
+    const next=memberNextTier(memberTotal(m.id));
+    if(birthdayDays!==null&&birthdayDays<=30)actions.push({priority:1,id:m.id,name:m.name,label:birthdayDays===0?"Cumpleaños hoy":`Cumpleaños en ${birthdayDays} día(s)`,detail:m.marketing_consent?"Puede recibir una felicitación o ventaja de cumpleaños.":"Revisar permiso antes de enviar promociones.",kind:"cool"});
+    if(count>0&&lastDays!==null&&lastDays>90)actions.push({priority:2,id:m.id,name:m.name,label:lastDays>=180?"Cliente inactivo":"Cliente en riesgo",detail:`Último consumo hace ${lastDays} días.`,kind:"alert"});
+    if(count===0)actions.push({priority:4,id:m.id,name:m.name,label:"Sin primera compra",detail:"Tiene ficha de cliente pero todavía no tiene consumos.",kind:"alert"});
+    if(next&&count>0&&next.min-memberTotal(m.id)<=100)actions.push({priority:3,id:m.id,name:m.name,label:`Cerca de ${next.name}`,detail:`Le faltan ${euro(next.min-memberTotal(m.id))} de consumo cobrado.`,kind:"good"});
+  });
+  actions.sort((a,b)=>a.priority-b.priority||String(a.name).localeCompare(String(b.name),"es"));
+  document.getElementById("analytics-actions").innerHTML=actions.slice(0,20).map(item=>`<div class="action-item"><div class="action-copy"><strong>${esc(item.name||"Sin nombre")}</strong><span>${esc(item.detail)}</span></div><div class="member-actions"><span class="tag ${item.kind}">${esc(item.label)}</span><button class="btn" onclick="openMemberProfile(${Number(item.id)})">Ver ficha</button></div></div>`).join("")||'<div class="empty-state">No hay acciones pendientes con los datos actuales.</div>';
 }
 function renderLoyaltyRules(){
   const el=document.getElementById("loyalty-rules");
@@ -585,29 +803,93 @@ function renderMemberSummary(){
 function renderMembers(){
   renderMemberSummary();
   const members=(data.members||[]).filter(m=>{
-    const text=`${m.name||""} ${m.phone||""} ${m.email||""} ${m.notes||""} ${memberLevel(m)}`.toLowerCase();
-    return !memberSearchTerm || text.includes(memberSearchTerm);
+    const text=`${m.name||""} ${m.phone||""} ${m.email||""} ${m.notes||""} ${m.city||""} ${m.postal_code||""} ${m.source||""} ${m.preferred_flowers||""} ${m.preferred_colors||""} ${memberLevel(m)}`.toLowerCase();
+    return (!memberSearchTerm||text.includes(memberSearchTerm))&&memberMatchesSegment(m,memberSegmentFilter);
   });
   document.getElementById("members").innerHTML=members.map(m=>`
     <div class="member" style="${m.status==="inactive"?"opacity:.55":""}">
       <div>
-        <div class="member-name">${m.name||"Sin nombre"}</div>
-        <div class="member-line">${m.phone||"Sin teléfono"}${m.email?" · "+m.email:""}${m.birthday?" · Cumpleaños: "+m.birthday:""}</div>
-        <div class="meta"><span class="badge">${memberLevel(m)}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span>${memberRewardBadges(m)}${memberLastDate(m.id)?`<span class="badge">Último: ${memberLastDate(m.id)}</span>`:""}${m.status==="inactive"?'<span class="badge">Inactivo</span>':""}</div>
-        ${m.notes?`<div class="member-line">${m.notes}</div>`:""}
+        <div class="member-name">${esc(m.name||"Sin nombre")}</div>
+        <div class="member-line">${esc(m.phone||"Sin teléfono")}${m.email?" · "+esc(m.email):""}${m.city?" · "+esc(m.city):""}${m.birthday?" · Cumpleaños: "+esc(m.birthday):""}</div>
+        <div class="meta"><span class="badge">${esc(memberLevel(m))}</span><span class="badge">${memberCount(m.id)} consumo(s)</span><span class="member-total">${euro(memberTotal(m.id))}</span>${memberRewardBadges(m)}${memberLastDate(m.id)?`<span class="badge">Último: ${esc(memberLastDate(m.id))}</span>`:""}</div>
+        <div class="meta" style="margin-top:7px">${memberTags(m).map(tag=>`<span class="tag ${tag.className}">${esc(tag.label)}</span>`).join("")}<span class="tag">Ficha ${memberProfileCompleteness(m)}%</span></div>
+        ${m.preferred_flowers||m.preferred_colors?`<div class="member-line" style="margin-top:6px">Preferencias: ${esc([m.preferred_flowers,m.preferred_colors].filter(Boolean).join(" · "))}</div>`:""}
       </div>
-      <div class="actions"><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
-    </div>`).join("")||'<p class="muted">No hay miembros todavía.</p>';
+      <div class="actions"><button class="btn btn-primary" onclick="openMemberProfile(${m.id})">Ver ficha</button><button class="btn" onclick="openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="openMember(${m.id})">Editar</button><button class="btn btn-danger" onclick="deleteMember(${m.id})">Borrar</button></div>
+    </div>`).join("")||'<p class="muted">No hay miembros que coincidan con este filtro.</p>';
   renderTransactionMemberOptions();
 }
+function detailItem(label,value){return `<div class="detail-item"><span>${esc(label)}</span><strong>${esc(value||"Sin registrar")}</strong></div>`}
+function memberOpportunity(m){
+  const count=memberCount(m.id);
+  const lastDays=daysSince(memberLastDate(m.id));
+  const birthdayDays=daysUntilAnnual(m.birthday);
+  const next=memberNextTier(memberTotal(m.id));
+  if(count===0)return "La ficha está creada, pero todavía no hay una primera compra registrada.";
+  if(lastDays!==null&&lastDays>=180)return `Lleva ${lastDays} días sin comprar. Conviene revisar su historial antes de contactar.`;
+  if(lastDays!==null&&lastDays>90)return `Lleva ${lastDays} días sin comprar y está en el grupo de riesgo.`;
+  if(birthdayDays!==null&&birthdayDays<=30)return birthdayDays===0?"Hoy es su cumpleaños.":`Su cumpleaños es dentro de ${birthdayDays} día(s).`;
+  if(next&&next.min-memberTotal(m.id)<=100)return `Está cerca del nivel ${next.name}: faltan ${euro(next.min-memberTotal(m.id))} de consumo cobrado.`;
+  if(count>=3)return "Es un cliente recurrente. Sus preferencias y últimas compras pueden orientar la próxima recomendación.";
+  return "La ficha está al día. Registra el motivo y el tipo de producto en cada consumo para mejorar el análisis.";
+}
+function openMemberProfile(id){
+  const m=(data.members||[]).find(x=>x.id===id);
+  if(!m)return;
+  profileMemberId=id;
+  const points=memberPoints(id);
+  const transactions=(data.member_transactions||[]).filter(t=>t.member_id===id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+  const tags=memberTags(m);
+  const age=memberAge(m);
+  document.getElementById("profile-content").innerHTML=`
+    <div class="profile-head">
+      <div><h3>${esc(m.name||"Sin nombre")}</h3><p class="muted">Ficha de cliente · creada ${formatDate(m.created_at)}</p></div>
+      <div class="btn-row"><button class="btn" onclick="closeMemberProfile();openMember(${m.id})">Editar</button><button class="btn btn-primary" onclick="closeMemberProfile();openTransaction(null,${m.id})">+ Consumo</button><button class="btn" onclick="closeMemberProfile()">Cerrar</button></div>
+    </div>
+    <div class="summary">
+      <div class="stat"><strong>${esc(memberLevel(m))}</strong><span>Nivel</span></div>
+      <div class="stat"><strong>${euro(memberTotal(id))}</strong><span>Consumo cobrado</span></div>
+      <div class="stat"><strong>${memberCount(id)}</strong><span>Compras</span></div>
+      <div class="stat"><strong>${euro(memberAverage(id))}</strong><span>Ticket medio</span></div>
+      <div class="stat"><strong>${points}</strong><span>Puntos disponibles</span></div>
+      <div class="stat"><strong>${euro(redeemableFromPoints(points))}</strong><span>Saldo para descontar</span></div>
+    </div>
+    <div class="analysis-intro"><strong>Lectura de la ficha:</strong> ${esc(memberOpportunity(m))}</div>
+    <div class="meta">${tags.map(tag=>`<span class="tag ${tag.className}">${esc(tag.label)}</span>`).join("")}<span class="tag">Ficha ${memberProfileCompleteness(m)}%</span>${m.marketing_consent===true?'<span class="tag good">Promociones autorizadas</span>':'<span class="tag alert">Sin autorización promocional</span>'}</div>
+    <section class="profile-section"><h4>Contacto y datos generales</h4><div class="detail-grid">
+      ${detailItem("Teléfono",m.phone)}${detailItem("Email",m.email)}${detailItem("Fecha de nacimiento",m.birthday?`${formatDate(m.birthday)}${age!==null?` · ${age} años`:""}`:"")}${detailItem("Tipo de cliente",m.customer_type||"Particular")}
+      ${detailItem("Ciudad",m.city)}${detailItem("Código postal",m.postal_code)}${detailItem("Idioma",m.language)}${detailItem("Contacto preferido",m.preferred_contact)}${detailItem("Origen",m.source)}${detailItem("Estado",m.status==="inactive"?"Inactivo":"Activo")}
+    </div></section>
+    <section class="profile-section"><h4>Preferencias y fechas</h4><div class="detail-grid">
+      ${detailItem("Flores preferidas",m.preferred_flowers)}${detailItem("Colores preferidos",m.preferred_colors)}${detailItem("Presupuesto habitual",m.budget)}${detailItem("Aniversario / fecha importante",m.anniversary?formatDate(m.anniversary):"")}
+    </div>${m.notes?`<div class="detail-item" style="margin-top:12px"><span>Notas</span><strong>${esc(m.notes)}</strong></div>`:""}</section>
+    <section class="profile-section"><h4>Historial de consumo</h4>
+      <div class="table-wrap"><table class="records-table" style="min-width:720px"><thead><tr><th>Fecha</th><th>Pedido</th><th>Motivo</th><th>Producto</th><th>Cobrado</th><th>Descuento</th><th>Puntos</th></tr></thead><tbody>
+      ${transactions.map(t=>`<tr><td>${esc(t.date||"")}</td><td>${esc(t.order||"-")}</td><td>${esc(t.occasion||"-")}</td><td>${esc(t.product_type||"-")}</td><td><strong>${euro(t.amount)}</strong></td><td>${euro(transactionDiscount(t))}</td><td>+${transactionPoints(t)}${t.points_used?` / -${Number(t.points_used)||0}`:""}</td></tr>`).join("")||'<tr><td colspan="7" class="muted">Todavía no hay consumos.</td></tr>'}
+      </tbody></table></div>
+    </section>`;
+  document.getElementById("profile-modal").classList.add("open");
+}
+function closeMemberProfile(){document.getElementById("profile-modal").classList.remove("open");profileMemberId=null}
 function openMember(id){
   editingMemberId=id||null;
-  const m=id?data.members.find(x=>x.id===id):{name:"",phone:"",email:"",birthday:"",level:"",status:"active",notes:""};
+  const m=id?data.members.find(x=>x.id===id):{name:"",phone:"",email:"",birthday:"",customer_type:"Particular",language:"",city:"",postal_code:"",source:"",preferred_contact:"",preferred_flowers:"",preferred_colors:"",budget:"",anniversary:"",marketing_consent:false,level:"",status:"active",notes:""};
   document.getElementById("member-modal-title").textContent=id?"Editar miembro":"Nuevo miembro";
   document.getElementById("m-name").value=m.name||"";
   document.getElementById("m-phone").value=m.phone||"";
   document.getElementById("m-email").value=m.email||"";
   document.getElementById("m-birthday").value=m.birthday||"";
+  document.getElementById("m-customer-type").value=m.customer_type||"Particular";
+  document.getElementById("m-language").value=m.language||"";
+  document.getElementById("m-city").value=m.city||"";
+  document.getElementById("m-postal-code").value=m.postal_code||"";
+  document.getElementById("m-source").value=m.source||"";
+  document.getElementById("m-preferred-contact").value=m.preferred_contact||"";
+  document.getElementById("m-preferred-flowers").value=m.preferred_flowers||"";
+  document.getElementById("m-preferred-colors").value=m.preferred_colors||"";
+  document.getElementById("m-budget").value=m.budget||"";
+  document.getElementById("m-anniversary").value=m.anniversary||"";
+  document.getElementById("m-marketing-consent").checked=m.marketing_consent===true;
   document.getElementById("m-level").value=m.level||"";
   document.getElementById("m-status").value=m.status||"active";
   document.getElementById("m-notes").value=m.notes||"";
@@ -617,38 +899,40 @@ function closeMember(){document.getElementById("member-modal").classList.remove(
 async function saveMember(){
   const name=document.getElementById("m-name").value.trim();
   if(!name){alert("El nombre es obligatorio");return}
-  const member={id:editingMemberId||Math.max(0,...data.members.map(m=>m.id||0))+1,name,phone:document.getElementById("m-phone").value.trim(),email:document.getElementById("m-email").value.trim(),birthday:document.getElementById("m-birthday").value,level:document.getElementById("m-level").value,status:document.getElementById("m-status").value,notes:document.getElementById("m-notes").value.trim(),created_at:editingMemberId?(data.members.find(m=>m.id===editingMemberId)?.created_at||today()):today()};
+  const existing=editingMemberId?(data.members.find(m=>m.id===editingMemberId)||{}):{};
+  const consent=document.getElementById("m-marketing-consent").checked;
+  const member={...existing,id:editingMemberId||Math.max(0,...data.members.map(m=>m.id||0))+1,name,phone:document.getElementById("m-phone").value.trim(),email:document.getElementById("m-email").value.trim(),birthday:document.getElementById("m-birthday").value,customer_type:document.getElementById("m-customer-type").value,language:document.getElementById("m-language").value,city:document.getElementById("m-city").value.trim(),postal_code:document.getElementById("m-postal-code").value.trim(),source:document.getElementById("m-source").value,preferred_contact:document.getElementById("m-preferred-contact").value,preferred_flowers:document.getElementById("m-preferred-flowers").value.trim(),preferred_colors:document.getElementById("m-preferred-colors").value.trim(),budget:document.getElementById("m-budget").value,anniversary:document.getElementById("m-anniversary").value,marketing_consent:consent,marketing_consent_updated_at:existing.marketing_consent===consent?(existing.marketing_consent_updated_at||""):today(),level:document.getElementById("m-level").value,status:document.getElementById("m-status").value,notes:document.getElementById("m-notes").value.trim(),created_at:existing.created_at||today(),updated_at:today()};
   if(editingMemberId){data.members[data.members.findIndex(m=>m.id===editingMemberId)]=member}else data.members.push(member);
-  closeMember();renderMembers();renderTransactions();setDirty(true);show("Miembro guardado. Publicando...");
+  closeMember();renderMembers();renderTransactions();renderAnalytics();setDirty(true);show("Miembro guardado. Publicando...");
   await saveAll();
 }
 async function deleteMember(id){
   const m=data.members.find(x=>x.id===id);
   const count=memberCount(id);
   const msg=count?`Borrar "${m.name}" también eliminará ${count} consumo(s).`:`¿Borrar "${m.name}"?`;
-  if(confirm(msg)){data.members=data.members.filter(x=>x.id!==id);data.member_transactions=data.member_transactions.filter(t=>t.member_id!==id);renderMembers();renderTransactions();setDirty(true);show("Miembro borrado. Publicando...");await saveAll()}
+  if(confirm(msg)){data.members=data.members.filter(x=>x.id!==id);data.member_transactions=data.member_transactions.filter(t=>t.member_id!==id);renderMembers();renderTransactions();renderAnalytics();setDirty(true);show("Miembro borrado. Publicando...");await saveAll()}
 }
 function renderTransactionMemberOptions(){
-  const opts=['<option value="all">Todos los miembros</option>',...(data.members||[]).map(m=>`<option value="${m.id}" ${String(transactionFilter)===String(m.id)?"selected":""}>${m.name}</option>`)].join("");
+  const opts=['<option value="all">Todos los miembros</option>',...(data.members||[]).map(m=>`<option value="${m.id}" ${String(transactionFilter)===String(m.id)?"selected":""}>${esc(m.name)}</option>`)].join("");
   const filterEl=document.getElementById("transaction-member-filter");
   if(filterEl) filterEl.innerHTML=opts;
   const memberEl=document.getElementById("t-member");
-  if(memberEl) memberEl.innerHTML=(data.members||[]).map(m=>`<option value="${m.id}">${m.name} · ${m.phone||"sin teléfono"}</option>`).join("");
+  if(memberEl) memberEl.innerHTML=(data.members||[]).map(m=>`<option value="${m.id}">${esc(m.name)} · ${esc(m.phone||"sin teléfono")}</option>`).join("");
 }
 function renderTransactions(){
   renderTransactionMemberOptions();
   const items=(data.member_transactions||[]).filter(t=>transactionFilter==="all"||String(t.member_id)===String(transactionFilter)).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
   document.getElementById("transactions").innerHTML=items.map(t=>`
     <tr>
-      <td>${t.date||""}</td><td>${memberName(t.member_id)}</td><td>${euro(transactionTotal(t))}</td><td>${t.points_used?`${t.points_used} pts · ${euro(transactionDiscount(t))}`:"-"}</td><td><strong>${euro(t.amount)}</strong></td><td>${transactionPoints(t)}</td><td>${euro(redeemableFromPoints(memberPoints(t.member_id)))}</td><td>${t.order||""}</td><td>${t.payment||""}</td><td>${t.notes||""}</td>
+      <td>${esc(t.date||"")}</td><td>${esc(memberName(t.member_id))}</td><td>${euro(transactionTotal(t))}</td><td>${t.points_used?`${t.points_used} pts · ${euro(transactionDiscount(t))}`:"-"}</td><td><strong>${euro(t.amount)}</strong></td><td>${transactionPoints(t)}</td><td>${euro(redeemableFromPoints(memberPoints(t.member_id)))}</td><td>${esc(t.order||"")}</td><td>${esc(t.occasion||"")}</td><td>${esc(t.product_type||"")}</td><td>${esc(t.channel||"")}</td><td>${esc(t.payment||"")}</td><td>${esc(t.notes||"")}</td>
       <td><div class="btn-row"><button class="btn" onclick="openTransaction(${t.id})">Editar</button><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">Borrar</button></div></td>
-    </tr>`).join("")||'<tr><td colspan="11" class="muted">No hay consumos todavía.</td></tr>';
+    </tr>`).join("")||'<tr><td colspan="14" class="muted">No hay consumos todavía.</td></tr>';
 }
 function openTransaction(id,memberId=null){
   if(!(data.members||[]).length){alert("Primero crea un miembro.");return}
   editingTransactionId=id||null;
   renderTransactionMemberOptions();
-  const t=id?data.member_transactions.find(x=>x.id===id):{member_id:memberId||data.members[0].id,date:today(),amount:"",total_amount:"",points_used:0,payment:"Bizum",order:"",notes:""};
+  const t=id?data.member_transactions.find(x=>x.id===id):{member_id:memberId||data.members[0].id,date:today(),amount:"",total_amount:"",points_used:0,payment:"Bizum",order:"",occasion:"",product_type:"",channel:"",notes:""};
   document.getElementById("transaction-modal-title").textContent=id?"Editar consumo":"Nuevo consumo";
   document.getElementById("t-member").value=t.member_id;
   document.getElementById("t-date").value=t.date||today();
@@ -656,6 +940,9 @@ function openTransaction(id,memberId=null){
   document.getElementById("t-use-points").checked=!!(Number(t.points_used)||0);
   document.getElementById("t-payment").value=t.payment||"Bizum";
   document.getElementById("t-order").value=t.order||"";
+  document.getElementById("t-occasion").value=t.occasion||"";
+  document.getElementById("t-product-type").value=t.product_type||"";
+  document.getElementById("t-channel").value=t.channel||"";
   document.getElementById("t-notes").value=t.notes||"";
   updateTransactionPreview();
   document.getElementById("transaction-modal").classList.add("open");
@@ -684,12 +971,13 @@ async function saveTransaction(){
   if(!memberId){alert("El miembro es obligatorio");return}
   if(total<=0){alert("El importe debe ser mayor que 0");return}
   const calc=calculateTransactionAmounts(memberId,total,document.getElementById("t-use-points").checked,editingTransactionId);
-  const record={id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),total_amount:total,amount:calc.paid,points_used:calc.pointsUsed,discount:calc.discount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),notes:document.getElementById("t-notes").value.trim()};
+  const existing=editingTransactionId?(data.member_transactions.find(t=>t.id===editingTransactionId)||{}):{};
+  const record={...existing,id:editingTransactionId||Math.max(0,...data.member_transactions.map(t=>t.id||0))+1,member_id:memberId,date:document.getElementById("t-date").value||today(),total_amount:total,amount:calc.paid,points_used:calc.pointsUsed,discount:calc.discount,payment:document.getElementById("t-payment").value,order:document.getElementById("t-order").value.trim(),occasion:document.getElementById("t-occasion").value,product_type:document.getElementById("t-product-type").value,channel:document.getElementById("t-channel").value,notes:document.getElementById("t-notes").value.trim(),updated_at:today()};
   if(editingTransactionId){data.member_transactions[data.member_transactions.findIndex(t=>t.id===editingTransactionId)]=record}else data.member_transactions.push(record);
-  closeTransaction();renderMembers();renderTransactions();setDirty(true);show("Consumo guardado. Publicando...");
+  closeTransaction();renderMembers();renderTransactions();renderAnalytics();setDirty(true);show("Consumo guardado. Publicando...");
   await saveAll();
 }
-async function deleteTransaction(id){if(confirm("¿Borrar este consumo?")){data.member_transactions=data.member_transactions.filter(t=>t.id!==id);renderMembers();renderTransactions();setDirty(true);show("Consumo borrado. Publicando...");await saveAll()}}
+async function deleteTransaction(id){if(confirm("¿Borrar este consumo?")){data.member_transactions=data.member_transactions.filter(t=>t.id!==id);renderMembers();renderTransactions();renderAnalytics();setDirty(true);show("Consumo borrado. Publicando...");await saveAll()}}
 function setting(label,key,type="text"){return`<div class="${type==="textarea"?"wide":""}"><label>${label}</label>${type==="textarea"?`<textarea oninput="data.site.${key}=this.value;setDirty(true)">${data.site[key]||""}</textarea>`:`<input value="${String(data.site[key]||"").replace(/"/g,"&quot;")}" oninput="data.site.${key}=this.value;setDirty(true)">`}</div>`}
 function renderSettings(){document.getElementById("settings").innerHTML=`<div class="card"><div class="form-grid">${setting("Teléfono","phone")}${setting("WhatsApp","whatsapp")}${setting("Instagram","instagram")}${setting("Email","email")}${setting("Dirección","address")}${setting("Horario","hours")}${setting("Título principal","hero_title")}${setting("Texto superior","top_bar_text")}${setting("Subtítulo","hero_subtitle","textarea")}<div class="wide"><label>Foto portada inicio</label><div class="upload"><input id="hero-image" type="file" accept="image/jpeg,image/png,image/webp" onchange="handleHeroImage(event)"><p class="muted">Esta es la foto grande que aparece al entrar en la web. Máximo 25 MB. La web la comprimirá automáticamente a JPG.</p><img id="hero-preview" src="${data.site.hero_image||""}" alt="" style="${data.site.hero_image?"display:block":"display:none"}"></div></div><div class="wide"><label>Opacidad de la foto portada: <span id="hero-opacity-value">${data.site.hero_image_opacity??70}%</span></label><input id="hero-opacity" type="range" min="20" max="100" step="5" value="${data.site.hero_image_opacity??70}" oninput="data.site.hero_image_opacity=parseInt(this.value);document.getElementById('hero-opacity-value').textContent=this.value+'%';setDirty(true)"><p class="muted">100% muestra la foto más clara. 40% deja la portada más oscura y transparente.</p></div>${setting("Historia","about_text","textarea")}</div></div>`}
 async function handleHeroImage(e){
