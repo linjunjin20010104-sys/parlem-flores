@@ -166,6 +166,53 @@ function filterProductsBySubcategory(catId, subcategoryId, btn) {
 }
 
 // ---- PRODUCTS ----
+function productSizePrice(product, size) {
+  return Number(product[`price_${size}`]) || 0;
+}
+
+function hasProductSizePrices(product) {
+  return ['s', 'm', 'l'].every(size => productSizePrice(product, size) > 0);
+}
+
+function formatProductPrice(value) {
+  const amount = Number(value) || 0;
+  return `${amount.toLocaleString('es-ES', {
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2
+  })}€`;
+}
+
+function renderProductPrice(product) {
+  if (hasProductSizePrices(product)) {
+    return `
+      <div class="product-size-prices" aria-label="Precios por tamaño">
+        ${['s', 'm', 'l'].map(size => `
+          <span class="product-size-price">
+            <small>${size.toUpperCase()}</small>
+            <strong>${formatProductPrice(productSizePrice(product, size))}</strong>
+          </span>`).join('')}
+      </div>`;
+  }
+
+  const price = Number(product.price) || 0;
+  const priceMax = Number(product.price_max) || 0;
+  if (price <= 0) {
+    return '<span class="product-price"><small>Consultar presupuesto</small></span>';
+  }
+  if (priceMax > price) {
+    return `
+      <div class="product-legacy-price">
+        <span class="product-price">Desde ${formatProductPrice(price)}</span>
+        <span class="product-price-range">Hasta ${formatProductPrice(priceMax)}</span>
+      </div>`;
+  }
+  return `
+    <div class="product-legacy-price">
+      <span class="product-price">${formatProductPrice(price)}</span>
+      ${product.price_label ? `<span class="product-price-range">${product.price_label}</span>` : ''}
+    </div>`;
+}
+
 function renderProducts(catId, subcategoryId = 'all') {
   const grid = document.getElementById('products-grid');
   if (catId === 'all') renderSubcategoryTabs('all');
@@ -182,22 +229,10 @@ function renderProducts(catId, subcategoryId = 'all') {
   grid.innerHTML = products.map(p => {
     const badgeClass = p.badge && p.badge.toLowerCase().includes('consul') ? 'consultar' :
                        p.badge && p.badge.toLowerCase().includes('nuevo') ? 'nuevo' : '';
-    let priceHtml;
-    if (p.price === 0) {
-      priceHtml = `<span class="product-price"><small>Consultar presupuesto</small></span>`;
-    } else if (p.price_max && p.price_max > p.price) {
-      priceHtml = `
-        <div>
-          <span class="product-price">${p.price}€</span>
-          <span class="product-price-range">desde ${p.price}€ – ${p.price_max}€</span>
-        </div>`;
-    } else {
-      priceHtml = `
-        <div>
-          <span class="product-price">${p.price}€</span>
-          ${p.price_label ? `<span class="product-price-range">${p.price_label}</span>` : ''}
-        </div>`;
-    }
+    const priceHtml = renderProductPrice(p);
+    const whatsappText = hasProductSizePrices(p)
+      ? `Hola Parlem Flores, me interesa ${p.name}. ¿Me puedes informar sobre los tamaños S, M y L?`
+      : `Hola Parlem Flores, me interesa ${p.name}. ¿Me puedes dar más información?`;
     const subcategoryName = p.subcategory ? getSubcategoryName(p.category, p.subcategory) : '';
     return `
     <div class="product-card" data-id="${p.id}">
@@ -211,7 +246,7 @@ function renderProducts(catId, subcategoryId = 'all') {
         <div class="product-desc">${p.description}</div>
         <div class="product-footer">
           ${priceHtml}
-          <a class="btn-order" href="https://wa.me/${siteData.site.whatsapp}?text=${encodeURIComponent(`Hola Parlem Flores, me interesa ${p.name}. ¿Me puedes dar más información?`)}" target="_blank">
+          <a class="btn-order" href="https://wa.me/${siteData.site.whatsapp}?text=${encodeURIComponent(whatsappText)}" target="_blank">
             WhatsApp
           </a>
         </div>
