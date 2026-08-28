@@ -161,7 +161,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <button class="nav" onclick="showPage('publish',this)">Publicar</button>
     <span class="dirty" id="dirty">Cambios sin publicar</span>
     <button class="btn" onclick="location.href='/'">Ver web</button>
-    <button class="btn" onclick="logout()">Salir</button>
+    <button class="btn" id="logout-btn" onclick="logout()">Salir</button>
   </nav>
   <main class="wrap">
     <section class="page active" id="page-products">
@@ -364,6 +364,7 @@ const raw="/data.json";
 let data=null,dataSha="",filter="all",subfilter="all",searchTerm="",memberSearchTerm="",memberSegmentFilter="all",transactionFilter="all",profileMemberId=null,editingId=null,editingSeasonalIndex=null,editingMemberId=null,editingTransactionId=null,available=true,pendingImage=null,pendingSeasonalImage=null,pendingHeroImage=null,dirty=false;
 
 async function identityToken(){
+  if(isLocalAdminHost()) return "local";
   const user=window.netlifyIdentity && window.netlifyIdentity.currentUser();
   if(!user) throw new Error("No Netlify user");
   return user.jwt();
@@ -421,7 +422,12 @@ async function uploadImage(path,file,message){
 }
 
 function isNetlifyHost(){return location.hostname.includes("netlify.app")}
+function isLocalAdminHost(){return location.hostname==="127.0.0.1"||location.hostname==="localhost"}
 function login(){
+  if(isLocalAdminHost()){
+    start();
+    return;
+  }
   if(!isNetlifyHost()){
     location.href="https://precious-concha-6f7bce.netlify.app/admin/";
     return;
@@ -433,6 +439,10 @@ function showAccountHelp(){
   if(isNetlifyHost() && window.netlifyIdentity) window.netlifyIdentity.open("login");
 }
 function logout(){
+  if(isLocalAdminHost()){
+    location.reload();
+    return;
+  }
   window.netlifyIdentity.logout();
   document.getElementById("app").style.display="none";
   document.getElementById("login").style.display="flex";
@@ -441,12 +451,15 @@ async function start(){
   try{await loadData();document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";renderAll()}
   catch(e){document.getElementById("login-error").style.display="block"}
 }
-if(!isNetlifyHost()){
+if(isLocalAdminHost()){
+  document.getElementById("logout-btn").textContent="Recargar";
+  start();
+}else if(!isNetlifyHost()){
   document.getElementById("login-main").textContent="Entrar con cuenta";
   document.querySelector('a[href="/admin/token.html"]').style.display="none";
   document.querySelector('a[href="/admin/cms.html"]').style.display="none";
 }
-if(isNetlifyHost() && window.netlifyIdentity){
+if(!isLocalAdminHost() && isNetlifyHost() && window.netlifyIdentity){
   window.netlifyIdentity.on("init", user => { if(user) start(); });
   window.netlifyIdentity.on("login", () => { window.netlifyIdentity.close(); start(); });
   window.netlifyIdentity.init();

@@ -8,6 +8,8 @@ Panel principal:
 
 El panel carga siempre la version actual de `data.json`. Si se abre en varias pestanas, se recomienda terminar y publicar los cambios en una antes de editar desde otra.
 
+En el Mac principal tambien se puede abrir el proyecto en Finder y hacer doble clic en `打开后台.command`. Este acceso local entra directamente sin contrasena, escucha solamente en `127.0.0.1` y usa las credenciales Git ya guardadas en el Mac para publicar. La ventana de Terminal debe permanecer abierta mientras se utiliza el panel.
+
 ## Productos
 
 1. Abrir `Productos`.
