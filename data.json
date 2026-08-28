@@ -553,20 +553,26 @@
       "price_label": "Talla único",
       "image": "/img/1782403872847-ramo-rosa-azul-preservada.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 24,
-      "category": "cestas-ramos-secos",
+      "category": "centros-flores",
       "subcategory": "",
       "name": "Cesta suerte preservado",
       "description": "La de foto es de talla L",
       "price": 100,
-      "price_max": 0,
-      "price_label": "Talla único",
+      "price_max": 188,
+      "price_label": "Según diseño",
       "image": "/img/1782403908029-cesta-suerte.jpg",
       "badge": "Más vendido",
-      "available": true
+      "available": true,
+      "price_s": 100,
+      "price_m": 135,
+      "price_l": 188
     },
     {
       "id": 25,
@@ -819,7 +825,10 @@
       "price_label": "Talla único",
       "image": "/img/1784029829034-ramo-preservado-azul.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 42,
@@ -845,7 +854,10 @@
       "price_label": "Talla único",
       "image": "/img/1784029987351-ramo-seco-naranja.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 44,
@@ -858,7 +870,10 @@
       "price_label": "Talla único",
       "image": "/img/1784030084534-ramo-seco-rosa.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 45,
@@ -871,7 +886,10 @@
       "price_label": "Talla único",
       "image": "/img/1784030339485-ramo-seco-amarillo.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 46,
@@ -884,7 +902,10 @@
       "price_label": "Talla único",
       "image": "/img/1784030428202-ramo-seco-azul.jpg",
       "badge": "Premium",
-      "available": true
+      "available": true,
+      "price_s": 0,
+      "price_m": 0,
+      "price_l": 0
     },
     {
       "id": 47,
