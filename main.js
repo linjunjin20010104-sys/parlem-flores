@@ -174,6 +174,10 @@ function hasProductSizePrices(product) {
   return ['s', 'm', 'l'].every(size => productSizePrice(product, size) > 0);
 }
 
+function isSinglePriceCategory(product) {
+  return ['cestas-ramos-secos', 'flores-preservadas'].includes(product.category);
+}
+
 function formatProductPrice(value) {
   const amount = Number(value) || 0;
   return `${amount.toLocaleString('es-ES', {
@@ -183,6 +187,18 @@ function formatProductPrice(value) {
 }
 
 function renderProductPrice(product) {
+  if (isSinglePriceCategory(product)) {
+    const price = Number(product.price) || productSizePrice(product, 's');
+    if (price <= 0) {
+      return '<span class="product-price"><small>Consultar presupuesto</small></span>';
+    }
+    return `
+      <div class="product-legacy-price">
+        <span class="product-price">${formatProductPrice(price)}</span>
+        <span class="product-price-range">Talla único</span>
+      </div>`;
+  }
+
   if (hasProductSizePrices(product)) {
     return `
       <div class="product-size-prices" aria-label="Precios por tamaño">

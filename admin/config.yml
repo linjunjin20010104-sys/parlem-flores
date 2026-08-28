@@ -91,12 +91,12 @@ collections:
                   - { label: "Decoración floral de suelo para ceremonia", value: "decoracion-suelo-ceremonia" }
               - { label: "Nombre", name: "name", widget: "string" }
               - { label: "Descripción", name: "description", widget: "text" }
-              - { label: "Precio tamaño S", name: "price_s", widget: "number", value_type: "float", required: false }
-              - { label: "Precio tamaño M", name: "price_m", widget: "number", value_type: "float", required: false }
-              - { label: "Precio tamaño L", name: "price_l", widget: "number", value_type: "float", required: false }
-              - { label: "Precio anterior desde (compatibilidad)", name: "price", widget: "number", value_type: "float", required: false }
-              - { label: "Precio anterior hasta (compatibilidad)", name: "price_max", widget: "number", value_type: "float", required: false }
-              - { label: "Etiqueta de precio", name: "price_label", widget: "string", required: false }
+              - { label: "Precio tamaño S (solo categorías con tallas)", name: "price_s", widget: "number", value_type: "float", required: false }
+              - { label: "Precio tamaño M (solo categorías con tallas)", name: "price_m", widget: "number", value_type: "float", required: false }
+              - { label: "Precio tamaño L (solo categorías con tallas)", name: "price_l", widget: "number", value_type: "float", required: false }
+              - { label: "Precio único / precio desde", name: "price", widget: "number", value_type: "float", required: false }
+              - { label: "Precio hasta (dejar 0 en talla único)", name: "price_max", widget: "number", value_type: "float", required: false }
+              - { label: "Etiqueta de precio (Talla único para secos/preservadas)", name: "price_label", widget: "string", required: false }
               - { label: "Imagen", name: "image", widget: "image", required: false }
               - { label: "Badge", name: "badge", widget: "string", required: false }
               - { label: "Disponible en la web", name: "available", widget: "boolean", default: true }
