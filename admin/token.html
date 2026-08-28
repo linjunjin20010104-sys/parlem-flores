@@ -24,6 +24,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
 .btn-danger{color:#ad3f3f;border-color:#e7bcbc;background:#fff8f8}
 .btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .full{display:flex;width:100%;align-items:center;justify-content:center;margin-top:10px;text-align:center;line-height:1.25;min-height:44px;text-decoration:none}
+.account-help{margin-top:12px;padding:12px;border:1px solid #ead7b7;background:#fff8ef;border-radius:8px;color:#655951;font-size:13px;line-height:1.45}
 .hint+.full{margin-top:18px}
 .error{display:none;color:#b43b3b;font-size:13px;text-align:center;margin-top:12px}
 .app{display:none;min-height:100vh}
@@ -139,6 +140,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7f1f28;box-sh
     <label>GitHub token</label>
     <input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
     <button class="btn btn-primary full" onclick="start()">Entrar</button>
+    <div class="account-help">Si olvidaste la cuenta de Netlify, este acceso sirve como alternativa usando un token de GitHub con permiso de escritura.</div>
     <div class="error" id="login-error">No se pudo conectar con GitHub. Revisa el token.</div>
   </div>
 </section>
