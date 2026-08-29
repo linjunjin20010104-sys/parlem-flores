@@ -98,7 +98,24 @@
       "updated_at": "2026-08-29"
     }
   ],
-  "member_transactions": [],
+  "member_transactions": [
+    {
+      "id": 1,
+      "member_id": 1,
+      "date": "2026-08-29",
+      "total_amount": 99,
+      "amount": 99,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-08-29"
+    }
+  ],
   "seasonal": [
     {
       "name": "Tulipanes",
