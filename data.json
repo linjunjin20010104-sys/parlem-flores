@@ -72,45 +72,8 @@
     "hero_image_opacity": 70
   },
   "occasions": [],
-  "members": [
-    {
-      "id": 1,
-      "name": "zhouzhou",
-      "phone": "625086359",
-      "email": "zhouzhou.ye73@gmail.com",
-      "birthday": "1993-08-09",
-      "level": "",
-      "status": "active",
-      "notes": "",
-      "created_at": "2026-08-17"
-    }
-  ],
-  "member_transactions": [
-    {
-      "id": 1,
-      "member_id": 1,
-      "date": "2026-08-17",
-      "total_amount": 100,
-      "amount": 100,
-      "points_used": 0,
-      "discount": 0,
-      "payment": "Bizum",
-      "order": "",
-      "notes": ""
-    },
-    {
-      "id": 2,
-      "member_id": 1,
-      "date": "2026-08-17",
-      "total_amount": 100,
-      "amount": 95,
-      "points_used": 100,
-      "discount": 5,
-      "payment": "Bizum",
-      "order": "",
-      "notes": ""
-    }
-  ],
+  "members": [],
+  "member_transactions": [],
   "seasonal": [
     {
       "name": "Tulipanes",
