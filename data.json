@@ -98,7 +98,24 @@
       "updated_at": "2026-08-31"
     }
   ],
-  "member_transactions": [],
+  "member_transactions": [
+    {
+      "id": 1,
+      "member_id": 1,
+      "date": "2026-08-31",
+      "total_amount": 80,
+      "amount": 80,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Efectivo",
+      "order": "",
+      "occasion": "Regalo",
+      "product_type": "Centro floral",
+      "channel": "WhatsApp",
+      "notes": "",
+      "updated_at": "2026-08-31"
+    }
+  ],
   "seasonal": [
     {
       "name": "Tulipanes",
