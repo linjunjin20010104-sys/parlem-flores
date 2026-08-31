@@ -72,50 +72,8 @@
     "hero_image_opacity": 70
   },
   "occasions": [],
-  "members": [
-    {
-      "id": 1,
-      "name": "zhouzhou",
-      "phone": "698774460",
-      "email": "zhouzhou.ye73@gmail.com",
-      "birthday": "2019-01-29",
-      "customer_type": "Particular",
-      "language": "Español",
-      "city": "Valencia",
-      "postal_code": "46001",
-      "source": "Tienda",
-      "preferred_contact": "WhatsApp",
-      "preferred_flowers": "",
-      "preferred_colors": "",
-      "budget": "",
-      "anniversary": "",
-      "marketing_consent": false,
-      "marketing_consent_updated_at": "2026-08-29",
-      "level": "",
-      "status": "active",
-      "notes": "",
-      "created_at": "2026-08-29",
-      "updated_at": "2026-08-29"
-    }
-  ],
-  "member_transactions": [
-    {
-      "id": 1,
-      "member_id": 1,
-      "date": "2026-08-29",
-      "total_amount": 99,
-      "amount": 99,
-      "points_used": 0,
-      "discount": 0,
-      "payment": "Bizum",
-      "order": "",
-      "occasion": "",
-      "product_type": "",
-      "channel": "",
-      "notes": "",
-      "updated_at": "2026-08-29"
-    }
-  ],
+  "members": [],
+  "member_transactions": [],
   "seasonal": [
     {
       "name": "Tulipanes",
