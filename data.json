@@ -258,6 +258,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-01"
+    },
+    {
+      "id": 5,
+      "member_id": 5,
+      "date": "2026-09-01",
+      "total_amount": 15,
+      "amount": 15,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-01"
     }
   ],
   "seasonal": [
