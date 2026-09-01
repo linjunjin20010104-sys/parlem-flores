@@ -218,6 +218,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-01"
+    },
+    {
+      "id": 4,
+      "member_id": 4,
+      "date": "2026-09-01",
+      "total_amount": 27,
+      "amount": 27,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Efectivo",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-01"
     }
   ],
   "seasonal": [
