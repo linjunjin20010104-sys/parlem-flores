@@ -264,6 +264,30 @@
       "notes": "",
       "created_at": "2026-09-02",
       "updated_at": "2026-09-02"
+    },
+    {
+      "id": 9,
+      "name": "Ivan",
+      "phone": "722236500",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-02",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-02",
+      "updated_at": "2026-09-02"
     }
   ],
   "member_transactions": [
