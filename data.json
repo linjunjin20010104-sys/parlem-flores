@@ -216,6 +216,30 @@
       "notes": "",
       "created_at": "2026-09-02",
       "updated_at": "2026-09-02"
+    },
+    {
+      "id": 7,
+      "name": "Edelmiro Revet",
+      "phone": "610526048",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "Valencia",
+      "postal_code": "46005",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "Planta",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-02",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-02",
+      "updated_at": "2026-09-02"
     }
   ],
   "member_transactions": [
