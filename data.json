@@ -288,6 +288,30 @@
       "notes": "",
       "created_at": "2026-09-02",
       "updated_at": "2026-09-02"
+    },
+    {
+      "id": 10,
+      "name": "Belen",
+      "phone": "679288383",
+      "email": "",
+      "birthday": "1986-01-02",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-02",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-02",
+      "updated_at": "2026-09-02"
     }
   ],
   "member_transactions": [
