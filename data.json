@@ -336,6 +336,30 @@
       "notes": "",
       "created_at": "2026-09-03",
       "updated_at": "2026-09-03"
+    },
+    {
+      "id": 12,
+      "name": "Jesus",
+      "phone": "722267572",
+      "email": "",
+      "birthday": "1993-10-03",
+      "customer_type": "Particular",
+      "language": "Español",
+      "city": "Valencia",
+      "postal_code": "46005",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "Menos de 30€",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-03",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-03",
+      "updated_at": "2026-09-03"
     }
   ],
   "member_transactions": [
