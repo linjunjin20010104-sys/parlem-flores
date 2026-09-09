@@ -778,6 +778,22 @@
       "channel": "Tienda",
       "notes": "",
       "updated_at": "2026-09-07"
+    },
+    {
+      "id": 18,
+      "member_id": 18,
+      "date": "2026-09-09",
+      "total_amount": 65,
+      "amount": 65,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Centro",
+      "occasion": "Regalo",
+      "product_type": "Centro floral",
+      "channel": "Tienda",
+      "notes": "",
+      "updated_at": "2026-09-09"
     }
   ],
   "seasonal": [
