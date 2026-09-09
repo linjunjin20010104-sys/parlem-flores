@@ -480,6 +480,30 @@
       "notes": "",
       "created_at": "2026-09-07",
       "updated_at": "2026-09-07"
+    },
+    {
+      "id": 18,
+      "name": "Maite Aliga",
+      "phone": "655020829",
+      "email": "",
+      "birthday": "1955-06-09",
+      "customer_type": "Particular",
+      "language": "Español",
+      "city": "",
+      "postal_code": "",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-09",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-09",
+      "updated_at": "2026-09-09"
     }
   ],
   "member_transactions": [
