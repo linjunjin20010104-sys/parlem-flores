@@ -600,6 +600,30 @@
       "notes": "",
       "created_at": "2026-09-10",
       "updated_at": "2026-09-10"
+    },
+    {
+      "id": 23,
+      "name": "Lixin",
+      "phone": "666678337",
+      "email": "",
+      "birthday": "1988-10-10",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "Valencia",
+      "postal_code": "46005",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "COLOR CLARITO",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-10",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-10",
+      "updated_at": "2026-09-10"
     }
   ],
   "member_transactions": [
