@@ -576,6 +576,30 @@
       "notes": "",
       "created_at": "2026-09-10",
       "updated_at": "2026-09-10"
+    },
+    {
+      "id": 22,
+      "name": "Asun Perello",
+      "phone": "637371282",
+      "email": "",
+      "birthday": "1978-06-10",
+      "customer_type": "Particular",
+      "language": "Español",
+      "city": "",
+      "postal_code": "",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "Planta",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-10",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-10",
+      "updated_at": "2026-09-10"
     }
   ],
   "member_transactions": [
