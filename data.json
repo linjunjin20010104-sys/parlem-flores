@@ -1178,6 +1178,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 28,
+      "member_id": 28,
+      "date": "2026-09-12",
+      "total_amount": 135,
+      "amount": 135,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Efectivo",
+      "order": "Centro",
+      "occasion": "Regalo",
+      "product_type": "Flores preservadas",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-12"
     }
   ],
   "seasonal": [
