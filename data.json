@@ -768,6 +768,30 @@
       "notes": "",
       "created_at": "2026-09-12",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 30,
+      "name": "Andres",
+      "phone": "603772920",
+      "email": "",
+      "birthday": "1998-05-12",
+      "customer_type": "Particular",
+      "language": "Español",
+      "city": "",
+      "postal_code": "",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "Rosa",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-12",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-12",
+      "updated_at": "2026-09-12"
     }
   ],
   "member_transactions": [
