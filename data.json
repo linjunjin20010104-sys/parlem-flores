@@ -1138,6 +1138,22 @@
       "channel": "Tienda",
       "notes": "",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 27,
+      "member_id": 27,
+      "date": "2026-09-12",
+      "total_amount": 100,
+      "amount": 100,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "Centro",
+      "occasion": "Regalo",
+      "product_type": "Flores preservadas",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-12"
     }
   ],
   "seasonal": [
