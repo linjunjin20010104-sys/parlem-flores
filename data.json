@@ -720,6 +720,30 @@
       "notes": "",
       "created_at": "2026-09-12",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 28,
+      "name": "兰兰",
+      "phone": "676747983",
+      "email": "",
+      "birthday": "1994-09-12",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "Valencia",
+      "postal_code": "",
+      "source": "Recomendación",
+      "preferred_contact": "WhatsApp",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-12",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-12",
+      "updated_at": "2026-09-12"
     }
   ],
   "member_transactions": [
