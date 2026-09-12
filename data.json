@@ -744,6 +744,30 @@
       "notes": "",
       "created_at": "2026-09-12",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 29,
+      "name": "李美珠",
+      "phone": "690239692",
+      "email": "",
+      "birthday": "1995-06-12",
+      "customer_type": "Particular",
+      "language": "Chino",
+      "city": "",
+      "postal_code": "",
+      "source": "Recomendación",
+      "preferred_contact": "WhatsApp",
+      "preferred_flowers": "现代风格花束",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-12",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-12",
+      "updated_at": "2026-09-12"
     }
   ],
   "member_transactions": [
