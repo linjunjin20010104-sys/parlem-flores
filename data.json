@@ -1098,6 +1098,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-11"
+    },
+    {
+      "id": 26,
+      "member_id": 26,
+      "date": "2026-09-12",
+      "total_amount": 33,
+      "amount": 33,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Regalo",
+      "product_type": "Ramo",
+      "channel": "Tienda",
+      "notes": "",
+      "updated_at": "2026-09-12"
     }
   ],
   "seasonal": [
