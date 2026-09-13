@@ -1298,6 +1298,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-12"
+    },
+    {
+      "id": 31,
+      "member_id": 31,
+      "date": "2026-09-13",
+      "total_amount": 60,
+      "amount": 60,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "Ramo",
+      "occasion": "Cumpleaños",
+      "product_type": "Ramo",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-13"
     }
   ],
   "seasonal": [
