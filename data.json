@@ -1458,6 +1458,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-15"
+    },
+    {
+      "id": 35,
+      "member_id": 35,
+      "date": "2026-09-15",
+      "total_amount": 230,
+      "amount": 230,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "Ramo",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-15"
     }
   ],
   "seasonal": [
