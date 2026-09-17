@@ -912,6 +912,30 @@
       "notes": "",
       "created_at": "2026-09-15",
       "updated_at": "2026-09-15"
+    },
+    {
+      "id": 36,
+      "name": "Beatriz",
+      "phone": "627570613",
+      "email": "",
+      "birthday": "1973-06-17",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-17",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-17",
+      "updated_at": "2026-09-17"
     }
   ],
   "member_transactions": [
