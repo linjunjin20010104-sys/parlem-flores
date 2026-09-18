@@ -936,6 +936,30 @@
       "notes": "",
       "created_at": "2026-09-17",
       "updated_at": "2026-09-17"
+    },
+    {
+      "id": 37,
+      "name": "Maria",
+      "phone": "626538704",
+      "email": "",
+      "birthday": "1998-05-18",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "Rosa",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-18",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-18",
+      "updated_at": "2026-09-18"
     }
   ],
   "member_transactions": [
