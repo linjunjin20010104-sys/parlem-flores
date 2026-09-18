@@ -1578,6 +1578,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-18"
+    },
+    {
+      "id": 38,
+      "member_id": 38,
+      "date": "2026-09-18",
+      "total_amount": 27,
+      "amount": 27,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "",
+      "occasion": "Regalo",
+      "product_type": "Planta",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-18"
     }
   ],
   "seasonal": [
