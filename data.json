@@ -960,6 +960,30 @@
       "notes": "",
       "created_at": "2026-09-18",
       "updated_at": "2026-09-18"
+    },
+    {
+      "id": 38,
+      "name": "Susana",
+      "phone": "661446438",
+      "email": "",
+      "birthday": "1965-04-18",
+      "customer_type": "Particular",
+      "language": "Español",
+      "city": "Valencia",
+      "postal_code": "46007",
+      "source": "Tienda",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-18",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-18",
+      "updated_at": "2026-09-18"
     }
   ],
   "member_transactions": [
