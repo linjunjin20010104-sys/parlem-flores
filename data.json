@@ -1538,6 +1538,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-17"
+    },
+    {
+      "id": 37,
+      "member_id": 37,
+      "date": "2026-09-18",
+      "total_amount": 90,
+      "amount": 90,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Cumpleaños",
+      "product_type": "Ramo",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-18"
     }
   ],
   "seasonal": [
