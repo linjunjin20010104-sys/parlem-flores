@@ -1978,6 +1978,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-22"
+    },
+    {
+      "id": 48,
+      "member_id": 48,
+      "date": "2026-09-22",
+      "total_amount": 55,
+      "amount": 55,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Funeral",
+      "product_type": "Flores preservadas",
+      "channel": "Tienda",
+      "notes": "",
+      "updated_at": "2026-09-22"
     }
   ],
   "seasonal": [
