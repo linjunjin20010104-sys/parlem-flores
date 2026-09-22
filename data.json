@@ -1152,6 +1152,30 @@
       "notes": "",
       "created_at": "2026-09-21",
       "updated_at": "2026-09-21"
+    },
+    {
+      "id": 46,
+      "name": "倩倩",
+      "phone": "602424593",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-22",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-22",
+      "updated_at": "2026-09-22"
     }
   ],
   "member_transactions": [
