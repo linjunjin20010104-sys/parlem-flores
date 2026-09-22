@@ -1938,6 +1938,22 @@
       "channel": "Otro",
       "notes": "",
       "updated_at": "2026-09-22"
+    },
+    {
+      "id": 47,
+      "member_id": 47,
+      "date": "2026-09-22",
+      "total_amount": 25,
+      "amount": 25,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Efectivo",
+      "order": "Ramo",
+      "occasion": "Cumpleaños",
+      "product_type": "Ramo",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-22"
     }
   ],
   "seasonal": [
