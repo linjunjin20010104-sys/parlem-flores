@@ -1898,6 +1898,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-21"
+    },
+    {
+      "id": 46,
+      "member_id": 46,
+      "date": "2026-09-22",
+      "total_amount": 100,
+      "amount": 100,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "Regalo",
+      "product_type": "Flores preservadas",
+      "channel": "Otro",
+      "notes": "",
+      "updated_at": "2026-09-22"
     }
   ],
   "seasonal": [
