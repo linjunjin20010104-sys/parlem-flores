@@ -1440,6 +1440,30 @@
       "notes": "",
       "created_at": "2026-09-26",
       "updated_at": "2026-09-26"
+    },
+    {
+      "id": 58,
+      "name": "Peluqueria Orientw Pilar Garcia",
+      "phone": "657663291",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-09-28",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-09-28",
+      "updated_at": "2026-09-28"
     }
   ],
   "member_transactions": [
