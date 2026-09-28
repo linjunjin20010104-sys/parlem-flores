@@ -2490,6 +2490,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-28"
+    },
+    {
+      "id": 62,
+      "member_id": 60,
+      "date": "2026-09-28",
+      "total_amount": 50,
+      "amount": 50,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "Centro",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-09-28"
     }
   ],
   "seasonal": [
