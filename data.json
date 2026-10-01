@@ -2570,6 +2570,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-09-30"
+    },
+    {
+      "id": 64,
+      "member_id": 62,
+      "date": "2026-10-01",
+      "total_amount": 35,
+      "amount": 35,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Regalo",
+      "product_type": "Flores preservadas",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-10-01"
     }
   ],
   "seasonal": [
