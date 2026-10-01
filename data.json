@@ -1584,6 +1584,30 @@
       "notes": "",
       "created_at": "2026-10-01",
       "updated_at": "2026-10-01"
+    },
+    {
+      "id": 64,
+      "name": "Ricardo",
+      "phone": "660368899",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-10-01",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-10-01",
+      "updated_at": "2026-10-01"
     }
   ],
   "member_transactions": [
