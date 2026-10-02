@@ -1704,6 +1704,30 @@
       "notes": "",
       "created_at": "2026-10-02",
       "updated_at": "2026-10-02"
+    },
+    {
+      "id": 69,
+      "name": "elisa",
+      "phone": "73166364483",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "Valencia",
+      "postal_code": "46005",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-10-02",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-10-02",
+      "updated_at": "2026-10-02"
     }
   ],
   "member_transactions": [
