@@ -1776,6 +1776,30 @@
       "notes": "",
       "created_at": "2026-10-05",
       "updated_at": "2026-10-05"
+    },
+    {
+      "id": 72,
+      "name": "Fernando Hernandez Garcia-Forte",
+      "phone": "699411116",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Empresa",
+      "language": "Español",
+      "city": "Valencia",
+      "postal_code": "46007",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-10-05",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-10-05",
+      "updated_at": "2026-10-05"
     }
   ],
   "member_transactions": [
