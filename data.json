@@ -1872,6 +1872,30 @@
       "notes": "",
       "created_at": "2026-10-06",
       "updated_at": "2026-10-06"
+    },
+    {
+      "id": 76,
+      "name": "Luis Bayona",
+      "phone": "663460227",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-10-07",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-10-07",
+      "updated_at": "2026-10-07"
     }
   ],
   "member_transactions": [
