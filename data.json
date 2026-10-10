@@ -3322,6 +3322,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-10-09"
+    },
+    {
+      "id": 84,
+      "member_id": 80,
+      "date": "2026-10-10",
+      "total_amount": 45,
+      "amount": 45,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-10-10"
     }
   ],
   "seasonal": [
