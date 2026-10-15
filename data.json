@@ -3538,6 +3538,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-10-14"
+    },
+    {
+      "id": 90,
+      "member_id": 85,
+      "date": "2026-10-15",
+      "total_amount": 50,
+      "amount": 50,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Efectivo",
+      "order": "Ramo",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-10-15"
     }
   ],
   "seasonal": [
