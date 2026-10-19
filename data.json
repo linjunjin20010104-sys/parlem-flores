@@ -2256,30 +2256,6 @@
       "notes": "",
       "created_at": "2026-10-17",
       "updated_at": "2026-10-17"
-    },
-    {
-      "id": 92,
-      "name": "junsheng",
-      "phone": "",
-      "email": "",
-      "birthday": "",
-      "customer_type": "Particular",
-      "language": "",
-      "city": "",
-      "postal_code": "",
-      "source": "",
-      "preferred_contact": "",
-      "preferred_flowers": "",
-      "preferred_colors": "",
-      "budget": "",
-      "anniversary": "",
-      "marketing_consent": false,
-      "marketing_consent_updated_at": "2026-10-19",
-      "level": "",
-      "status": "active",
-      "notes": "",
-      "created_at": "2026-10-19",
-      "updated_at": "2026-10-19"
     }
   ],
   "member_transactions": [
@@ -3834,22 +3810,6 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-10-17"
-    },
-    {
-      "id": 98,
-      "member_id": 92,
-      "date": "2026-10-19",
-      "total_amount": 100,
-      "amount": 100,
-      "points_used": 0,
-      "discount": 0,
-      "payment": "Bizum",
-      "order": "",
-      "occasion": "",
-      "product_type": "",
-      "channel": "",
-      "notes": "",
-      "updated_at": "2026-10-19"
     }
   ],
   "seasonal": [
