@@ -3834,6 +3834,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-10-17"
+    },
+    {
+      "id": 98,
+      "member_id": 92,
+      "date": "2026-10-19",
+      "total_amount": 100,
+      "amount": 100,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-10-19"
     }
   ],
   "seasonal": [
