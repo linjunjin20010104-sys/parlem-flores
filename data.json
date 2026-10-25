@@ -4026,6 +4026,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-10-24"
+    },
+    {
+      "id": 104,
+      "member_id": 96,
+      "date": "2026-10-25",
+      "total_amount": 17.5,
+      "amount": 17.5,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "Planta",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-10-25"
     }
   ],
   "seasonal": [
