@@ -332,5 +332,17 @@
   }
 </script>
 <script src="main.js"></script>
+<script>
+  // Measure WhatsApp intent clicks in GA4.
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href*="wa.me"]');
+    if (link && typeof window.gtag === 'function') {
+      window.gtag('event', 'whatsapp_click', {
+        link_id: link.id || 'whatsapp_link',
+        link_url: link.href
+      });
+    }
+  });
+</script>
 </body>
 </html>
