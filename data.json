@@ -2448,6 +2448,30 @@
       "notes": "",
       "created_at": "2026-10-30",
       "updated_at": "2026-10-30"
+    },
+    {
+      "id": 100,
+      "name": "Pere Rallester",
+      "phone": "670216198",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-10-31",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-10-31",
+      "updated_at": "2026-10-31"
     }
   ],
   "member_transactions": [
