@@ -2520,6 +2520,30 @@
       "notes": "",
       "created_at": "2026-10-31",
       "updated_at": "2026-10-31"
+    },
+    {
+      "id": 103,
+      "name": "Luisa",
+      "phone": "622193133",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-11-01",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-11-01",
+      "updated_at": "2026-11-01"
     }
   ],
   "member_transactions": [
