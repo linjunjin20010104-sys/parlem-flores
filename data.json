@@ -4930,6 +4930,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-11-10"
+    },
+    {
+      "id": 129,
+      "member_id": 117,
+      "date": "2026-11-12",
+      "total_amount": 20,
+      "amount": 20,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-11-12"
     }
   ],
   "seasonal": [
