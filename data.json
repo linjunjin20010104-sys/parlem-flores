@@ -5026,6 +5026,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-11-12"
+    },
+    {
+      "id": 132,
+      "member_id": 5,
+      "date": "2026-11-13",
+      "total_amount": 18,
+      "amount": 17.3,
+      "points_used": 14,
+      "discount": 0.7000000000000001,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-11-13"
     }
   ],
   "seasonal": [
