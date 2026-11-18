@@ -3024,6 +3024,30 @@
       "notes": "",
       "created_at": "2026-11-18",
       "updated_at": "2026-11-18"
+    },
+    {
+      "id": 124,
+      "name": "Marcos",
+      "phone": "617138906",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "Valencia",
+      "postal_code": "46005",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-11-18",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-11-18",
+      "updated_at": "2026-11-18"
     }
   ],
   "member_transactions": [
