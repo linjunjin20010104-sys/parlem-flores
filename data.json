@@ -3000,6 +3000,30 @@
       "notes": "",
       "created_at": "2026-11-14",
       "updated_at": "2026-11-14"
+    },
+    {
+      "id": 123,
+      "name": "paloma peris",
+      "phone": "675224747",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "46005",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-11-18",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-11-18",
+      "updated_at": "2026-11-18"
     }
   ],
   "member_transactions": [
