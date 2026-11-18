@@ -5162,6 +5162,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-11-14"
+    },
+    {
+      "id": 136,
+      "member_id": 50,
+      "date": "2026-11-18",
+      "total_amount": 30,
+      "amount": 28.2,
+      "points_used": 36,
+      "discount": 1.8,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Regalo",
+      "product_type": "Ramo",
+      "channel": "WhatsApp",
+      "notes": "",
+      "updated_at": "2026-11-18"
     }
   ],
   "seasonal": [
