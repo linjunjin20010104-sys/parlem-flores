@@ -5202,6 +5202,22 @@
       "channel": "WhatsApp",
       "notes": "",
       "updated_at": "2026-11-18"
+    },
+    {
+      "id": 137,
+      "member_id": 123,
+      "date": "2026-11-18",
+      "total_amount": 13.5,
+      "amount": 13.5,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-11-18"
     }
   ],
   "seasonal": [
