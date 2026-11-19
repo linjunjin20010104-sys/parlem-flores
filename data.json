@@ -3072,6 +3072,30 @@
       "notes": "",
       "created_at": "2026-11-19",
       "updated_at": "2026-11-19"
+    },
+    {
+      "id": 126,
+      "name": "Paula",
+      "phone": "628149535",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-11-19",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-11-19",
+      "updated_at": "2026-11-19"
     }
   ],
   "member_transactions": [
