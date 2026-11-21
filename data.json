@@ -3144,6 +3144,30 @@
       "notes": "",
       "created_at": "2026-11-21",
       "updated_at": "2026-11-21"
+    },
+    {
+      "id": 129,
+      "name": "Juan Carlos Cantillo",
+      "phone": "676007267",
+      "email": "",
+      "birthday": "",
+      "customer_type": "Particular",
+      "language": "",
+      "city": "",
+      "postal_code": "",
+      "source": "",
+      "preferred_contact": "",
+      "preferred_flowers": "",
+      "preferred_colors": "",
+      "budget": "",
+      "anniversary": "",
+      "marketing_consent": false,
+      "marketing_consent_updated_at": "2026-11-21",
+      "level": "",
+      "status": "active",
+      "notes": "",
+      "created_at": "2026-11-21",
+      "updated_at": "2026-11-21"
     }
   ],
   "member_transactions": [
