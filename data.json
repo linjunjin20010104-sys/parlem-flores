@@ -5554,6 +5554,22 @@
       "channel": "",
       "notes": "",
       "updated_at": "2026-11-21"
+    },
+    {
+      "id": 147,
+      "member_id": 131,
+      "date": "2026-11-22",
+      "total_amount": 35,
+      "amount": 35,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Tarjeta",
+      "order": "Ramo",
+      "occasion": "Regalo",
+      "product_type": "Flores preservadas",
+      "channel": "Tienda",
+      "notes": "",
+      "updated_at": "2026-11-22"
     }
   ],
   "seasonal": [
