@@ -5594,6 +5594,22 @@
       "channel": "Tienda",
       "notes": "",
       "updated_at": "2026-11-22"
+    },
+    {
+      "id": 148,
+      "member_id": 132,
+      "date": "2026-11-25",
+      "total_amount": 40,
+      "amount": 40,
+      "points_used": 0,
+      "discount": 0,
+      "payment": "Bizum",
+      "order": "",
+      "occasion": "",
+      "product_type": "",
+      "channel": "",
+      "notes": "",
+      "updated_at": "2026-11-25"
     }
   ],
   "seasonal": [
